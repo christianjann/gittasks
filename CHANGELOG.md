@@ -52,6 +52,10 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
   - Material Design checkbox components replace plain markdown text
   - Accept button appears to save changes without switching to edit mode
   - Seamless task management in rendered markdown view
+- Image Support: Display images in rendered markdown mode
+  - Support for remote images via HTTP/HTTPS URLs
+  - Support for local repository files via relative paths (resolved from the note's directory)
+  - PNG/JPG/SVG images load correctly with proper path resolution
 
 ### Changed
 

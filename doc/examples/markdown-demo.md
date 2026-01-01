@@ -62,7 +62,11 @@ print(fibonacci(10))
 
 [GitNote Repository](https://github.com/wiiznokes/gitnote)
 
-![GitNote Logo](https://github.com/wiiznokes/gitnote/raw/master/assets/GitNote%20Logo.graphite)
+![Remote Image](https://picsum.photos/200/100)
+
+![Local Image](542-200x100.jpg)
+
+![GitNote SVG App Icon](app_icon.svg)
 
 ## Blockquotes
 

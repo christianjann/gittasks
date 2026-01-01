@@ -181,6 +181,8 @@ dependencies {
 
     // Markdown
     implementation(libs.compose.markdown)
+    implementation(libs.coil.compose)
+    implementation(libs.coil.svg)
 
     // unit test
     testImplementation(kotlin("test"))

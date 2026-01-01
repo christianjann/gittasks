@@ -11,7 +11,7 @@ GitNote is a Git-based note-taking app for Android that integrates seamlessly wi
 - **Git Log Viewer**: Access commit history directly in the app with formatted timestamps, author information, and commit messages.
 
 ### Note Management
-- **Markdown Support**: Full Markdown rendering with syntax highlighting.
+- **Markdown Support**: Full Markdown rendering with syntax highlighting and image display.
 - **Frontmatter Metadata**: YAML headers for titles, timestamps, completion status, tags, and authors.
 - **File-Based Storage**: Notes are stored as Markdown files in the repository.
 
@@ -162,6 +162,10 @@ GitNote supports interactive checkboxes directly within rendered markdown conten
 - Use in read-only mode for quick task management.
 - Supports indented checkboxes for nested task hierarchies.
 - All checkbox changes in a session are saved together.
+- Images in markdown are rendered in read-only mode.
+- Support for remote images (HTTP/HTTPS URLs) and local repository files.
+- Relative image paths are resolved from the note's directory in the repository.
+- Absolute paths within the repository (starting with /) are also supported.
 
 #### Example Workflow
 1. Create a note with checkbox markdown:
