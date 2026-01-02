@@ -37,9 +37,37 @@ mod test {
     }
 
     #[test]
-    #[ignore = "local repo"]
     fn check_extension() {
-        let path = Path::new("../../../../../note-pv");
+        // Create a temporary test directory with various file types
+        let test_dir = Path::new("test_extensions");
+        if test_dir.exists() {
+            fs::remove_dir_all(test_dir).expect("Failed to clean up test directory");
+        }
+        fs::create_dir_all(test_dir).expect("Failed to create test directory");
+
+        // Create subdirectories
+        let sub_dir = test_dir.join("subdir");
+        fs::create_dir_all(&sub_dir).expect("Failed to create subdirectory");
+
+        // Create files with various extensions (mix of supported and unsupported)
+        let test_files = vec![
+            ("file1.md", "# Markdown file"),
+            ("file2.txt", "Plain text file"),
+            ("file3.rs", "fn main() {}"),
+            ("file4.js", "console.log('hello');"),
+            ("file5.bin", "binary data"),
+            ("file6.pdf", "pdf content"),
+            ("file7.jpg", "image data"),
+            ("file8.md", "# Another markdown"),
+            ("subdir/file9.txt", "Text in subdirectory"),
+            ("subdir/file10.py", "print('hello')"),
+        ];
+
+        for (file_path, content) in test_files {
+            let full_path = test_dir.join(file_path);
+            fs::write(&full_path, content).expect("Failed to write test file");
+        }
+
         let mut counts: HashMap<String, usize> = HashMap::new();
 
         // Recursively walk through the directory
@@ -56,7 +84,7 @@ mod test {
             }
         }
 
-        visit_dir(path, &mut counts);
+        visit_dir(test_dir, &mut counts);
 
         // Sort by number of files (descending)
         let mut extensions = counts
@@ -76,5 +104,8 @@ mod test {
         for (ext, count, supported) in extensions {
             println!("{ext:<10}    {supported:<5}         {count:<6}");
         }
+
+        // Clean up
+        fs::remove_dir_all(test_dir).expect("Failed to clean up test directory");
     }
 }

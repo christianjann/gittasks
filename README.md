@@ -129,6 +129,8 @@ This project uses a custom build system based on [just](https://github.com/casey
 - `just install` - Build and install debug APK
 - `just rust-build` - Build Rust native library
 - `just fmt` - Format all code (Kotlin + Rust)
+- `just test` - Run Rust unit tests
+- `just test-integration` - Run Git integration tests (requires git, located in `app/src/main/rust/tests/`)
 - `just clean-build` - Clean and rebuild
 
 See [building.md](doc/building.md) for detailed build instructions.

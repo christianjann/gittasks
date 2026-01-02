@@ -13,3 +13,10 @@ sortext:
         sort $extension_dir/$f -o $extension_dir/$f
         echo sorted $f
     done
+
+test:
+    # Run all Rust tests (including integration tests)
+    cargo test
+
+rust-build:
+    make DEBUG=0 build_install

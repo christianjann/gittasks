@@ -41,3 +41,4 @@ google-services.json
 .kotlin/
 
 jniLibs/
+app/src/main/rust/test_repos*

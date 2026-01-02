@@ -28,6 +28,10 @@ fmt-rust:
 # Format all code files
 fmt: fmt-kotlin fmt-rust fmt-just fmt-prettier
 
+test:
+    # Run all Rust tests (including integration tests)
+    cd app/src/main/rust && cargo test
+
 sort-supported-extension:
     #!/usr/bin/env bash
     extension_dir=app/src/main/rust/supported_extensions

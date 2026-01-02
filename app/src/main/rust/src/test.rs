@@ -6,7 +6,6 @@ use ssh_key::{
 };
 
 #[test]
-#[ignore = "local testing"]
 fn gen_keys() {
     let comment = "GitNote";
 

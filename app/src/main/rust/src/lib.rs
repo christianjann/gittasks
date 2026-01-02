@@ -14,7 +14,7 @@ extern crate log;
 #[macro_use]
 mod utils;
 mod key_gen;
-mod libgit2;
+pub mod libgit2;
 mod mime_types;
 
 #[cfg(test)]
@@ -23,7 +23,7 @@ mod test;
 const OK: jint = 0;
 
 #[derive(Debug)]
-enum Error {
+pub enum Error {
     Git2 { error: git2::Error, msg: String },
 }
 
