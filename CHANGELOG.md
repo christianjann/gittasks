@@ -69,7 +69,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
   - Visual feedback with loading spinner during resolution
   - Seamless background operation without user intervention
   - Repository-aware path resolution for cross-platform compatibility
-
+- Scrollbars: Added opt-in custom scroll indicators to grid and list views for better navigation in long note lists
 
 ### Changed
 

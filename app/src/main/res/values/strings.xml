@@ -27,6 +27,8 @@
     <string name="search_in_notes">Search in notes</string>
     <string name="user_interface">User interface</string>
     <string name="dynamic_colors">Dynamic colors</string>
+    <string name="show_scrollbars">Show scrollbars</string>
+    <string name="show_scrollbars_description">Display scroll indicators in grid and list views for better navigation</string>
     <string name="sort_order">Sort Order</string>
     <string name="sort_order_folder">Sort Order folder</string>
     <string name="sort_type">Sort type</string>

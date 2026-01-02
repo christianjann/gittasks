@@ -25,6 +25,8 @@
     <string name="search_in_notes">Hledat v poznámkách</string>
     <string name="user_interface">Uživatelské rozhraní</string>
     <string name="dynamic_colors">Dynamické barvy</string>
+    <string name="show_scrollbars">Zobrazit posuvníky</string>
+    <string name="show_scrollbars_description">Zobrazit indikátory posouvání v mřížkovém a seznamovém zobrazení pro lepší navigaci</string>
     <string name="sort_type">Typ řazení</string>
     <string name="sort_order">Pořadí řazení</string>
     <string name="minimal_note_width">Minimální šířka poznámky</string>

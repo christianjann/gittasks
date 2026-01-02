@@ -12,7 +12,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.width
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material.icons.Icons
@@ -45,6 +51,45 @@ import io.github.christianjann.gitnotecje.ui.viewmodel.GridViewModel
 import java.text.DateFormat
 import java.util.Date
 
+// Custom scrollbar implementation since VerticalScrollbar is not available in current Compose version
+@Composable
+private fun CustomVerticalScrollbar(
+    scrollState: LazyListState,
+    modifier: Modifier = Modifier
+) {
+    val scrollbarWidth = 8.dp
+    val scrollbarColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)
+
+    Box(modifier = modifier) {
+        Canvas(
+            modifier = Modifier
+                .width(scrollbarWidth)
+                .fillMaxHeight()
+                .align(Alignment.CenterEnd)
+        ) {
+            val canvasHeight = size.height
+            val totalItems = scrollState.layoutInfo.totalItemsCount.toFloat()
+            val visibleItems = scrollState.layoutInfo.visibleItemsInfo.size.toFloat()
+
+            if (totalItems > visibleItems) {
+                val thumbHeight = (canvasHeight * visibleItems / totalItems).coerceAtLeast(20f)
+                val maxThumbTravel = canvasHeight - thumbHeight
+                val scrollProgress = if (totalItems - visibleItems > 0) {
+                    scrollState.firstVisibleItemIndex.toFloat() / (totalItems - visibleItems)
+                } else 0f
+                val thumbY = scrollProgress * maxThumbTravel
+
+                drawRoundRect(
+                    color = scrollbarColor,
+                    topLeft = Offset(0f, thumbY),
+                    size = Size(size.width, thumbHeight),
+                    cornerRadius = CornerRadius(4f, 4f)
+                )
+            }
+        }
+    }
+}
+
 @Composable
 internal fun NoteListView(
     gridNotes: LazyPagingItems<GridNote>,
@@ -57,37 +102,47 @@ internal fun NoteListView(
     noteViewType: NoteViewType,
     onEditClick: (Note, EditType) -> Unit,
     vm: GridViewModel,
+    showScrollbars: Boolean,
 ) {
 
-    LazyColumn(
-        modifier = modifier,
-        state = listState
-    ) {
-        item {
-            Spacer(modifier = Modifier.height(topSpacerHeight))
-        }
+    Box(modifier = modifier) {
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            state = listState
+        ) {
+            item {
+                Spacer(modifier = Modifier.height(topSpacerHeight))
+            }
 
-        items(
-            count = gridNotes.itemCount,
-            key = { index -> gridNotes[index]?.note?.id ?: index }
-        ) { index ->
-            val gridNote = gridNotes[index]
-            if (gridNote != null) {
-                NoteListRow(
-                    gridNote = gridNote,
-                    vm = vm,
-                    onEditClick = onEditClick,
-                    selectedNotes = selectedNotes,
-                    showFullPathOfNotes = showFullPathOfNotes,
-                    showFullTitleInListView = showFullTitleInListView,
-                    tagDisplayMode = tagDisplayMode,
-                    noteViewType = noteViewType,
-                )
+            items(
+                count = gridNotes.itemCount,
+                key = { index -> gridNotes[index]?.note?.id ?: index }
+            ) { index ->
+                val gridNote = gridNotes[index]
+                if (gridNote != null) {
+                    NoteListRow(
+                        gridNote = gridNote,
+                        vm = vm,
+                        onEditClick = onEditClick,
+                        selectedNotes = selectedNotes,
+                        showFullPathOfNotes = showFullPathOfNotes,
+                        showFullTitleInListView = showFullTitleInListView,
+                        tagDisplayMode = tagDisplayMode,
+                        noteViewType = noteViewType,
+                    )
+                }
+            }
+
+            item {
+                Spacer(modifier = Modifier.height(topBarHeight + 10.dp))
             }
         }
 
-        item {
-            Spacer(modifier = Modifier.height(topBarHeight + 10.dp))
+        if (showScrollbars) {
+            CustomVerticalScrollbar(
+                scrollState = listState,
+                modifier = Modifier.align(Alignment.CenterEnd)
+            )
         }
     }
 }

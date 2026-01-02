@@ -23,6 +23,8 @@
     <string name="search_in_notes">Pesquisar anotações</string>
     <string name="user_interface">Interface de usuário</string>
     <string name="dynamic_colors">Cores dinâmicas</string>
+    <string name="show_scrollbars">Mostrar barras de rolagem</string>
+    <string name="show_scrollbars_description">Exibir indicadores de rolagem nas visualizações em grade e lista para melhor navegação</string>
     <string name="sort_order">Ordem de organização</string>
     <string name="defaultPathForNewNote">Caminho padrão para novas notas</string>
     <string name="minimal_note_width">Largura máxima de uma nota</string>

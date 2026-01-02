@@ -189,6 +189,8 @@ class AppPreferences(
 
     val debugFeaturesEnabled = booleanPreference("debugFeaturesEnabled", false)
 
+    val showScrollbars = booleanPreference("showScrollbars", false)
+
     val language = enumPreference("language", Language.System)
 
 }

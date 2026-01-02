@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContent
@@ -30,6 +31,10 @@ import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridItemSpan
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.width
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Size
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.foundation.BorderStroke
@@ -113,6 +118,45 @@ private const val maxOffset = -500f
 internal val topBarHeight = 80.dp
 
 internal val topSpacerHeight = topBarHeight + 40.dp + 15.dp
+
+// Custom scrollbar implementation since VerticalScrollbar is not available in current Compose version
+@Composable
+private fun CustomVerticalScrollbar(
+    scrollState: LazyStaggeredGridState,
+    modifier: Modifier = Modifier
+) {
+    val scrollbarWidth = 8.dp
+    val scrollbarColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)
+
+    Box(modifier = modifier) {
+        Canvas(
+            modifier = Modifier
+                .width(scrollbarWidth)
+                .fillMaxHeight()
+                .align(Alignment.CenterEnd)
+        ) {
+            val canvasHeight = size.height
+            val totalItems = scrollState.layoutInfo.totalItemsCount.toFloat()
+            val visibleItems = scrollState.layoutInfo.visibleItemsInfo.size.toFloat()
+
+            if (totalItems > visibleItems) {
+                val thumbHeight = (canvasHeight * visibleItems / totalItems).coerceAtLeast(20f)
+                val maxThumbTravel = canvasHeight - thumbHeight
+                val scrollProgress = if (totalItems - visibleItems > 0) {
+                    scrollState.firstVisibleItemIndex.toFloat() / (totalItems - visibleItems)
+                } else 0f
+                val thumbY = scrollProgress * maxThumbTravel
+
+                drawRoundRect(
+                    color = scrollbarColor,
+                    topLeft = Offset(0f, thumbY),
+                    size = Size(size.width, thumbHeight),
+                    cornerRadius = CornerRadius(4f, 4f)
+                )
+            }
+        }
+    }
+}
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -349,11 +393,11 @@ private fun GridView(
 
     val showFullPathOfNotes = vm.prefs.showFullPathOfNotes.getAsState()
     val showFullTitleInListView = vm.prefs.showFullTitleInListView.getAsState()
+    val showScrollbars = vm.prefs.showScrollbars.getAsState()
 
     Box {
 
-        // todo: scroll even when there is nothing to scroll
-        // todo: add scroll bar
+        // Scrollbars added to both grid and list views for better UX
 
         val commonModifier = Modifier
             .fillMaxSize()
@@ -380,6 +424,7 @@ private fun GridView(
                     noteViewType = noteViewType,
                     onEditClick = onEditClick,
                     vm = vm,
+                    showScrollbars = showScrollbars.value,
                 )
             }
 
@@ -401,6 +446,7 @@ private fun GridView(
                     noteViewType = noteViewType,
                     onEditClick = onEditClick,
                     vm = vm,
+                    showScrollbars = showScrollbars.value,
                 )
             }
         }
@@ -432,59 +478,69 @@ private fun GridNotesView(
     noteViewType: NoteViewType,
     onEditClick: (Note, EditType) -> Unit,
     vm: GridViewModel,
+    showScrollbars: Boolean,
 ) {
 
 
     val noteMinWidth = vm.prefs.noteMinWidth.getAsState()
     val showFullNoteHeight = vm.prefs.showFullNoteHeight.getAsState()
 
-    LazyVerticalStaggeredGrid(
-        modifier = modifier,
-        contentPadding = PaddingValues(horizontal = 3.dp),
-        columns = StaggeredGridCells.Adaptive(noteMinWidth.value.size.dp),
-        state = gridState
-    ) {
-        item(span = StaggeredGridItemSpan.FullLine) {
-            Spacer(modifier = Modifier.height(topSpacerHeight))
-        }
+    Box(modifier = modifier) {
+        LazyVerticalStaggeredGrid(
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(horizontal = 3.dp),
+            columns = StaggeredGridCells.Adaptive(noteMinWidth.value.size.dp),
+            state = gridState
+        ) {
+            item(span = StaggeredGridItemSpan.FullLine) {
+                Spacer(modifier = Modifier.height(topSpacerHeight))
+            }
 
-        items(
-            count = gridNotes.itemCount,
-            key = { index -> gridNotes[index]?.note?.id ?: index }
-        ) { index ->
-            val gridNote = gridNotes[index]
-            if (gridNote != null) {
-                NoteCard(
-                    gridNote = gridNote,
-                    vm = vm,
-                    onEditClick = onEditClick,
-                    selectedNotes = selectedNotes,
-                    showFullPathOfNotes = showFullPathOfNotes,
-                    showFullNoteHeight = showFullNoteHeight.value,
-                    tagDisplayMode = tagDisplayMode,
-                    noteViewType = noteViewType,
-                    modifier = Modifier.padding(3.dp)
-                )
-            } else {
-                // Placeholder for loading item
-                Card(
-                    modifier = Modifier.padding(3.dp).height(100.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surface
+            items(
+                count = gridNotes.itemCount,
+                key = { index -> gridNotes[index]?.note?.id ?: index }
+            ) { index ->
+                val gridNote = gridNotes[index]
+                if (gridNote != null) {
+                    NoteCard(
+                        gridNote = gridNote,
+                        vm = vm,
+                        onEditClick = onEditClick,
+                        selectedNotes = selectedNotes,
+                        showFullPathOfNotes = showFullPathOfNotes,
+                        showFullNoteHeight = showFullNoteHeight.value,
+                        tagDisplayMode = tagDisplayMode,
+                        noteViewType = noteViewType,
+                        modifier = Modifier.padding(3.dp)
                     )
-                ) {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
+                } else {
+                    // Placeholder for loading item
+                    Card(
+                        modifier = Modifier.padding(3.dp).height(100.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surface
+                        )
                     ) {
-                        Text("Loading...")
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text("Loading...")
+                        }
                     }
                 }
             }
+
+            item(span = StaggeredGridItemSpan.FullLine) {
+                Spacer(modifier = Modifier.height(topBarHeight + 10.dp))
+            }
         }
 
-        item(span = StaggeredGridItemSpan.FullLine) {
-            Spacer(modifier = Modifier.height(topBarHeight + 10.dp))
+        if (showScrollbars) {
+            CustomVerticalScrollbar(
+                scrollState = gridState,
+                modifier = Modifier.align(Alignment.CenterEnd)
+            )
         }
     }
 }

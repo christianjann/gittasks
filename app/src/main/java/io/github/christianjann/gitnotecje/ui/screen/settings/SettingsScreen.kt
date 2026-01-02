@@ -81,6 +81,16 @@ fun SettingsScreen(
                 }
             )
 
+            val showScrollbars by vm.prefs.showScrollbars.getAsState()
+            ToggleableSettings(
+                title = stringResource(R.string.show_scrollbars),
+                subtitle = stringResource(R.string.show_scrollbars_description),
+                checked = showScrollbars,
+                onCheckedChange = {
+                    vm.update { vm.prefs.showScrollbars.update(it) }
+                }
+            )
+
         }
 
         SettingsSection(

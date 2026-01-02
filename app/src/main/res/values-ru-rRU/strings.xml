@@ -25,6 +25,8 @@
     <string name="search_in_notes">Поиск в заметках</string>
     <string name="user_interface">Интерфейс</string>
     <string name="dynamic_colors">Динамические цвета</string>
+    <string name="show_scrollbars">Показывать полосы прокрутки</string>
+    <string name="show_scrollbars_description">Отображать индикаторы прокрутки в сетке и списке для лучшей навигации</string>
     <string name="sort_type">Тип сортировки</string>
     <string name="sort_order">Порядок сортировки</string>
     <string name="minimal_note_width">Минимальная ширина заметки</string>

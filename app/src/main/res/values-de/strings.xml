@@ -27,6 +27,8 @@
     <string name="search_in_notes">In Notizen suchen</string>
     <string name="user_interface">Benutzeroberfläche</string>
     <string name="dynamic_colors">Dynamische Farben</string>
+    <string name="show_scrollbars">Scrollleisten anzeigen</string>
+    <string name="show_scrollbars_description">Scroll-Indikatoren in Raster- und Listenansicht für bessere Navigation anzeigen</string>
     <string name="sort_order">Sortierreihenfolge</string>
     <string name="sort_order_folder">Ordner-Sortierreihenfolge</string>
     <string name="sort_type">Sortiertyp</string>

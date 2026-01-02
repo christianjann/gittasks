@@ -147,6 +147,7 @@ GitNote allows users to control whether notes from subfolders are included when 
 - **Offline Indicator**: Persistent icon showing when the app is offline and cannot sync.
 - **Tag Display Mode**: Control whether tags are shown in grid view, list view, both, or neither.
 - **Reload Spinner**: Visual progress indicator during database reload operations.
+- **Scrollbars**: Custom scroll indicators for grid and list views to improve navigation in long note lists (opt-in setting).
 
 ### Reload Spinner
 
@@ -171,6 +172,39 @@ GitNote provides visual feedback during long-running database reload operations 
 - **User Feedback**: Clear indication that a long-running operation is in progress.
 - **Improved UX**: Reduces user uncertainty during database operations.
 - **Professional Feel**: Provides the same level of feedback as other modern applications.
+
+### Scrollbars
+
+GitNote provides custom scroll indicators for both grid and list views to improve navigation when browsing through long lists of notes. This feature is opt-in and can be enabled in the settings.
+
+#### How It Works
+
+- **Settings Toggle**: Enable/disable via Settings → User Interface → "Show scrollbars"
+- **Automatic Display**: Scrollbars appear on the right edge of scrollable content when there are more items than can fit on screen and the setting is enabled
+- **Visual Design**: Semi-transparent rounded rectangles that match the app's Material 3 theme.
+- **Dynamic Sizing**: The scrollbar thumb size reflects the proportion of visible items to total items.
+- **Position Indication**: The scrollbar thumb position shows the current scroll position within the list.
+
+#### Implementation Details
+
+- **Custom Canvas Drawing**: Implemented using Compose Canvas for precise control over appearance and behavior.
+- **Theme Integration**: Uses MaterialTheme colors with appropriate alpha transparency.
+- **Performance Optimized**: Only renders when scrolling is necessary (total items > visible items).
+- **Responsive**: Updates in real-time as the user scrolls through content.
+
+#### Usage Tips
+
+- Scrollbars provide visual feedback about list length and current position.
+- Particularly useful when browsing large collections of notes.
+- The scrollbar thumb size gives a quick sense of how much content is available.
+- Available in both grid and list view modes.
+
+#### Key Benefits
+
+- **Better Navigation**: Users can quickly assess list length and current position.
+- **Improved UX**: Reduces the need to scroll blindly through long lists.
+- **Visual Consistency**: Matches modern app design patterns.
+- **Accessibility**: Provides additional visual cues for content navigation.
 
 ### Read-Only Mode
 

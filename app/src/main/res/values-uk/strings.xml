@@ -25,6 +25,8 @@
     <string name="search_in_notes">Пошук у нотатках</string>
     <string name="user_interface">Інтерфейс</string>
     <string name="dynamic_colors">Динамічні кольори</string>
+    <string name="show_scrollbars">Показувати смуги прокрутки</string>
+    <string name="show_scrollbars_description">Відображати індикатори прокрутки в сітці та списку для кращої навігації</string>
     <string name="sort_type">Тип сортування</string>
     <string name="sort_order">Порядок сортування</string>
     <string name="minimal_note_width">Мінімальна ширина нотатки</string>

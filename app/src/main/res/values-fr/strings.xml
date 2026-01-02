@@ -40,6 +40,8 @@
     <string name="search_in_notes">Rechercher dans les notes</string>
     <string name="user_interface">Interface</string>
     <string name="dynamic_colors">Couleurs dynamique</string>
+    <string name="show_scrollbars">Afficher les barres de défilement</string>
+    <string name="show_scrollbars_description">Afficher les indicateurs de défilement dans les vues grille et liste pour une meilleure navigation</string>
     <string name="sort_type">Type de tri</string>
     <string name="sort_order">Odre du tri</string>
     <string name="minimal_note_width">Largeur minimal d\'une note</string>
