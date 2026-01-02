@@ -24,6 +24,7 @@ enum class SortOrder {
 
 enum class NoteMinWidth(val size: Int) {
     C100(100),
+    C150(150),
     Default(200),
     C250(250),
     C300(300),
