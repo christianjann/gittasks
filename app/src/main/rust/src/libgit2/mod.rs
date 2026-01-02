@@ -104,9 +104,10 @@ fn current_branch(repo: &Repository) -> Result<String, Error> {
     let head = repo.head().map_err(|e| Error::git2(e, "head"))?;
 
     if head.is_branch()
-        && let Some(name) = head.shorthand() {
-            return Ok(name.to_string());
-        }
+        && let Some(name) = head.shorthand()
+    {
+        return Ok(name.to_string());
+    }
 
     // Detached HEAD or not a branch
     Err(Error::git2(
@@ -448,7 +449,11 @@ pub fn get_git_log(limit: usize) -> Result<Vec<GitLogEntry>, Error> {
     }
 
     let duration = start.elapsed();
-    log::debug!("get_git_log completed in {}ms, returned {} entries", duration.as_millis(), entries.len());
+    log::debug!(
+        "get_git_log completed in {}ms, returned {} entries",
+        duration.as_millis(),
+        entries.len()
+    );
 
     Ok(entries)
 }

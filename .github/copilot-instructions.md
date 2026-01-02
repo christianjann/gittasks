@@ -10,6 +10,7 @@ This file documents the build commands for the GitNote Android app, which uses K
 - `just` command runner installed
 
 **Important**: The `just` commands automatically set `JAVA_HOME` from `.gradle/config.properties`. When running `./gradlew` directly in terminal, you must manually set `JAVA_HOME` first:
+
 ```bash
 JAVA_HOME=$(grep '^java.home=' .gradle/config.properties | cut -d'=' -f2) ./gradlew <command>
 ```
@@ -19,40 +20,50 @@ JAVA_HOME=$(grep '^java.home=' .gradle/config.properties | cut -d'=' -f2) ./grad
 All commands are run using the `just` command runner. The justfile contains the following targets:
 
 ### Rust Library Build
+
 ```bash
 just rust-build
 ```
+
 - Builds the Rust native library for Android (x86_64 and aarch64 targets)
 - Copies shared libraries to `app/src/main/jniLibs/`
 - Uses the Makefile in `app/src/main/rust/`
 
 ### Debug Build
+
 ```bash
 just build
 ```
+
 - Assembles the debug APK
 - Sets JAVA_HOME from `.gradle/config.properties`
 - Output: `app/build/outputs/apk/debug/app-debug.apk`
 
 ### Debug Install
+
 ```bash
 just install
 ```
+
 - Builds and installs the debug APK to connected device/emulator
 - Requires device to be connected via ADB
 
 ### Release Build
+
 ```bash
 just release-build
 ```
+
 - Sets up release environment (signing keys, etc.)
 - Assembles the release APK
 - Output: `app/build/outputs/apk/release/app-release.apk`
 
 ### Release Install
+
 ```bash
 just release-install
 ```
+
 - Builds and installs the release APK to connected device
 - Checks for connected device before installing
 - Provides manual install instructions if no device found
@@ -90,4 +101,4 @@ just fix-wrapper  # Update Gradle wrapper (commented out)
 - Check that Rust targets are installed: `rustup target add aarch64-linux-android x86_64-linux-android`
 - Verify JAVA_HOME in `.gradle/config.properties` points to correct JDK
 - For device issues, ensure ADB is working and device is authorized</content>
-<parameter name="filePath">/home/data/Projects/Programming/Platform/Android/gitnote/copilot-instructions.md
+  <parameter name="filePath">/home/data/Projects/Programming/Platform/Android/gitnote/copilot-instructions.md

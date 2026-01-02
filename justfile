@@ -1,7 +1,10 @@
 set windows-powershell := true
 
+# You need to open the project once in Android studio, then it should be there
+export JAVA_HOME := `grep '^java.home=' .gradle/config.properties | cut -d'=' -f2`
+
 main:
-    echo "do nothing"
+    just --list
 
 fix:
     ./gradlew lintFix
@@ -9,10 +12,21 @@ fix:
 fmt-just:
     just --fmt --unstable
 
-prettier:
+fmt-prettier:
     # install on Debian: sudo snap install node --classic
     # npx is the command to run npm package, node is the runtime
     npx prettier -w . --ignore-path ./.gitignore --ignore-path ./.prettierignore
+
+fmt-kotlin:
+    # Format Kotlin files using Android lint fix
+    ./gradlew lintFix
+
+fmt-rust:
+    # Format all Rust files using cargo fmt
+    cd app/src/main/rust && cargo fmt
+
+# Format all code files
+fmt: fmt-kotlin fmt-rust fmt-just fmt-prettier
 
 sort-supported-extension:
     #!/usr/bin/env bash
@@ -28,16 +42,16 @@ rust-build:
     make DEBUG=0 build_install
 
 build:
-    #!/usr/bin/env bash
-    JAVA_HOME=$(grep '^java.home=' .gradle/config.properties | cut -d'=' -f2)
-    export JAVA_HOME
     ./gradlew :app:assembleDebug
 
 install:
-    #!/usr/bin/env bash
-    JAVA_HOME=$(grep '^java.home=' .gradle/config.properties | cut -d'=' -f2)
-    export JAVA_HOME
     ./gradlew :app:assembleDebug :app:installDebug
+
+clean:
+    ./gradlew clean
+
+clean-build:
+    ./gradlew clean :app:assembleDebug
 
 fix-wrapper:
     #curl -L -o gradle/wrapper/gradle-wrapper.jar https://github.com/gradle/gradle/raw/v8.13.0/gradle/wrapper/gradle-wrapper.jar
@@ -54,8 +68,6 @@ release-build:
     echo "Setting up release environment..."
     source ./setup-release-env.sh
     echo "Building release APK..."
-    JAVA_HOME=$(grep '^java.home=' .gradle/config.properties | cut -d'=' -f2)
-    export JAVA_HOME
     ./gradlew :app:assembleRelease
 
 release-install:
@@ -63,8 +75,6 @@ release-install:
     echo "Setting up release environment..."
     source ./setup-release-env.sh
     echo "Building and installing release APK..."
-    JAVA_HOME=$(grep '^java.home=' .gradle/config.properties | cut -d'=' -f2)
-    export JAVA_HOME
     ./gradlew assembleRelease
     echo "Checking for connected device..."
     if ! adb devices | grep -q "device$"; then

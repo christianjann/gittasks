@@ -28,8 +28,8 @@ tags:
 - Don't forget reusable bags
 - Budget: $75 max
 
-*All items purchased successfully!*
+_All items purchased successfully!_
 
 ---
 
-*This completed task demonstrates the checkbox feature when marked as done.*
+_This completed task demonstrates the checkbox feature when marked as done._

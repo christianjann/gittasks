@@ -22,6 +22,7 @@ tags:
 ## Notes
 
 The documentation should include:
+
 - Installation instructions
 - Configuration options
 - API reference
@@ -31,4 +32,4 @@ Remember to update the README.md with links to the new docs.
 
 ---
 
-*This is a task note with completion tracking enabled. The checkbox in the app will show this as incomplete.*
+_This is a task note with completion tracking enabled. The checkbox in the app will show this as incomplete._

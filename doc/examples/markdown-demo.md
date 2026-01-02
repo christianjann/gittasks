@@ -12,11 +12,12 @@ tags:
 
 ## Text Formatting
 
-**Bold text** and *italic text* and ~~strikethrough~~.
+**Bold text** and _italic text_ and ~~strikethrough~~.
 
 ## Lists
 
 ### Unordered List
+
 - Item 1
 - Item 2
   - Nested item
@@ -24,6 +25,7 @@ tags:
 - Item 3
 
 ### Ordered List
+
 1. First step
 2. Second step
 3. Third step
@@ -34,10 +36,10 @@ Inline code: `console.log('Hello World')`
 
 ```javascript
 function greet(name) {
-    return `Hello, ${name}!`;
+  return `Hello, ${name}!`;
 }
 
-console.log(greet('GitNote'));
+console.log(greet("GitNote"));
 ```
 
 ```python
@@ -51,12 +53,12 @@ print(fibonacci(10))
 
 ## Tables
 
-| Feature | Status | Notes |
-|---------|--------|-------|
-| Markdown | ✅ | Full support |
-| Git Sync | ✅ | Automatic |
-| Tasks | ✅ | Checkbox UI |
-| Frontmatter | ✅ | YAML metadata |
+| Feature     | Status | Notes         |
+| ----------- | ------ | ------------- |
+| Markdown    | ✅     | Full support  |
+| Git Sync    | ✅     | Automatic     |
+| Tasks       | ✅     | Checkbox UI   |
+| Frontmatter | ✅     | YAML metadata |
 
 ## Links and Images
 
@@ -79,10 +81,11 @@ print(fibonacci(10))
 Inline: $E = mc^2$
 
 Block:
+
 $$
 \int_{-\infty}^{\infty} e^{-x^2} dx = \sqrt{\pi}
 $$
 
 ---
 
-*This example showcases various Markdown elements for rich note formatting.*
+_This example showcases various Markdown elements for rich note formatting._

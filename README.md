@@ -4,17 +4,17 @@
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/logo_wide_dark.svg">
   <source media="(prefers-color-scheme: light)" srcset="assets/logo_wide_light.svg">
-  <img alt="GitNote" width="50%" src="assets/logo_wide_light.svg">
+  <img alt="GitNoteCJE" width="50%" src="assets/logo_wide_light.svg">
 </picture>
 </h1>
 
 </div>
 
-[![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/wiiznokes/gitnote.svg?logo=github&label=GitHub&cacheSeconds=3600)](https://github.com/wiiznokes/gitnote/releases/latest)
-[![F-Droid](https://img.shields.io/f-droid/v/io.github.wiiznokes.gitnote?logo=f-droid&label=F-Droid&cacheSeconds=3600)](https://f-droid.org/packages/io.github.wiiznokes.gitnote)
-[![IzzyOnDroid](https://img.shields.io/endpoint?url=https://apt.izzysoft.de/fdroid/api/v1/shield/io.github.wiiznokes.gitnote)](https://apt.izzysoft.de/fdroid/index/apk/io.github.wiiznokes.gitnote)
+<!-- [![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/christianjann/gitnotecje.svg?logo=github&label=GitHub&cacheSeconds=3600)](https://github.com/christianjann/gitnotecje/releases/latest)
+[![F-Droid](https://img.shields.io/f-droid/v/io.github.christianjann.gitnotecje?logo=f-droid&label=F-Droid&cacheSeconds=3600)](https://f-droid.org/packages/io.github.christianjann.gitnotecje)
+[![IzzyOnDroid](https://img.shields.io/endpoint?url=https://apt.izzysoft.de/fdroid/api/v1/shield/io.github.christianjann.gitnotecje)](https://apt.izzysoft.de/fdroid/index/apk/io.github.christianjann.gitnotecje) -->
 
-Android note app which integrate Git. You can use this app with other desktop editors.
+Android note app which integrates with Git. You can use this app to share your notes with any desktop editor that also supports Markdown.
 
 ## Why
 
@@ -116,10 +116,15 @@ _Supported Architecture: `arm64-v8a`, `x86_64`_
 # Current limitation
 
 - Android does not differentiate case for file name, so if you have a folder named `A` and another folder named `a`, `a` will not be displayed.
-- Conflict will make the app crash
+- A GIT conflict will make the app crash
 - Resync and reload of the database when there was an remote change by some other Git client takes forever
 - Sometimes the app is misbehaving, the only thing that helps is a reload of the database via the debug menu
+- Opening a local repository in device memory that was previously a remote cloned repo seems not to work, re-clone it
 
 ## Contributing
 
 See [this file](./CONTRIBUTING.md).
+
+## Attribution
+
+This project is a fork of the original [GitNote](https://github.com/wiiznokes/gitnote) Android app, it's an opinionated edition to better suit my personal note-taking requirements and workflow preferences.

@@ -20,5 +20,5 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
--keep class io.github.wiiznokes.gitnote.ui.model.Cred { *; }
--keep class io.github.wiiznokes.gitnote.ui.model.Cred$* { *; }
+-keep class io.github.christianjann.gitnotecje.ui.model.Cred { *; }
+-keep class io.github.christianjann.gitnotecje.ui.model.Cred$* { *; }

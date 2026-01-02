@@ -22,7 +22,7 @@ android {
     // could be removed otherwise
     ndkVersion = "27.3.13750724"
 
-    namespace = "io.github.wiiznokes.gitnote"
+    namespace = "io.github.christianjann.gitnotecje"
     compileSdk = 36
     
     dependenciesInfo {
@@ -47,7 +47,7 @@ android {
             return currentDate.format(formatter)
         }
 
-        applicationId = "io.github.wiiznokes.gitnote"
+        applicationId = "io.github.christianjann.gitnotecje"
         minSdk = 30
         targetSdk = 36
         versionCode = 14

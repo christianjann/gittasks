@@ -16,6 +16,7 @@ GitNote supports YAML frontmatter in Markdown files to store metadata. The front
 ## Examples
 
 ### Basic Note with Completion
+
 ```
 ---
 title: Buy Groceries
@@ -30,6 +31,7 @@ completed?: no
 ```
 
 ### Note with Tags and Author
+
 ```
 ---
 title: Project Meeting Notes
@@ -47,6 +49,7 @@ Discussed the new features...
 ```
 
 ### Minimal Frontmatter
+
 ```
 ---
 title: Quick Note
@@ -58,6 +61,7 @@ Just a simple note without completion or tags.
 ```
 
 ## Notes
+
 - Fields are case-sensitive.
 - The `completed?` field is used by the app to display a checkbox in the UI.
 - Timestamps should be in the format `yyyy-MM-dd HH:mm:ssZ`.
@@ -67,10 +71,12 @@ Just a simple note without completion or tags.
 ## UI Rendering
 
 ### View Mode
+
 - Frontmatter is automatically hidden when viewing Markdown notes in read-only mode.
 - Only the content after the frontmatter is rendered as Markdown.
 - This provides a clean reading experience without metadata clutter.
 
 ### Edit Mode
+
 - Full content including frontmatter is shown when editing notes.
 - Users can modify frontmatter fields directly in the text editor.

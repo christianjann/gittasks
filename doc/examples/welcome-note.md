@@ -30,4 +30,4 @@ GitNote is a powerful note-taking app that combines the simplicity of Markdown w
 
 ---
 
-*This example demonstrates frontmatter metadata, Markdown rendering, and basic note structure.*
+_This example demonstrates frontmatter metadata, Markdown rendering, and basic note structure._

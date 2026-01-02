@@ -39,11 +39,13 @@ To build a release APK for distribution:
 ## 1. Generate Signing Keys
 
 Run the key generation script:
+
 ```bash
 ./generate-release-keys.sh
 ```
 
 Or use the just command:
+
 ```bash
 just generate-release-keys
 ```
@@ -55,11 +57,13 @@ This will create a `app/key.jks` keystore file and display the required environm
 ## 2. Set Environment Variables
 
 Either run the setup script:
+
 ```bash
 ./setup-release-env.sh
 ```
 
 Or manually source the generated environment file:
+
 ```bash
 source release-keys.env
 ```
@@ -73,6 +77,7 @@ just release-build
 ```
 
 Or directly:
+
 ```bash
 ./gradlew :app:assembleRelease
 ```

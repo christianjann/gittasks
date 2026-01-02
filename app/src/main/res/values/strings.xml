@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">GitNote</string>
+    <string name="app_name" translatable="false">GitNoteCJE</string>
     <string name="system_theme">System</string>
     <string name="light_theme">Light</string>
     <string name="dark_theme">Dark</string>

@@ -13,4 +13,4 @@ No completion tracking here - just plain Markdown.
 
 ---
 
-*This note has no frontmatter, so no checkbox will appear in the app.*
+_This note has no frontmatter, so no checkbox will appear in the app._

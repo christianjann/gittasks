@@ -5,6 +5,7 @@ GitNote is a Git-based note-taking app for Android that integrates seamlessly wi
 ## Core Features
 
 ### Git Integration
+
 - **Repository Management**: Clone, pull, and push notes to Git repositories.
 - **Version Control**: Automatic commits on note changes, with conflict resolution.
 - **SSH Support**: Secure authentication using SSH keys.
@@ -12,26 +13,31 @@ GitNote is a Git-based note-taking app for Android that integrates seamlessly wi
 - **External Change Detection**: Automatically detects and syncs changes made outside the app.
 
 ### Note Management
+
 - **Markdown Support**: Full Markdown rendering with syntax highlighting and image display.
 - **Frontmatter Metadata**: YAML headers for titles, timestamps, completion status, tags, and authors.
 - **File-Based Storage**: Notes are stored as Markdown files in the repository.
 
 ### Tag Filtering
+
 GitNote supports filtering notes by tags defined in the frontmatter, allowing users to quickly find related notes.
 
 #### How It Works
+
 - **Tag Parsing**: Tags are extracted from the `tags:` field in YAML frontmatter.
 - **Drawer Navigation**: Switch between folder and tag browsing modes in the navigation drawer.
 - **Tag Selection**: Click on tags in the drawer to filter notes, or select "All notes" to show everything.
 - **Real-time Filtering**: Notes are filtered instantly when a tag is selected, showing only matching notes.
 
 #### Usage Tips
+
 - Add tags to notes using YAML frontmatter: `tags: - tag1 - tag2`
 - Use the toggle button in the drawer to switch between folder and tag modes.
 - Tag filtering works in both grid and list views.
 - Tags are case-sensitive and must match exactly.
 
 #### Example Workflow
+
 1. Add tags to a note's frontmatter:
    ```
    ---
@@ -47,6 +53,7 @@ GitNote supports filtering notes by tags defined in the frontmatter, allowing us
 4. Click "All notes" to return to showing all notes.
 
 #### Auto-Closing Drawer
+
 To provide a focused view of filtered results, the navigation drawer automatically closes in certain scenarios:
 
 - **Tag Selection**: When you select a tag (including "All notes"), the drawer closes immediately, allowing you to view the filtered notes without obstruction.
@@ -60,24 +67,28 @@ This behavior ensures a smooth user experience by reducing the need for manual d
 GitNote allows users to control whether notes from subfolders are included when browsing a folder, providing flexible folder navigation options.
 
 #### How It Works
+
 - **Current Folder Only**: Shows only notes directly in the selected folder, excluding notes from subfolders.
 - **Include Subfolders**: Shows notes from the selected folder and all its subfolders (default behavior).
 - **Setting Location**: Configure this option in Settings > Appearance > Folder display mode.
 - **Real-time Updates**: Changes take effect immediately when switching folders or updating the setting.
 
 #### Usage Tips
+
 - Use "Current folder only" for focused work in specific folders without subfolder distractions.
 - Use "Include subfolders" (default) to see all related notes in a folder hierarchy.
 - The setting applies to both grid and list views.
 - Search functionality respects the current folder display mode setting.
 
 #### Example Workflow
+
 1. Navigate to a folder containing both direct notes and subfolders with notes.
 2. Open Settings > Appearance and select "Folder display mode".
 3. Choose "Current folder only" to see only notes directly in the current folder.
 4. Switch back to "Include subfolders" to see all notes in the folder hierarchy.
 
 #### Folder Structure Example
+
 ```
 📁 Project/
 ├── 📄 project-overview.md
@@ -92,6 +103,7 @@ GitNote allows users to control whether notes from subfolders are included when 
 - **Include subfolders** in "Project/": Shows all 4 notes from the entire hierarchy
 
 ### User Interface
+
 - **Grid and List Views**: Switch between grid and list layouts for notes.
 - **Search and Sort**: Search notes by content, sort by date, title, etc.
 - **Dark Mode**: Automatic theme switching.
@@ -105,6 +117,7 @@ GitNote allows users to control whether notes from subfolders are included when 
 GitNote features a read-only mode that transforms the note editing experience into a clean, distraction-free markdown preview with interactive elements.
 
 #### How It Works
+
 - **Menu Toggle**: Access via the three-dot menu in the main grid view ("Activate read only mode" / "Deactivate read only mode").
 - **Markdown Rendering**: Instead of showing a text editor, notes display as fully rendered markdown with proper formatting, images, and styling.
 - **Interactive Checkboxes**: Task checkboxes (`- [ ]` and `- [X]`) become clickable, allowing you to toggle completion status without editing the raw text.
@@ -113,6 +126,7 @@ GitNote features a read-only mode that transforms the note editing experience in
 - **Persistent Setting**: The read-only mode preference is saved and persists across app sessions.
 
 #### Usage Tips
+
 - Use read-only mode for reviewing and reading notes without accidental edits.
 - Perfect for task management - toggle checkboxes in rendered view for quick updates.
 - Ideal for sharing screen content or presenting notes.
@@ -120,6 +134,7 @@ GitNote features a read-only mode that transforms the note editing experience in
 - The mode applies to all note editing screens throughout the app.
 
 #### Example Workflow
+
 1. Open GitNote and access the three-dot menu in the main grid view.
 2. Select "Activate read only mode" to switch to preview mode.
 3. Open any note to see it rendered as formatted markdown.
@@ -127,15 +142,18 @@ GitNote features a read-only mode that transforms the note editing experience in
 5. Return to the menu and select "Deactivate read only mode" to return to normal editing.
 
 #### Key Benefits
+
 - **Clean Reading**: Focus on content without frontmatter or raw markdown syntax.
 - **Quick Task Updates**: Toggle checkboxes without opening the text editor.
 - **Accidental Edit Prevention**: Perfect for reviewing notes you don't want to modify.
 - **Presentation Mode**: Clean, formatted display for sharing or presenting notes.
 
 ### Git Log Viewer
+
 GitNote provides direct access to the git commit history of your notes repository, allowing you to track changes and see the evolution of your notes over time.
 
 #### How It Works
+
 - **Menu Access**: Available in the main menu (three-dot menu) in the grid view
 - **Commit Information**: Displays commit message, author, date, and abbreviated hash for each commit.
 - **Loading Indicator**: Shows a progress indicator while retrieving git log data.
@@ -143,6 +161,7 @@ GitNote provides direct access to the git commit history of your notes repositor
 - **Scrollable List**: All commits are shown in a scrollable list within a dialog.
 
 #### Usage Tips
+
 - Access the git log to understand what changes were made and when.
 - Useful for tracking note modifications, additions, and deletions over time.
 - The loading indicator appears on first access due to repository initialization.
@@ -153,6 +172,7 @@ GitNote provides direct access to the git commit history of your notes repositor
 GitNote now supports marking notes as completed using a checkbox in the UI, tied to the `completed?` field in the frontmatter.
 
 ### How It Works
+
 - **Checkbox Display**: A checkbox appears next to the note title if the note has frontmatter.
 - **Toggling**: Click the checkbox to toggle between `completed?: yes` and `completed?: no`.
 - **Automatic Updates**: Toggling updates the `updated` timestamp and saves the changes to the file and Git repository.
@@ -160,6 +180,7 @@ GitNote now supports marking notes as completed using a checkbox in the UI, tied
 - **List View Icons**: In list view, tasks show a checkbox icon while notes show a document icon.
 
 ### Usage Tips
+
 - Add frontmatter to notes to enable the checkbox.
 - Use completion for tasks, reminders, or project tracking.
 - The checkbox is read-only in display; editing requires toggling in the app.
@@ -167,6 +188,7 @@ GitNote now supports marking notes as completed using a checkbox in the UI, tied
 - In list view, the icon type (checkbox vs document) indicates whether the item is a task or note.
 
 ### Example Workflow
+
 1. Create a note with frontmatter:
    ```
    ---
@@ -183,6 +205,7 @@ GitNote now supports marking notes as completed using a checkbox in the UI, tied
 GitNote supports interactive checkboxes directly within rendered markdown content, allowing you to toggle task completion without switching to edit mode.
 
 #### How It Works
+
 - **Rendered Mode**: In read-only markdown view, `- [ ]` and `- [X]` patterns become interactive checkboxes.
 - **Visual Components**: Plain markdown text is replaced with Material Design checkbox components.
 - **Local Editing**: Tapping checkboxes updates the display immediately but doesn't save until confirmed.
@@ -190,6 +213,7 @@ GitNote supports interactive checkboxes directly within rendered markdown conten
 - **Git Integration**: Confirmed changes are committed to the repository with proper version control.
 
 #### Usage Tips
+
 - Perfect for task lists and checklists within note content.
 - Changes are local until you tap the accept button.
 - Use in read-only mode for quick task management.
@@ -201,6 +225,7 @@ GitNote supports interactive checkboxes directly within rendered markdown conten
 - Absolute paths within the repository (starting with /) are also supported.
 
 #### Example Workflow
+
 1. Create a note with checkbox markdown:
    ```
    ## Project Tasks
@@ -217,19 +242,23 @@ GitNote supports interactive checkboxes directly within rendered markdown conten
 Completed tasks are automatically sorted to the end of the list view to keep active tasks visible at the top.
 
 ### How It Works
+
 - **Automatic Sorting**: In list view, completed tasks (with `completed?: yes`) appear after incomplete tasks.
 - **Primary Sort**: Tasks are first sorted by completion status, then by the selected sort order (date, title, etc.).
 - **Grid View**: This sorting only applies to list view; grid view maintains the standard sort order.
 - **Real-time Updates**: Sorting updates immediately when task completion status changes.
 
 ### Usage Tips
+
 - Use list view to keep your active tasks at the top of the list.
 - Completed tasks remain accessible but don't clutter the active task list.
 - This feature works automatically for all notes with completion status.
 - Switch to grid view if you prefer a different organization.
 
 ### Example
+
 In list view, with sort by "Most recent":
+
 ```
 [ ] Active Task 1 (today)
 [ ] Active Task 2 (yesterday)
@@ -242,6 +271,7 @@ In list view, with sort by "Most recent":
 The FAB provides quick access to create new notes and tasks directly.
 
 ### How It Works
+
 - **Expandable Menu**: Long-press or tap the FAB to expand creation options.
 - **Create Note**: Creates a new regular note with document icon.
 - **Create Task**: Creates a new task with checkbox icon and `completed?: no` in frontmatter.
@@ -249,12 +279,14 @@ The FAB provides quick access to create new notes and tasks directly.
 - **Smart Defaults**: New items inherit the current folder and use query text as title if available.
 
 ### Usage Tips
+
 - Use the document icon to create regular notes.
 - Use the checkbox icon to create tasks that need completion tracking.
 - The FAB respects the current folder context for new items.
 - Search option focuses the search bar for quick note finding.
 
 ### Example Workflow
+
 1. Navigate to the desired folder.
 2. Tap the FAB to expand options.
 3. Select the checkbox icon to create a new task.
@@ -265,6 +297,7 @@ The FAB provides quick access to create new notes and tasks directly.
 GitNote allows moving notes between folders using an intuitive drag-and-drop style interface.
 
 ### How It Works
+
 - **Initiate Move**: Long-press a note and select "Move note" from the menu.
 - **Drawer Navigation**: The navigation drawer opens in move mode, allowing folder browsing.
 - **Folder Selection**: Navigate through folders without closing the drawer.
@@ -273,12 +306,14 @@ GitNote allows moving notes between folders using an intuitive drag-and-drop sty
 - **Automatic Close**: The drawer closes automatically after a successful move.
 
 ### Usage Tips
+
 - Use the drawer to browse and select destination folders.
 - The drawer stays open during folder navigation in move mode.
 - Move operations update the note's file path and commit changes to Git.
 - Cancel at any time without making changes.
 
 ### Example Workflow
+
 1. Long-press a note in the current folder.
 2. Select "Move note" from the menu.
 3. Use the drawer to navigate to the target folder.
@@ -290,18 +325,21 @@ GitNote allows moving notes between folders using an intuitive drag-and-drop sty
 GitNote allows quick conversion between regular notes and task-like notes via the long-press menu.
 
 ### How It Works
+
 - **Long-Press Menu**: Access additional options by long-pressing a note.
 - **Convert to Task**: Adds the `completed?: no` field to the frontmatter. If no frontmatter exists, creates one with title, updated, created, and completed fields.
 - **Convert to Note**: Removes the `completed?:` field from the frontmatter, converting the task back to a regular note.
 - **Automatic Updates**: Conversion updates the `updated` timestamp and saves changes to the file and Git repository.
 
 ### Usage Tips
+
 - Use "Convert to Task" for notes that represent actionable items.
 - Use "Convert to Note" to remove task tracking from a note.
 - The menu shows the appropriate option based on the note's current state (task or note).
 - Converted notes immediately show/hide the completion checkbox in the UI.
 
 ### Example Workflow
+
 1. Long-press a regular note.
 2. Select "Convert to Task"; frontmatter is added with `completed?: no`.
 3. The note now displays a checkbox for completion tracking.
@@ -312,19 +350,23 @@ GitNote allows quick conversion between regular notes and task-like notes via th
 As part of GitNote's read-only mode, YAML frontmatter is automatically hidden when viewing Markdown notes to provide a clean, distraction-free reading experience.
 
 ### How It Works
+
 - **Automatic Detection**: The app detects YAML frontmatter enclosed in `---` markers at the beginning of Markdown files.
 - **Content Extraction**: In view mode, only the content after the frontmatter is rendered as Markdown.
 - **Edit Mode Visibility**: Frontmatter remains visible and editable when switching to edit mode.
 - **No Data Loss**: Frontmatter is preserved in the file; it's only hidden during rendering.
 
 ### Usage Tips
+
 - Frontmatter is completely hidden in read-only view, showing only the actual note content.
 - Switch to edit mode to see and modify frontmatter fields.
 - This feature works automatically for all Markdown notes with valid frontmatter.
 - Non-Markdown files and notes without frontmatter display normally.
 
 ### Example
+
 A note file containing:
+
 ```
 ---
 title: My Note
@@ -336,7 +378,9 @@ This is the actual note content that users see.
 ```
 
 Will display in view mode as:
+
 > # Main Content
+>
 > This is the actual note content that users see.
 
 ## Show Full Title in List View
@@ -344,24 +388,29 @@ Will display in view mode as:
 GitNote allows long note titles to wrap to multiple lines in list view instead of being truncated with ellipsis.
 
 ### How It Works
+
 - **Setting Toggle**: Enable "Show full title in list view" in Settings > Appearance
 - **Multi-line Display**: When enabled, note titles wrap naturally to multiple lines
 - **Single-line Display**: When disabled, titles are truncated with "..." after one line
 - **List View Only**: This setting only affects the list view, not the grid view
 
 ### Usage Tips
+
 - Enable this setting if you have long note titles that are being cut off
 - The setting provides better readability for notes with descriptive titles
 - Disable it to keep a more compact list view with consistent row heights
 - Changes take effect immediately without restarting the app
 
 ### Example
+
 With the setting **disabled** (default):
+
 ```
-My Very Long Note Title That Gets... 
+My Very Long Note Title That Gets...
 ```
 
 With the setting **enabled**:
+
 ```
 My Very Long Note Title That Gets
 Cut Off At The End Of The Line
@@ -372,6 +421,7 @@ Cut Off At The End Of The Line
 GitNote allows users to perform git synchronization operations asynchronously to prevent UI blocking during all note operations, not just refreshes.
 
 ### How It Works
+
 - **Setting Toggle**: Enable "Background git operations" in Settings > Git
 - **Non-blocking Operations**: When enabled, git pull/push operations run asynchronously after any note modification (create, update, delete, convert)
 - **Immediate Commits**: Changes are committed immediately for data integrity, then sync operations happen in the background
@@ -380,6 +430,7 @@ GitNote allows users to perform git synchronization operations asynchronously to
 - **Default Behavior**: Disabled by default to maintain immediate sync feedback
 
 ### Usage Tips
+
 - Enable this setting if you work alone and want uninterrupted note editing during any operation
 - The setting is ideal for users who perform frequent note operations and prefer responsiveness over immediate sync feedback
 - Disable it if you need to know immediately when sync operations complete or fail
@@ -387,6 +438,7 @@ GitNote allows users to perform git synchronization operations asynchronously to
 - Applies to all note operations: creating, editing, deleting, converting between tasks/notes, moving notes
 
 ### Example Workflow
+
 1. Open Settings > Git and enable "Background git operations"
 2. Edit notes, convert tasks, create new notes - all operations complete immediately
 3. Check sync status indicators to monitor background operations

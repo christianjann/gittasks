@@ -41,4 +41,4 @@ January 10, 2025 - 2:00 PM
 
 ---
 
-*This example shows a professional note with detailed metadata and structured content.*
+_This example shows a professional note with detailed metadata and structured content._
