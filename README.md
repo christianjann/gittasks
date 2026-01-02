@@ -117,6 +117,8 @@ _Supported Architecture: `arm64-v8a`, `x86_64`_
 
 - Android does not differentiate case for file name, so if you have a folder named `A` and another folder named `a`, `a` will not be displayed.
 - Conflict will make the app crash
+- Resync and reload of the database when there was an remote change by some other Git client takes forever
+- Sometimes the app is misbehaving, the only thing that helps is a reload of the database via the debug menu
 
 ## Contributing
 

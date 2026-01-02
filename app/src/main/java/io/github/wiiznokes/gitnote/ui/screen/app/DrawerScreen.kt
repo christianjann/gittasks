@@ -87,6 +87,7 @@ fun RowNFoldersNavigation(
     noteBeingMoved: Note?,
     onMoveNoteToFolder: (String) -> Unit,
     onCancelMove: () -> Unit,
+    onHomeClick: () -> Unit,
 ) {
     val containers = if (currentPath.isEmpty()) emptyList() else currentPath.split('/')
 
@@ -99,9 +100,7 @@ fun RowNFoldersNavigation(
         ),
         navigationIcon = {
             IconButton(
-                onClick = {
-                    openFolder("")
-                }
+                onClick = onHomeClick
             ) {
                 Icon(
                     imageVector = Icons.Filled.Home,
@@ -250,6 +249,10 @@ fun DrawerScreen(
                 noteBeingMoved = noteBeingMoved,
                 onMoveNoteToFolder = onMoveNoteToFolder,
                 onCancelMove = onCancelMove,
+                onHomeClick = {
+                    openFolder("")
+                    scope.launch { drawerState.open() }
+                },
             )
         },
         floatingActionButton = {

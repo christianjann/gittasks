@@ -181,6 +181,7 @@ private fun PickFolderDialogInternal(
             noteBeingMoved = null,
             onMoveNoteToFolder = {},
             onCancelMove = {},
+            onHomeClick = { openFolder("") },
         )
 
         val listState = rememberLazyListState()
