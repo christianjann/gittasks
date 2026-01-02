@@ -104,6 +104,7 @@ import io.github.wiiznokes.gitnote.ui.model.NoteViewType
 import io.github.wiiznokes.gitnote.ui.model.TagDisplayMode
 import io.github.wiiznokes.gitnote.ui.screen.app.DrawerScreen
 import io.github.wiiznokes.gitnote.ui.viewmodel.GridViewModel
+import io.github.wiiznokes.gitnote.manager.SyncState
 
 
 private const val TAG = "GridScreen"
@@ -145,6 +146,7 @@ fun GridScreen(
                 noteBeingMoved = vm.noteBeingMoved.collectAsState().value,
                 onMoveNoteToFolder = { vm.moveNoteToFolder(it) },
                 onCancelMove = { vm.cancelMoveNote() },
+                syncState = vm.syncState.collectAsState().value,
                 scrollBehavior = scrollBehavior,
             )
         }

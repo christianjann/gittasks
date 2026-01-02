@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -30,6 +32,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -54,6 +57,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.room.Embedded
 import io.github.wiiznokes.gitnote.R
+import io.github.wiiznokes.gitnote.manager.SyncState
 import io.github.wiiznokes.gitnote.data.room.Note
 import io.github.wiiznokes.gitnote.data.room.NoteFolder
 import io.github.wiiznokes.gitnote.ui.component.CustomDropDown
@@ -211,7 +215,9 @@ fun DrawerScreen(
     onTagSelected: (String?) -> Unit,
     noteBeingMoved: Note?,
     onMoveNoteToFolder: (String) -> Unit,
-    onCancelMove: () -> Unit,    scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(),) {
+    onCancelMove: () -> Unit,
+    syncState: SyncState,
+    scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(),) {
 
     val showTags = rememberSaveable { mutableStateOf(false) }
 
@@ -325,6 +331,26 @@ fun DrawerScreen(
                     )
                 }
             } else {
+                if (drawerFolders.isEmpty() && (syncState is SyncState.Pull || syncState is SyncState.Push)) {
+                    item {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(LocalSpaces.current.smallPadding),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(24.dp),
+                                strokeWidth = 2.dp
+                            )
+                            Spacer(modifier = Modifier.width(16.dp))
+                            Text(
+                                text = stringResource(R.string.syncing_repository),
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        }
+                    }
+                }
                 items(
                     drawerFolders,
                     key = { it.noteFolder.id }) { drawerNoteFolder ->
