@@ -1,7 +1,10 @@
 package io.github.wiiznokes.gitnote
 
+import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.os.LocaleList
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -40,6 +43,36 @@ class MainActivity : ComponentActivity() {
         private const val TAG = "MainActivity"
     }
 
+    override fun attachBaseContext(newBase: Context) {
+        // Apply saved language preference to the base context
+        val prefs = MyApp.appModule.appPreferences
+        val savedLanguage = runBlocking { prefs.language.get() }
+        
+        val locale = when (savedLanguage) {
+            Language.System -> null
+            Language.English -> Locale.forLanguageTag("en")
+            Language.Czech -> Locale.forLanguageTag("cs")
+            Language.French -> Locale.forLanguageTag("fr")
+            Language.PortugueseBrazilian -> Locale.forLanguageTag("pt-BR")
+            Language.Russian -> Locale.forLanguageTag("ru-RU")
+            Language.Ukrainian -> Locale.forLanguageTag("uk")
+            Language.German -> Locale.forLanguageTag("de")
+        }
+
+        val context = if (locale != null) {
+            val config = newBase.resources.configuration
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                config.setLocales(LocaleList(locale))
+            } else {
+                config.setLocale(locale)
+            }
+            newBase.createConfigurationContext(config)
+        } else {
+            newBase
+        }
+        
+        super.attachBaseContext(context)
+    }
 
     val authFlow: MutableSharedFlow<String> = MutableSharedFlow(replay = 0)
 
@@ -144,30 +177,13 @@ class MainActivity : ComponentActivity() {
     }
 
     fun changeLanguage(language: Language) {
-        val locale = when (language) {
-            Language.System -> null
-            Language.English -> Locale("en")
-            Language.Czech -> Locale("cs")
-            Language.French -> Locale("fr")
-            Language.PortugueseBrazilian -> Locale("pt", "BR")
-            Language.Russian -> Locale("ru", "RU")
-            Language.Ukrainian -> Locale("uk")
-            Language.German -> Locale("de")
-        }
-
-        // For runtime locale changes, we need to update the configuration
-        val config = resources.configuration
-        if (locale != null) {
-            config.setLocale(locale)
-        } else {
-            config.setLocale(Locale.getDefault())
+        // Save the new language preference
+        runBlocking {
+            MyApp.appModule.appPreferences.language.update(language)
         }
         
-        // Update the configuration
-        @Suppress("DEPRECATION")
-        resources.updateConfiguration(config, resources.displayMetrics)
-        
-        // Recreate activity to apply changes
+        // Recreate activity to apply the new locale
+        // attachBaseContext() will be called again and apply the new language
         recreate()
     }
 
