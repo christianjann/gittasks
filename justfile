@@ -107,6 +107,7 @@ release-package:
     # Create git tag
     echo "Creating git tag v$VERSION_NAME..."
     git tag "v$VERSION_NAME"
+    #git push origin "v$VERSION_NAME"
     
     # Do release-build
     echo "Building release APK..."
@@ -117,7 +118,7 @@ release-package:
     
     # Move APK
     echo "Moving APK to packages/gitnote-release-${VERSION_NAME}.apk..."
-    mv app/build/outputs/apk/release/app-release.apk packages/gitnote-release-${VERSION_NAME}.apk
+    mv app/build/outputs/apk/release/app-release.apk packages/gitnotecje-release-${VERSION_NAME}.apk
     
     # Bump version code and name
     echo "Bumping version..."
