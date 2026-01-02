@@ -100,6 +100,38 @@ GitNote allows users to control whether notes from subfolders are included when 
 - **Offline Indicator**: Persistent icon showing when the app is offline and cannot sync.
 - **Tag Display Mode**: Control whether tags are shown in grid view, list view, both, or neither.
 
+### Read-Only Mode
+
+GitNote features a read-only mode that transforms the note editing experience into a clean, distraction-free markdown preview with interactive elements.
+
+#### How It Works
+- **Menu Toggle**: Access via the three-dot menu in the main grid view ("Activate read only mode" / "Deactivate read only mode").
+- **Markdown Rendering**: Instead of showing a text editor, notes display as fully rendered markdown with proper formatting, images, and styling.
+- **Interactive Checkboxes**: Task checkboxes (`- [ ]` and `- [X]`) become clickable, allowing you to toggle completion status without editing the raw text.
+- **Frontmatter Hiding**: YAML frontmatter is automatically hidden to provide a clean, distraction-free reading experience.
+- **Image Display**: Markdown images are properly rendered and displayed.
+- **Persistent Setting**: The read-only mode preference is saved and persists across app sessions.
+
+#### Usage Tips
+- Use read-only mode for reviewing and reading notes without accidental edits.
+- Perfect for task management - toggle checkboxes in rendered view for quick updates.
+- Ideal for sharing screen content or presenting notes.
+- Combine with dark/light theme switching for optimal reading comfort.
+- The mode applies to all note editing screens throughout the app.
+
+#### Example Workflow
+1. Open GitNote and access the three-dot menu in the main grid view.
+2. Select "Activate read only mode" to switch to preview mode.
+3. Open any note to see it rendered as formatted markdown.
+4. Click on task checkboxes to toggle completion status.
+5. Return to the menu and select "Deactivate read only mode" to return to normal editing.
+
+#### Key Benefits
+- **Clean Reading**: Focus on content without frontmatter or raw markdown syntax.
+- **Quick Task Updates**: Toggle checkboxes without opening the text editor.
+- **Accidental Edit Prevention**: Perfect for reviewing notes you don't want to modify.
+- **Presentation Mode**: Clean, formatted display for sharing or presenting notes.
+
 ### Git Log Viewer
 GitNote provides direct access to the git commit history of your notes repository, allowing you to track changes and see the evolution of your notes over time.
 
@@ -275,9 +307,9 @@ GitNote allows quick conversion between regular notes and task-like notes via th
 3. The note now displays a checkbox for completion tracking.
 4. To revert, long-press again and select "Convert to Note"; the `completed?` field is removed.
 
-## Frontmatter Hiding in View Mode
+## Frontmatter Hiding (Read-Only Mode Feature)
 
-GitNote automatically hides YAML frontmatter when viewing Markdown notes in read-only mode to provide a clean, distraction-free reading experience.
+As part of GitNote's read-only mode, YAML frontmatter is automatically hidden when viewing Markdown notes to provide a clean, distraction-free reading experience.
 
 ### How It Works
 - **Automatic Detection**: The app detects YAML frontmatter enclosed in `---` markers at the beginning of Markdown files.
