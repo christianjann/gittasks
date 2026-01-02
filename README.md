@@ -24,17 +24,32 @@ Because all apps which integrate git on Android either separate the note title f
 
 - [x] create/open/clone repositories
 - [x] notes search (global and from specific folder)
-- [x] grid view
+- [x] grid view with customizable widths
 - [x] tree view
 - [x] edit view
 - [x] private repo (SSH and HTTPS)
 - [x] remote sync
 - [x] time based sort
+- [x] multi-language support
+- [x] flexible tag display in grid view
+- [x] tag-based filtering and organization
+- [x] full markdown rendering
+- [x] frontmatter metadata support
+- [x] git log viewer
+- [x] folder display mode options
 
-<p  style="text-align: center;">
-  <img src="https://media.githubusercontent.com/media/wiiznokes/gitnote/master/assets/grid.png" width="32%"  alt="grid screen"/>
-  <img src="https://media.githubusercontent.com/media/wiiznokes/gitnote/master/assets/drawer.png" width="32%"  alt="drawer screen"/> 
-  <img src="https://media.githubusercontent.com/media/wiiznokes/gitnote/master/assets/edit.png" width="32%"  alt="edit screen"/>
+<p align="center">
+  <img src="assets/grid.png" width="23%" alt="Grid view with flexible tag display"/>
+  <img src="assets/list.png" width="23%" alt="List view"/>
+  <img src="assets/tags.png" width="23%" alt="Tag filtering interface"/>
+  <img src="assets/drawer.png" width="23%" alt="Drawer navigation"/>
+  
+</p>
+
+<p align="center">
+  <img src="assets/edit.png" width="30%" alt="Edit screen"/>
+  <img src="assets/rendered.png" width="30%" alt="Markdown rendering"/>
+  <img src="assets/git_log.png" width="30%" alt="Git log viewer"/>
 </p>
 
 _Supported Android versions: 11 to 16_
