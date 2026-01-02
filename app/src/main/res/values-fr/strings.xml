@@ -160,4 +160,19 @@
     <string name="syncing_repository">Synchronisation avec le dépôt distant…</string>
     <string name="sync_success">Dépôt synchronisé avec succès</string>
     <string name="sync_failed">Échec de la synchronisation avec le dépôt distant</string>
+    <string name="background_git_operations">Opérations Git en arrière-plan</string>
+    <string name="background_git_operations_subtitle">Effectuer git pull/push en arrière-plan pendant l\'actualisation pour éviter de bloquer l\'interface</string>
+    <string name="include_subfolders">Inclure les sous-dossiers</string>
+    <string name="include_subfolders_subtitle">Afficher les notes des sous-dossiers lors de la navigation dans un dossier</string>
+    <string name="tag_display_mode">Mode d\'affichage des tags</string>
+    <string name="tag_display_none">Aucun</string>
+    <string name="tag_display_list_only">Liste uniquement</string>
+    <string name="tag_display_grid_only">Grille uniquement</string>
+    <string name="tag_display_both">Les deux vues</string>
+    <string name="convert_to_task">Convertir en tâche</string>
+    <string name="convert_to_note">Convertir en note</string>
+    <string name="move_note">Déplacer la note</string>
+    <string name="show_git_log">Afficher le journal GIT</string>
+    <string name="tags">Tags</string>
+    <string name="all_notes">Toutes les notes</string>
 </resources>

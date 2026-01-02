@@ -117,4 +117,19 @@
     <string name="syncing_repository">Синхронізація з віддаленим репозиторієм…</string>
     <string name="sync_success">Репозиторій успішно синхронізовано</string>
     <string name="sync_failed">Не вдалося синхронізувати з віддаленим репозиторієм</string>
+    <string name="background_git_operations">Фонові операції Git</string>
+    <string name="background_git_operations_subtitle">Виконувати git pull/push у фоні під час оновлення, щоб уникнути блокування інтерфейсу</string>
+    <string name="include_subfolders">Включати підпапки</string>
+    <string name="include_subfolders_subtitle">Показувати нотатки з підпапок під час перегляду папки</string>
+    <string name="tag_display_mode">Режим відображення тегів</string>
+    <string name="tag_display_none">Немає</string>
+    <string name="tag_display_list_only">Лише список</string>
+    <string name="tag_display_grid_only">Лише сітка</string>
+    <string name="tag_display_both">Обидва види</string>
+    <string name="convert_to_task">Перетворити на завдання</string>
+    <string name="convert_to_note">Перетворити на нотатку</string>
+    <string name="move_note">Перемістити нотатку</string>
+    <string name="show_git_log">Показати журнал GIT</string>
+    <string name="tags">Теги</string>
+    <string name="all_notes">Усі нотатки</string>
 </resources>
