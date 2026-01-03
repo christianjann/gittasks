@@ -146,7 +146,7 @@ interface RepoDatabaseDao {
                        CASE WHEN content LIKE '%completed?: yes%' THEN 1 ELSE 0 END AS completed
                 FROM Notes
                 $whereClause
-                ${if (tag != null) "AND content LIKE '%  - ' || :tag || '%'" else ""}
+                ${if (tag != null) "AND content LIKE '%- ' || :tag || '%'" else ""}
             )
             SELECT *,
                    CASE 
@@ -213,7 +213,7 @@ interface RepoDatabaseDao {
                     $whereClause
                     AND
                     NotesFts MATCH :query
-                    ${if (tag != null) "AND Notes.content LIKE '%  - ' || :tag || '%'" else ""}
+                    ${if (tag != null) "AND Notes.content LIKE '%- ' || :tag || '%'" else ""}
             )
             SELECT *,
                    CASE 

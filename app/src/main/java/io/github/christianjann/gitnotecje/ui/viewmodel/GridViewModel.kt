@@ -358,6 +358,8 @@ class GridViewModel : ViewModel() {
                     uiHelper.makeToast("${uiHelper.getString(R.string.failed_reload)}: $it")
                 }
                 res.onSuccess {
+                    // Reset to root folder after database reload since folder structure might have changed
+                    _currentNoteFolderRelativePath.emit("")
                     uiHelper.makeToast(uiHelper.getString(R.string.success_reload))
                 }
             } finally {

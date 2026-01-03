@@ -151,7 +151,7 @@ release-package:
 release-package-install:
     #!/usr/bin/env bash
     echo "Finding latest release package..."
-    LATEST_PACKAGE=$(ls -t packages/gitnote-release-*.apk | head -1)
+    LATEST_PACKAGE=$(ls -t packages/gitnotecje-release-*.apk | head -1)
     if [ -z "$LATEST_PACKAGE" ]; then
         echo "❌ No release packages found in packages/"
         exit 1
@@ -163,5 +163,5 @@ release-package-install:
         exit 1
     fi
     echo "Installing $LATEST_PACKAGE..."
-    adb install -r "$LATEST_PACKAGE"
+    adb install -r -d "$LATEST_PACKAGE"
     echo "✅ Release package installed successfully!"

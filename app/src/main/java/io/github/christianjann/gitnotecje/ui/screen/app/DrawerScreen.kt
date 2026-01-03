@@ -6,8 +6,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -56,6 +58,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.room.Embedded
+import io.github.christianjann.gitnotecje.BuildConfig
+import io.github.christianjann.gitnotecje.MyApp
 import io.github.christianjann.gitnotecje.R
 import io.github.christianjann.gitnotecje.manager.SyncState
 import io.github.christianjann.gitnotecje.data.room.Note
@@ -258,7 +262,7 @@ fun DrawerScreen(
                 onCancelMove = onCancelMove,
                 onHomeClick = {
                     openFolder("")
-                    scope.launch { drawerState.open() }
+                    // Keep drawer open to show folders
                 },
                 scrollBehavior = scrollBehavior,
             )
@@ -331,107 +335,147 @@ fun DrawerScreen(
                     )
                 }
             } else {
+                val displayItems = mutableListOf<Any>()
                 if (drawerFolders.isEmpty() && (syncState is SyncState.Pull || syncState is SyncState.Push)) {
-                    item {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(LocalSpaces.current.smallPadding),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            CircularProgressIndicator(
-                                modifier = Modifier.size(24.dp),
-                                strokeWidth = 2.dp
-                            )
-                            Spacer(modifier = Modifier.width(16.dp))
-                            Text(
-                                text = stringResource(R.string.syncing_repository),
-                                style = MaterialTheme.typography.bodyMedium
-                            )
-                        }
-                    }
+                    displayItems.add("sync")
                 }
-                items(
-                    drawerFolders,
-                    key = { it.noteFolder.id }) { drawerNoteFolder ->
-                Box {
-                    val dropDownExpanded = remember {
-                        mutableStateOf(false)
+                if (drawerFolders.isNotEmpty()) {
+                    displayItems.addAll(drawerFolders)
+                } else if (!(syncState is SyncState.Pull || syncState is SyncState.Push)) {
+                    displayItems.add("fallback")
+                }
+                items(displayItems, key = {
+                    when (it) {
+                        "sync" -> "sync"
+                        "fallback" -> "fallback"
+                        else -> (it as DrawerFolderModel).noteFolder.id
                     }
-
-                    val clickPosition = remember {
-                        mutableStateOf(Offset.Zero)
-                    }
-
-                    // need this box for clickPosition
-                    Box {
-                        CustomDropDown(
-                            expanded = dropDownExpanded,
-                            shape = MaterialTheme.shapes.medium,
-                            options = listOf(
-                                CustomDropDownModel(
-                                    text = stringResource(R.string.delete_this_folder),
-                                    onClick = {
-                                        deleteFolder(drawerNoteFolder.noteFolder)
+                }) { item ->
+                    when (item) {
+                        "sync" -> {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(LocalSpaces.current.smallPadding),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                CircularProgressIndicator(
+                                    modifier = Modifier.size(24.dp),
+                                    strokeWidth = 2.dp
+                                )
+                                Spacer(modifier = Modifier.width(16.dp))
+                                Text(
+                                    text = stringResource(R.string.syncing_repository),
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                            }
+                        }
+                        "fallback" -> {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(LocalSpaces.current.smallPadding),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text(
+                                    text = "No folders found",
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(
+                                    text = "Go to Home",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.primary,
+                                    modifier = Modifier.clickable {
+                                        openFolder("")
                                     }
-                                ),
-                            ),
-                            clickPosition = clickPosition
-                        )
-                    }
+                                )
+                            }
+                        }
+                        is DrawerFolderModel -> {
+                            val drawerNoteFolder = item as DrawerFolderModel
+                            Box {
+                                val dropDownExpanded = remember {
+                                    mutableStateOf(false)
+                                }
 
-                    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+                                val clickPosition = remember {
+                                    mutableStateOf(Offset.Zero)
+                                }
 
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .combinedClickable(
-                                    onLongClick = {
-                                        dropDownExpanded.value = true
-                                    },
-                                    onClick = {
-                                        openFolder(drawerNoteFolder.noteFolder.relativePath)
-                                        if (!drawerNoteFolder.hasChildren && noteBeingMoved == null) {
-                                            scope.launch { drawerState.close() }
+                                // need this box for clickPosition
+                                Box {
+                                    CustomDropDown(
+                                        expanded = dropDownExpanded,
+                                        shape = MaterialTheme.shapes.medium,
+                                        options = listOf(
+                                            CustomDropDownModel(
+                                                text = stringResource(R.string.delete_this_folder),
+                                                onClick = {
+                                                    deleteFolder(drawerNoteFolder.noteFolder)
+                                                }
+                                            ),
+                                        ),
+                                        clickPosition = clickPosition
+                                    )
+                                }
+
+                                CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .combinedClickable(
+                                                onLongClick = {
+                                                    dropDownExpanded.value = true
+                                                },
+                                                onClick = {
+                                                    openFolder(drawerNoteFolder.noteFolder.relativePath)
+                                                    if (!drawerNoteFolder.hasChildren && noteBeingMoved == null) {
+                                                        scope.launch { drawerState.close() }
+                                                    }
+                                                }
+                                            )
+                                            .pointerInteropFilter {
+                                                clickPosition.value = Offset(it.x, it.y)
+                                                false
+                                            },
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+
+                                        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+
+                                            Text(
+                                                text = drawerNoteFolder.noteCount.toString(),
+                                                modifier = Modifier
+                                                    .padding(LocalSpaces.current.smallPadding)
+                                            )
+
+
+                                            Row(
+                                                modifier = Modifier
+                                                    .padding(LocalSpaces.current.smallPadding),
+                                                horizontalArrangement = Arrangement.Start,
+                                                verticalAlignment = Alignment.CenterVertically
+                                            ) {
+                                                SimpleIcon(
+                                                    modifier = Modifier
+                                                        .size(IconDefaultSize),
+                                                        imageVector = Icons.Filled.Folder
+                                                )
+
+                                                SimpleSpacer(width = LocalSpaces.current.smallPadding)
+
+                                                Text(
+                                                    text = drawerNoteFolder.noteFolder.fullName(),
+                                                    maxLines = 1,
+                                                    overflow = TextOverflow.Ellipsis,
+                                                )
+                                            }
                                         }
                                     }
-                                )
-                                .pointerInteropFilter {
-                                    clickPosition.value = Offset(it.x, it.y)
-                                    false
-                                },
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-
-                            CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
-
-                                Text(
-                                    text = drawerNoteFolder.noteCount.toString(),
-                                    modifier = Modifier
-                                        .padding(LocalSpaces.current.smallPadding)
-                                )
-
-
-                                Row(
-                                    modifier = Modifier
-                                        .padding(LocalSpaces.current.smallPadding),
-                                    horizontalArrangement = Arrangement.Start,
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    SimpleIcon(
-                                        modifier = Modifier
-                                            .size(IconDefaultSize),
-                                        imageVector = Icons.Filled.Folder
-                                    )
-
-                                    SimpleSpacer(width = LocalSpaces.current.smallPadding)
-
-                                    Text(
-                                        text = drawerNoteFolder.noteFolder.fullName(),
-                                        maxLines = 1,
-                                        overflow = TextOverflow.Ellipsis,
-                                    )
                                 }
                             }
                         }
@@ -439,5 +483,5 @@ fun DrawerScreen(
                 }
             }
         }
-    }
+    
 }}
