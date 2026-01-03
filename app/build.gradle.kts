@@ -161,6 +161,7 @@ dependencies {
     implementation(libs.compose.material)
     implementation(libs.compose.material3)
     implementation(libs.compose.material.icons.extended)
+    implementation(libs.compose.animation)
 
     // Compose Debug
     implementation(libs.compose.ui.tooling.preview)

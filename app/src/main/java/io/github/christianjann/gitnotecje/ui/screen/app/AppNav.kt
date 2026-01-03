@@ -1,6 +1,7 @@
 package io.github.christianjann.gitnotecje.ui.screen.app
 
 import androidx.compose.animation.ContentTransform
+import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import dev.olshevski.navigation.reimagined.AnimatedNavHost
@@ -35,43 +36,47 @@ fun AppScreen(
 
     NavBackHandler(navController)
 
-    AnimatedNavHost(
-        controller = navController,
-        transitionSpec = AppNavTransitionSpec
-    ) {
-        when (it) {
+    SharedTransitionLayout {
+        AnimatedNavHost(
+            controller = navController,
+            transitionSpec = AppNavTransitionSpec
+        ) {
+            when (it) {
 
-            is AppDestination.Grid -> {
-                GridScreen(
-                    onSettingsClick = {
-                        navController.navigate(
-                            AppDestination.Settings(
-                                SettingsDestination.Main
+                is AppDestination.Grid -> {
+                    GridScreen(
+                        onSettingsClick = {
+                            navController.navigate(
+                                AppDestination.Settings(
+                                    SettingsDestination.Main
+                                )
                             )
-                        )
+                        },
+                        onEditClick = { note, editType ->
+                            navController.navigate(AppDestination.Edit(EditParams.Idle(note, editType)))
+                        },
+                        sts = this@SharedTransitionLayout
+                    )
+                }
+
+                is AppDestination.Edit -> EditScreen(
+                    editParams = it.params,
+                    onFinished = {
+                        navController.pop()
+
+                        if (it.params is EditParams.Saved) {
+                            navController.navigate(AppDestination.Grid)
+                        }
                     },
-                    onEditClick = { note, editType ->
-                        navController.navigate(AppDestination.Edit(EditParams.Idle(note, editType)))
-                    },
+                    sharedTransitionScope = this@SharedTransitionLayout
+                )
+
+                is AppDestination.Settings -> SettingsNav(
+                    onBackClick = { navController.pop() },
+                    destination = it.settingsDestination,
+                    onCloseRepo = onCloseRepo
                 )
             }
-
-            is AppDestination.Edit -> EditScreen(
-                editParams = it.params,
-                onFinished = {
-                    navController.pop()
-
-                    if (it.params is EditParams.Saved) {
-                        navController.navigate(AppDestination.Grid)
-                    }
-                }
-            )
-
-            is AppDestination.Settings -> SettingsNav(
-                onBackClick = { navController.pop() },
-                destination = it.settingsDestination,
-                onCloseRepo = onCloseRepo
-            )
         }
     }
 }
@@ -89,6 +94,13 @@ private object AppNavTransitionSpec : NavTransitionSpec<AppDestination> {
             AppDestination.Grid -> {
                 if (to is AppDestination.Settings) {
                     slide()
+                } else if (to is AppDestination.Edit) {
+                    // Use shared element transition for note editing
+                    ContentTransform(
+                        targetContentEnter = androidx.compose.animation.fadeIn(),
+                        initialContentExit = androidx.compose.animation.fadeOut(),
+                        targetContentZIndex = 1f
+                    )
                 } else {
                     crossFade()
                 }

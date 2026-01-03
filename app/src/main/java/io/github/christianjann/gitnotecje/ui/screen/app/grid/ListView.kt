@@ -1,5 +1,8 @@
 package io.github.christianjann.gitnotecje.ui.screen.app.grid
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -104,6 +107,8 @@ internal fun NoteListView(
     onEditClick: (Note, EditType) -> Unit,
     vm: GridViewModel,
     showScrollbars: Boolean,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope,
 ) {
 
     Box(modifier = modifier) {
@@ -130,6 +135,8 @@ internal fun NoteListView(
                         showFullTitleInListView = showFullTitleInListView,
                         tagDisplayMode = tagDisplayMode,
                         noteViewType = noteViewType,
+                        sharedTransitionScope = sharedTransitionScope,
+                        animatedVisibilityScope = animatedVisibilityScope,
                     )
                 }
             }
@@ -158,6 +165,8 @@ private fun NoteListRow(
     showFullTitleInListView: Boolean,
     tagDisplayMode: TagDisplayMode,
     noteViewType: NoteViewType,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope,
 ) {
     val dropDownExpanded = remember { mutableStateOf(false) }
     val clickPosition = remember { mutableStateOf(Offset.Zero) }
@@ -239,7 +248,13 @@ private fun NoteListRow(
                             style = MaterialTheme.typography.titleMedium.copy(
                                 fontWeight = FontWeight.Bold,
                             ),
-                            color = MaterialTheme.colorScheme.onSurface
+                            color = MaterialTheme.colorScheme.onSurface,
+                            modifier = with(sharedTransitionScope) {
+                                Modifier.sharedElement(
+                                    sharedTransitionScope.rememberSharedContentState(key = "title-${gridNote.note.id}"),
+                                    animatedVisibilityScope = animatedVisibilityScope
+                                )
+                            }
                         )
                     } else {
                         Text(
@@ -249,7 +264,13 @@ private fun NoteListRow(
                             style = MaterialTheme.typography.titleMedium.copy(
                                 fontWeight = FontWeight.Bold,
                             ),
-                            color = MaterialTheme.colorScheme.onSurface
+                            color = MaterialTheme.colorScheme.onSurface,
+                            modifier = with(sharedTransitionScope) {
+                                Modifier.sharedElement(
+                                    sharedTransitionScope.rememberSharedContentState(key = "title-${gridNote.note.id}"),
+                                    animatedVisibilityScope = animatedVisibilityScope
+                                )
+                            }
                         )
                     }
 

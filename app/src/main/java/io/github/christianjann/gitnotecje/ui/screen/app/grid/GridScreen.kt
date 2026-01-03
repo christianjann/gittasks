@@ -3,6 +3,9 @@ package io.github.christianjann.gitnotecje.ui.screen.app.grid
 import android.annotation.SuppressLint
 import android.util.Log
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
@@ -161,10 +164,11 @@ private fun CustomVerticalScrollbar(
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GridScreen(
+fun AnimatedVisibilityScope.GridScreen(
     onSettingsClick: () -> Unit,
     onEditClick: (Note, EditType) -> Unit,
     scrollBehavior: TopAppBarScrollBehavior? = null,
+    sts: SharedTransitionScope,
 ) {
 
     val vm: GridViewModel = viewModel()
@@ -266,6 +270,8 @@ fun GridScreen(
                 padding = padding,
                 noteViewType = noteViewType,
                 tagDisplayMode = tagDisplayMode,
+                sharedTransitionScope = sts,
+                animatedVisibilityScope = this@GridScreen,
             )
 
             TopBar(
@@ -380,6 +386,8 @@ private fun GridView(
     padding: PaddingValues,
     noteViewType: NoteViewType,
     tagDisplayMode: TagDisplayMode,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope,
 ) {
     val gridNotes = vm.gridNotes.collectAsLazyPagingItems<GridNote>()
     val query = vm.query.collectAsState()
@@ -425,6 +433,8 @@ private fun GridView(
                     onEditClick = onEditClick,
                     vm = vm,
                     showScrollbars = showScrollbars.value,
+                    sharedTransitionScope = sharedTransitionScope,
+                    animatedVisibilityScope = animatedVisibilityScope,
                 )
             }
 
@@ -447,6 +457,8 @@ private fun GridView(
                     onEditClick = onEditClick,
                     vm = vm,
                     showScrollbars = showScrollbars.value,
+                    sharedTransitionScope = sharedTransitionScope,
+                    animatedVisibilityScope = animatedVisibilityScope,
                 )
             }
         }
@@ -479,6 +491,8 @@ private fun GridNotesView(
     onEditClick: (Note, EditType) -> Unit,
     vm: GridViewModel,
     showScrollbars: Boolean,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope,
 ) {
 
 
@@ -511,6 +525,8 @@ private fun GridNotesView(
                         showFullNoteHeight = showFullNoteHeight.value,
                         tagDisplayMode = tagDisplayMode,
                         noteViewType = noteViewType,
+                        sharedTransitionScope = sharedTransitionScope,
+                        animatedVisibilityScope = animatedVisibilityScope,
                         modifier = Modifier.padding(3.dp)
                     )
                 } else {
@@ -555,6 +571,8 @@ private fun NoteCard(
     showFullNoteHeight: Boolean,
     tagDisplayMode: TagDisplayMode,
     noteViewType: NoteViewType,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier,
 ) {
     val dropDownExpanded = remember {
@@ -643,7 +661,13 @@ private fun NoteCard(
                         style = MaterialTheme.typography.titleMedium.copy(
                             fontWeight = FontWeight.Bold,
                         ),
-                        color = MaterialTheme.colorScheme.tertiary
+                        color = MaterialTheme.colorScheme.tertiary,
+                        modifier = with(sharedTransitionScope) {
+                            Modifier.sharedElement(
+                                sharedTransitionScope.rememberSharedContentState(key = "title-${gridNote.note.id}"),
+                                animatedVisibilityScope = animatedVisibilityScope
+                            )
+                        }
                     )
                 }
 
@@ -690,14 +714,24 @@ private fun NoteCard(
 //                                )
                     Text(
                         text = FrontmatterParser.extractBody(gridNote.note.content),
-                        modifier = Modifier,
+                        modifier = with(sharedTransitionScope) {
+                            Modifier.sharedElement(
+                                sharedTransitionScope.rememberSharedContentState(key = "content-${gridNote.note.id}"),
+                                animatedVisibilityScope = animatedVisibilityScope
+                            )
+                        },
                         overflow = TextOverflow.Ellipsis,
                         color = MaterialTheme.colorScheme.onSurface
                     )
                 } else {
                     Text(
                         text = gridNote.note.content,
-                        modifier = Modifier,
+                        modifier = with(sharedTransitionScope) {
+                            Modifier.sharedElement(
+                                sharedTransitionScope.rememberSharedContentState(key = "content-${gridNote.note.id}"),
+                                animatedVisibilityScope = animatedVisibilityScope
+                            )
+                        },
                         overflow = TextOverflow.Ellipsis,
                         color = MaterialTheme.colorScheme.onSurface
                     )

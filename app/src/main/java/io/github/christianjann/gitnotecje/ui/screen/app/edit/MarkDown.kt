@@ -1,5 +1,7 @@
 package io.github.christianjann.gitnotecje.ui.screen.app.edit
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
@@ -137,12 +139,13 @@ private fun RenderMarkdownBlock(
 }
 
 @Composable
-fun MarkDownContent(
+fun AnimatedVisibilityScope.MarkDownContent(
     vm: MarkDownVM,
     textFocusRequester: FocusRequester,
     onFinished: () -> Unit,
     isReadOnlyModeActive: Boolean,
     textContent: TextFieldValue,
+    sharedTransitionScope: SharedTransitionScope,
     onCheckboxChangesPending: (hasChanges: Boolean, modifiedText: String?) -> Unit = { _, _ -> },
 ) {
     if (isReadOnlyModeActive) {
@@ -257,7 +260,8 @@ fun MarkDownContent(
             vm = vm,
             textFocusRequester = textFocusRequester,
             onFinished = onFinished,
-            textContent = textContent
+            textContent = textContent,
+            sharedTransitionScope = sharedTransitionScope
         )
     }
 }

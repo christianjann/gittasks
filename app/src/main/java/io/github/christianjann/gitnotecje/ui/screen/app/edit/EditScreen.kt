@@ -1,5 +1,8 @@
 package io.github.christianjann.gitnotecje.ui.screen.app.edit
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.SharedTransitionScope
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -59,9 +62,10 @@ private const val TAG = "EditScreen"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditScreen(
+fun AnimatedVisibilityScope.EditScreen(
     editParams: EditParams,
     onFinished: () -> Unit,
+    sharedTransitionScope: SharedTransitionScope,
 ) {
 
     val extension = editParams.fileExtension()
@@ -121,35 +125,40 @@ fun EditScreen(
                     }
                 },
                 title = {
-
-                    TextField(
-                        textStyle = MaterialTheme.typography.titleMedium,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .focusRequester(nameFocusRequester),
-                        value = vm.name.value,
-                        onValueChange = {
-                            vm.name.value = it
-                        },
-                        readOnly = isReadOnlyModeActive,
-                        singleLine = true,
-                        placeholder = {
-                            Text(text = stringResource(R.string.note_name))
-                        },
-                        colors = TextFieldDefaults.colors(
-                            focusedTextColor = MaterialTheme.colorScheme.tertiary,
-                            unfocusedTextColor = MaterialTheme.colorScheme.tertiary,
-                            focusedContainerColor = backgroundColor,
-                            unfocusedContainerColor = backgroundColor,
-                            focusedIndicatorColor = Color.Transparent,
-                            unfocusedIndicatorColor = Color.Transparent,
-                        ),
-                        keyboardActions = KeyboardActions(
-                            onDone = {
-                                textFocusRequester.requestFocus()
-                            }
+                        TextField(
+                            textStyle = MaterialTheme.typography.titleMedium,
+                            modifier = with(sharedTransitionScope) {
+                                Modifier
+                                    .fillMaxWidth()
+                                    .focusRequester(nameFocusRequester)
+                                    .sharedElement(
+                                        sharedTransitionScope.rememberSharedContentState(key = "title-${vm.previousNote.id}"),
+                                        animatedVisibilityScope = this@EditScreen
+                                    )
+                            },
+                            value = vm.name.value,
+                            onValueChange = {
+                                vm.name.value = it
+                            },
+                            readOnly = isReadOnlyModeActive,
+                            singleLine = true,
+                            placeholder = {
+                                Text(text = stringResource(R.string.note_name))
+                            },
+                            colors = TextFieldDefaults.colors(
+                                focusedTextColor = MaterialTheme.colorScheme.tertiary,
+                                unfocusedTextColor = MaterialTheme.colorScheme.tertiary,
+                                focusedContainerColor = backgroundColor,
+                                unfocusedContainerColor = backgroundColor,
+                                focusedIndicatorColor = Color.Transparent,
+                                unfocusedIndicatorColor = Color.Transparent,
+                            ),
+                            keyboardActions = KeyboardActions(
+                                onDone = {
+                                    textFocusRequester.requestFocus()
+                                }
+                            )
                         )
-                    )
                 },
                 actions = {
                     IconButton(
@@ -221,6 +230,7 @@ fun EditScreen(
                             onFinished = onFinished,
                             isReadOnlyModeActive = isReadOnlyModeActive,
                             textContent = textContent,
+                            sharedTransitionScope = sharedTransitionScope,
                             onCheckboxChangesPending = { hasChanges, modifiedText ->
                                 hasPendingCheckboxChanges = hasChanges
                                 pendingCheckboxText = modifiedText
@@ -234,7 +244,8 @@ fun EditScreen(
                             textFocusRequester = textFocusRequester,
                             onFinished = onFinished,
                             isReadOnlyModeActive = isReadOnlyModeActive,
-                            textContent = textContent
+                            textContent = textContent,
+                            sharedTransitionScope = sharedTransitionScope
                         )
                     }
                 }
@@ -280,17 +291,24 @@ fun EditScreen(
 }
 
 @Composable
-fun GenericTextField(
+fun AnimatedVisibilityScope.GenericTextField(
     vm: TextVM,
     textFocusRequester: FocusRequester,
     onFinished: () -> Unit,
     isReadOnlyModeActive: Boolean = false,
     textContent: TextFieldValue,
+    sharedTransitionScope: SharedTransitionScope,
 ) {
     TextField(
-        modifier = Modifier
-            .fillMaxSize()
-            .focusRequester(textFocusRequester),
+        modifier = with(sharedTransitionScope) {
+            Modifier
+                .fillMaxSize()
+                .focusRequester(textFocusRequester)
+                .sharedElement(
+                    sharedTransitionScope.rememberSharedContentState(key = "content-${vm.previousNote.id}"),
+                    animatedVisibilityScope = this@GenericTextField
+                )
+        },
         value = textContent,
         onValueChange = { vm.onValueChange(it) },
         colors = TextFieldDefaults.colors(
@@ -306,6 +324,4 @@ fun GenericTextField(
         ),
         readOnly = isReadOnlyModeActive
     )
-
-
 }
