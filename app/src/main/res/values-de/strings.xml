@@ -51,6 +51,10 @@
     <string name="tag_display_both">Beide Ansichten</string>
     <string name="include_subfolders">Unterordner einschließen</string>
     <string name="include_subfolders_subtitle">Notizen aus Unterordnern anzeigen, wenn ein Ordner durchsucht wird</string>
+    <string name="tag_ignores_folders">Tag-Filterung ignoriert Ordner</string>
+    <string name="tag_ignores_folders_subtitle">Bei der Filterung nach Tags Notizen aus allen Ordnern anstatt nur dem aktuellen Ordner anzeigen</string>
+    <string name="search_ignores_filters">Suche ignoriert alle Filter</string>
+    <string name="search_ignores_filters_subtitle">Bei der Suche Ergebnisse aus allen Ordnern anzeigen, unabhängig von aktuellen Ordner- und Unterordner-Einstellungen</string>
     <string name="background_git_operations">Hintergrund-GIT-Operationen</string>
     <string name="background_git_operations_subtitle">GIT-Pull/Push im Hintergrund während der Aktualisierung ausführen, um die Benutzeroberfläche nicht zu blockieren</string>
     <string name="folder_filters">Ordnerfilter</string>

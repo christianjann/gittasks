@@ -1,0 +1,10 @@
+Android-Notizen-App mit echten Dateien. Kann mit Git-Anbietern wie Github synchronisiert werden
+
+* Repositorys erstellen/öffnen/klonen
+* Notizsuche (global und aus bestimmten Ordnern)
+* Rasteransicht
+* Baumansicht
+* Bearbeitungsansicht
+* Private Repositorys (SSH und HTTPS)
+* Fernsynchronisation
+* Zeitbasierte Sortierung

@@ -187,4 +187,8 @@
     <string name="show_git_log">Afficher le journal GIT</string>
     <string name="tags">Tags</string>
     <string name="all_notes">Toutes les notes</string>
+    <string name="tag_ignores_folders">Le filtrage par tag ignore les dossiers</string>
+    <string name="tag_ignores_folders_subtitle">Lors du filtrage par tag, afficher les notes de tous les dossiers au lieu du dossier actuel uniquement</string>
+    <string name="search_ignores_filters">La recherche ignore tous les filtres</string>
+    <string name="search_ignores_filters_subtitle">Lors de la recherche, afficher les résultats de tous les dossiers indépendamment des paramètres du dossier actuel et des sous-dossiers</string>
 </resources>

@@ -176,5 +176,9 @@
     <string name="show_git_log">Zobrazit GIT log</string>
     <string name="tags">Štítky</string>
     <string name="all_notes">Všechny poznámky</string>
+    <string name="tag_ignores_folders">Filtrování štítků ignoruje složky</string>
+    <string name="tag_ignores_folders_subtitle">Při filtrování podle štítku zobrazit poznámky ze všech složek místo pouze aktuální složky</string>
+    <string name="search_ignores_filters">Hledání ignoruje všechny filtry</string>
+    <string name="search_ignores_filters_subtitle">Při hledání zobrazit výsledky ze všech složek bez ohledu na nastavení aktuální složky a podsložek</string>
 
 </resources>

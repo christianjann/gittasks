@@ -144,4 +144,8 @@
     <string name="show_git_log">Показать журнал GIT</string>
     <string name="tags">Теги</string>
     <string name="all_notes">Все заметки</string>
+    <string name="tag_ignores_folders">Фильтрация по тегам игнорирует папки</string>
+    <string name="tag_ignores_folders_subtitle">При фильтрации по тегу показывать заметки из всех папок вместо только текущей папки</string>
+    <string name="search_ignores_filters">Поиск игнорирует все фильтры</string>
+    <string name="search_ignores_filters_subtitle">При поиске показывать результаты из всех папок независимо от настроек текущей папки и подпапок</string>
 </resources>

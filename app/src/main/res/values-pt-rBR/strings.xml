@@ -168,4 +168,8 @@
     <string name="show_git_log">Mostrar log do GIT</string>
     <string name="tags">Tags</string>
     <string name="all_notes">Todas as notas</string>
+    <string name="tag_ignores_folders">Filtragem por tag ignora pastas</string>
+    <string name="tag_ignores_folders_subtitle">Ao filtrar por tag, mostrar notas de todas as pastas em vez de apenas a pasta atual</string>
+    <string name="search_ignores_filters">Busca ignora todos os filtros</string>
+    <string name="search_ignores_filters_subtitle">Ao pesquisar, mostrar resultados de todas as pastas independentemente das configurações da pasta atual e subpastas</string>
 </resources>
