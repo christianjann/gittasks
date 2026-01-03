@@ -172,4 +172,6 @@
     <string name="tag_ignores_folders_subtitle">Ao filtrar por tag, mostrar notas de todas as pastas em vez de apenas a pasta atual</string>
     <string name="search_ignores_filters">Busca ignora todos os filtros</string>
     <string name="search_ignores_filters_subtitle">Ao pesquisar, mostrar resultados de todas as pastas independentemente das configurações da pasta atual e subpastas</string>
+    <string name="no_notes_found">Nenhuma nota encontrada</string>
+    <string name="empty_state_hint">Abra a gaveta e selecione uma pasta para começar</string>
 </resources>

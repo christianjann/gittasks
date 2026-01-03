@@ -37,11 +37,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.pointerInteropFilter
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.paging.compose.LazyPagingItems
+import io.github.christianjann.gitnotecje.R
 import io.github.christianjann.gitnotecje.data.room.Note
 import io.github.christianjann.gitnotecje.ui.model.EditType
 import io.github.christianjann.gitnotecje.ui.model.GridNote
@@ -107,43 +110,65 @@ internal fun NoteListView(
 ) {
 
     Box(modifier = modifier) {
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            state = listState
-        ) {
-            item {
-                Spacer(modifier = Modifier.height(topSpacerHeight))
+        if (gridNotes.itemCount == 0) {
+            // Empty state hint
+            Column(
+                modifier = Modifier.fillMaxSize().padding(horizontal = 24.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = stringResource(R.string.no_notes_found),
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = stringResource(R.string.empty_state_hint),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f),
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                )
             }
+        } else {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                state = listState
+            ) {
+                item {
+                    Spacer(modifier = Modifier.height(topSpacerHeight))
+                }
 
-            items(
-                count = gridNotes.itemCount,
-                key = { index -> gridNotes[index]?.note?.id ?: index }
-            ) { index ->
-                val gridNote = gridNotes[index]
-                if (gridNote != null) {
-                    NoteListRow(
-                        gridNote = gridNote,
-                        vm = vm,
-                        onEditClick = onEditClick,
-                        selectedNotes = selectedNotes,
-                        showFullPathOfNotes = showFullPathOfNotes,
-                        showFullTitleInListView = showFullTitleInListView,
-                        tagDisplayMode = tagDisplayMode,
-                        noteViewType = noteViewType,
-                    )
+                items(
+                    count = gridNotes.itemCount,
+                    key = { index -> gridNotes[index]?.note?.id ?: index }
+                ) { index ->
+                    val gridNote = gridNotes[index]
+                    if (gridNote != null) {
+                        NoteListRow(
+                            gridNote = gridNote,
+                            vm = vm,
+                            onEditClick = onEditClick,
+                            selectedNotes = selectedNotes,
+                            showFullPathOfNotes = showFullPathOfNotes,
+                            showFullTitleInListView = showFullTitleInListView,
+                            tagDisplayMode = tagDisplayMode,
+                            noteViewType = noteViewType,
+                        )
+                    }
+                }
+
+                item {
+                    Spacer(modifier = Modifier.height(topBarHeight + 10.dp))
                 }
             }
 
-            item {
-                Spacer(modifier = Modifier.height(topBarHeight + 10.dp))
+            if (showScrollbars) {
+                CustomVerticalScrollbar(
+                    scrollState = listState,
+                    modifier = Modifier.align(Alignment.CenterEnd)
+                )
             }
-        }
-
-        if (showScrollbars) {
-            CustomVerticalScrollbar(
-                scrollState = listState,
-                modifier = Modifier.align(Alignment.CenterEnd)
-            )
         }
     }
 }

@@ -211,4 +211,6 @@
     <string name="tags">Tags</string>
     <string name="all_notes">Alle Notizen</string>
     <string name="offline_hint">, sind wir offline?</string>
+    <string name="no_notes_found">Keine Notizen gefunden</string>
+    <string name="empty_state_hint">Öffnen Sie die Schublade und wählen Sie einen Ordner aus, um zu beginnen</string>
 </resources>

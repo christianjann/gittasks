@@ -148,4 +148,6 @@
     <string name="tag_ignores_folders_subtitle">При фильтрации по тегу показывать заметки из всех папок вместо только текущей папки</string>
     <string name="search_ignores_filters">Поиск игнорирует все фильтры</string>
     <string name="search_ignores_filters_subtitle">При поиске показывать результаты из всех папок независимо от настроек текущей папки и подпапок</string>
+    <string name="no_notes_found">Заметки не найдены</string>
+    <string name="empty_state_hint">Откройте панель и выберите папку для начала работы</string>
 </resources>

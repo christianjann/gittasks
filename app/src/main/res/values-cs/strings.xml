@@ -180,5 +180,6 @@
     <string name="tag_ignores_folders_subtitle">Při filtrování podle štítku zobrazit poznámky ze všech složek místo pouze aktuální složky</string>
     <string name="search_ignores_filters">Hledání ignoruje všechny filtry</string>
     <string name="search_ignores_filters_subtitle">Při hledání zobrazit výsledky ze všech složek bez ohledu na nastavení aktuální složky a podsložek</string>
-
+    <string name="no_notes_found">Nebyly nalezeny žádné poznámky</string>
+    <string name="empty_state_hint">Otevřete zásuvku a vyberte složku pro začátek</string>
 </resources>

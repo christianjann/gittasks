@@ -87,6 +87,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.Velocity
@@ -486,61 +487,83 @@ private fun GridNotesView(
     val showFullNoteHeight = vm.prefs.showFullNoteHeight.getAsState()
 
     Box(modifier = modifier) {
-        LazyVerticalStaggeredGrid(
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(horizontal = 3.dp),
-            columns = StaggeredGridCells.Adaptive(noteMinWidth.value.size.dp),
-            state = gridState
-        ) {
-            item(span = StaggeredGridItemSpan.FullLine) {
-                Spacer(modifier = Modifier.height(topSpacerHeight))
+        if (gridNotes.itemCount == 0) {
+            // Empty state hint
+            Column(
+                modifier = Modifier.fillMaxSize().padding(horizontal = 24.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = stringResource(R.string.no_notes_found),
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = stringResource(R.string.empty_state_hint),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f),
+                    textAlign = TextAlign.Center
+                )
             }
+        } else {
+            LazyVerticalStaggeredGrid(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(horizontal = 3.dp),
+                columns = StaggeredGridCells.Adaptive(noteMinWidth.value.size.dp),
+                state = gridState
+            ) {
+                item(span = StaggeredGridItemSpan.FullLine) {
+                    Spacer(modifier = Modifier.height(topSpacerHeight))
+                }
 
-            items(
-                count = gridNotes.itemCount,
-                key = { index -> gridNotes[index]?.note?.id ?: index }
-            ) { index ->
-                val gridNote = gridNotes[index]
-                if (gridNote != null) {
-                    NoteCard(
-                        gridNote = gridNote,
-                        vm = vm,
-                        onEditClick = onEditClick,
-                        selectedNotes = selectedNotes,
-                        showFullPathOfNotes = showFullPathOfNotes,
-                        showFullNoteHeight = showFullNoteHeight.value,
-                        tagDisplayMode = tagDisplayMode,
-                        noteViewType = noteViewType,
-                        modifier = Modifier.padding(3.dp)
-                    )
-                } else {
-                    // Placeholder for loading item
-                    Card(
-                        modifier = Modifier.padding(3.dp).height(100.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surface
+                items(
+                    count = gridNotes.itemCount,
+                    key = { index -> gridNotes[index]?.note?.id ?: index }
+                ) { index ->
+                    val gridNote = gridNotes[index]
+                    if (gridNote != null) {
+                        NoteCard(
+                            gridNote = gridNote,
+                            vm = vm,
+                            onEditClick = onEditClick,
+                            selectedNotes = selectedNotes,
+                            showFullPathOfNotes = showFullPathOfNotes,
+                            showFullNoteHeight = showFullNoteHeight.value,
+                            tagDisplayMode = tagDisplayMode,
+                            noteViewType = noteViewType,
+                            modifier = Modifier.padding(3.dp)
                         )
-                    ) {
-                        Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
+                    } else {
+                        // Placeholder for loading item
+                        Card(
+                            modifier = Modifier.padding(3.dp).height(100.dp),
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.surface
+                            )
                         ) {
-                            Text("Loading...")
+                            Box(
+                                modifier = Modifier.fillMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text("Loading...")
+                            }
                         }
                     }
                 }
+
+                item(span = StaggeredGridItemSpan.FullLine) {
+                    Spacer(modifier = Modifier.height(topBarHeight + 10.dp))
+                }
             }
 
-            item(span = StaggeredGridItemSpan.FullLine) {
-                Spacer(modifier = Modifier.height(topBarHeight + 10.dp))
+            if (showScrollbars) {
+                CustomVerticalScrollbar(
+                    scrollState = gridState,
+                    modifier = Modifier.align(Alignment.CenterEnd)
+                )
             }
-        }
-
-        if (showScrollbars) {
-            CustomVerticalScrollbar(
-                scrollState = gridState,
-                modifier = Modifier.align(Alignment.CenterEnd)
-            )
         }
     }
 }

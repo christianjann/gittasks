@@ -148,4 +148,6 @@
     <string name="tag_ignores_folders_subtitle">При фільтрації за тегом показувати нотатки з усіх папок замість лише поточної папки</string>
     <string name="search_ignores_filters">Пошук ігнорує всі фільтри</string>
     <string name="search_ignores_filters_subtitle">При пошуку показувати результати з усіх папок незалежно від налаштувань поточної папки та підпапок</string>
+    <string name="no_notes_found">Нотатки не знайдено</string>
+    <string name="empty_state_hint">Відкрийте панель і виберіть папку, щоб розпочати</string>
 </resources>
