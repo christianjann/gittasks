@@ -2,6 +2,7 @@ package io.github.christianjann.gitnotecje.ui.screen.setup
 
 import androidx.compose.animation.ContentTransform
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -65,6 +66,7 @@ fun SetupNav(
                 repoPath = vm.prefs.repoPathSafely(),
                 navigate = navController::navigate,
                 onSetupSuccess = onSetupSuccess,
+                initState = vm.initState.collectAsState().value
             )
 
             is SetupDestination.FileExplorer -> {
@@ -127,6 +129,7 @@ fun SetupNav(
                     folders = fileExplorerVm.folders,
                     newRepoMethod = setupDestination.newRepoMethod,
                     useUrlForRootFolder = useUrlForRootFolder,
+                    initState = vm.initState.collectAsState().value
                 )
             }
 

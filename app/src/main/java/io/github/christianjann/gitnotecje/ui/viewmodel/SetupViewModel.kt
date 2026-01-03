@@ -136,14 +136,18 @@ class SetupViewModel(val authFlow: SharedFlow<String>) : ViewModel(), SetupViewM
     fun openRepo(storageConfig: StorageConfiguration, onSuccess: () -> Unit) {
 
         CoroutineScope(Dispatchers.IO).launch {
+            _initState.emit(InitState.OpeningRepo)
+
             if (!NodeFs.Folder.fromPath(storageConfig.repoPath()).exist()) {
                 val msg = uiHelper.getString(R.string.error_path_not_directory)
                 uiHelper.makeToast(msg)
+                _initState.emit(InitState.Idle)
                 return@launch
             }
 
             gitManager.openRepo(storageConfig.repoPath()).onFailure {
                 uiHelper.makeToast(it.message)
+                _initState.emit(InitState.Idle)
                 return@launch
             }
 
@@ -152,6 +156,7 @@ class SetupViewModel(val authFlow: SharedFlow<String>) : ViewModel(), SetupViewM
 
             storageManager.updateDatabaseAndRepo()
 
+            _initState.emit(InitState.Idle)
             onSuccess()
         }
 
@@ -409,6 +414,7 @@ sealed class InitState {
 
     data object CalculatingTimestamps : InitState()
     data class GeneratingDatabase(val path: String) : InitState()
+    data object OpeningRepo : InitState()
 
 
     fun message(): String {
@@ -424,6 +430,7 @@ sealed class InitState {
             GettingUserInfo -> "Getting user information"
             Idle -> ""
             FetchingInfosSuccess -> ""
+            OpeningRepo -> "Opening repository"
         }
     }
 

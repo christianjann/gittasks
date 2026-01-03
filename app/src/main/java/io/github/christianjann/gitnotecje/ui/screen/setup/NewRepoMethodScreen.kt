@@ -29,6 +29,7 @@ import io.github.christianjann.gitnotecje.ui.component.AppPage
 import io.github.christianjann.gitnotecje.ui.destination.NewRepoMethod
 import io.github.christianjann.gitnotecje.ui.destination.SetupDestination
 import io.github.christianjann.gitnotecje.ui.model.StorageConfiguration
+import io.github.christianjann.gitnotecje.ui.viewmodel.InitState
 import kotlinx.coroutines.launch
 
 
@@ -42,7 +43,8 @@ fun NewRepoMethodScreen(
     makeToast: (String) -> Unit,
     repoPath: String,
     navigate: (SetupDestination) -> Unit,
-    onSetupSuccess: () -> Unit
+    onSetupSuccess: () -> Unit,
+    initState: io.github.christianjann.gitnotecje.ui.viewmodel.InitState
 ) {
 
     val storageChooserExpanded: MutableState<Boolean> =
@@ -216,6 +218,7 @@ private fun NewRepoMethodScreenPreview() {
         makeToast = {},
         repoPath = "test",
         navigate = {},
-        onSetupSuccess = {}
+        onSetupSuccess = {},
+        initState = InitState.Idle
     )
 }

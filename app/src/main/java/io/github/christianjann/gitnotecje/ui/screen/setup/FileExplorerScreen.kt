@@ -36,6 +36,7 @@ import io.github.christianjann.gitnotecje.ui.component.GetStringDialog
 import io.github.christianjann.gitnotecje.ui.component.SimpleIcon
 import io.github.christianjann.gitnotecje.ui.destination.NewRepoMethod
 import io.github.christianjann.gitnotecje.ui.theme.LocalSpaces
+import io.github.christianjann.gitnotecje.ui.viewmodel.InitState
 
 
 @Composable
@@ -49,6 +50,7 @@ fun FileExplorerScreen(
     folders: List<NodeFs.Folder>,
     newRepoMethod: NewRepoMethod,
     useUrlForRootFolder: MutableState<Boolean>,
+    initState: io.github.christianjann.gitnotecje.ui.viewmodel.InitState,
 ) {
 
     AppPage(
@@ -90,9 +92,10 @@ fun FileExplorerScreen(
                         .padding(LocalSpaces.current.medium),
                     onClick = {
                         onFinish(currentDir.path, useUrlForRootFolder.value)
-                    }
+                    },
+                    enabled = initState != InitState.OpeningRepo
                 ) {
-                    Text(text = title)
+                    Text(text = if (initState == InitState.OpeningRepo) initState.message() else title)
                 }
 
                 if (newRepoMethod == NewRepoMethod.Clone) {
@@ -208,6 +211,7 @@ private fun FileExplorerPreview() {
             NodeFs.Folder.fromPath("hello"),
         ),
         newRepoMethod = NewRepoMethod.Clone,
-        useUrlForRootFolder = remember { mutableStateOf(false) }
+        useUrlForRootFolder = remember { mutableStateOf(false) },
+        initState = InitState.Idle
     )
 }
