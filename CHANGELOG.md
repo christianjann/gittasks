@@ -5,6 +5,10 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+### Improved
+
+- Tag Display: Tags now wrap to multiple lines in list view for better readability when notes have many tags
+
 ## [26.01]
 
 ### Added
