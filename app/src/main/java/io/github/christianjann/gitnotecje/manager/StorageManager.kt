@@ -88,7 +88,9 @@ class StorageManager {
             gitManager.pull(cred, author).onFailure {
                 syncFailed = true
                 _syncState.emit(SyncState.Offline)
-                uiHelper.makeToast("${it.message}${uiHelper.getString(R.string.offline_hint)}")
+                if (prefs.debugFeaturesEnabled.getBlocking()) {
+                    uiHelper.makeToast("${it.message}${uiHelper.getString(R.string.offline_hint)}")
+                }
             }
         }
 
@@ -98,7 +100,9 @@ class StorageManager {
             gitManager.push(cred).onFailure {
                 syncFailed = true
                 _syncState.emit(SyncState.Offline)
-                uiHelper.makeToast("${it.message}${uiHelper.getString(R.string.offline_hint)}")
+                if (prefs.debugFeaturesEnabled.getBlocking()) {
+                    uiHelper.makeToast("${it.message}${uiHelper.getString(R.string.offline_hint)}")
+                }
             }
         }
 

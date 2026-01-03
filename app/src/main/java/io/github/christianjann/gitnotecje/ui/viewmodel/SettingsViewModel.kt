@@ -33,10 +33,14 @@ class SettingsViewModel : ViewModel() {
             uiHelper.makeToast(uiHelper.getString(R.string.reloading_database))
             val res = storageManager.updateDatabase(force = true)
             res.onFailure {
-                uiHelper.makeToast("${uiHelper.getString(R.string.failed_reload)}: $it")
+                if (prefs.debugFeaturesEnabled.getBlocking()) {
+                    uiHelper.makeToast("${uiHelper.getString(R.string.failed_reload)}: $it")
+                }
             }
             res.onSuccess {
-                uiHelper.makeToast(uiHelper.getString(R.string.success_reload))
+                if (prefs.debugFeaturesEnabled.getBlocking()) {
+                    uiHelper.makeToast(uiHelper.getString(R.string.success_reload))
+                }
             }
         }
     }
