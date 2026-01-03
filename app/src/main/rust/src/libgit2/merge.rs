@@ -36,50 +36,62 @@ fn normal_merge(
         .allow_conflicts(true)
         .conflict_style_merge(true)
         .force();
-    repo.merge(&[remote], Some(&mut merge_options), Some(&mut checkout_options))?;
-    
+    repo.merge(
+        &[remote],
+        Some(&mut merge_options),
+        Some(&mut checkout_options),
+    )?;
+
     // Get the repository index which now has conflicts
     let mut idx = repo.index()?;
 
     let result_tree = if idx.has_conflicts() {
         info!("Merge conflicts detected, attempting automatic resolution...");
-        
+
         // First pass: resolve conflicts where we have our version
         let mut resolved_count = 0;
         let conflicts: Vec<_> = idx.conflicts()?.collect::<Result<Vec<_>, _>>()?;
-        
+
         for conflict in &conflicts {
             if let Some(our_entry) = &conflict.our {
                 // Resolve by writing the our version to the working directory
                 let blob = repo.find_blob(our_entry.id)?;
                 let content = blob.content();
                 let path_str = std::str::from_utf8(&our_entry.path).unwrap_or("");
-                
+
                 // Get the full path relative to repository working directory
-                let repo_workdir = repo.workdir().ok_or_else(|| git2::Error::from_str("Repository has no working directory"))?;
+                let repo_workdir = repo
+                    .workdir()
+                    .ok_or_else(|| git2::Error::from_str("Repository has no working directory"))?;
                 let full_path = repo_workdir.join(path_str);
-                
+
                 // Ensure parent directories exist
                 if let Some(parent) = full_path.parent() {
-                    std::fs::create_dir_all(parent).map_err(|e| git2::Error::from_str(&format!("Failed to create directories: {}", e)))?;
+                    std::fs::create_dir_all(parent).map_err(|e| {
+                        git2::Error::from_str(&format!("Failed to create directories: {}", e))
+                    })?;
                 }
-                
-                std::fs::write(&full_path, content).map_err(|e| git2::Error::from_str(&format!("Failed to write file: {}", e)))?;
-                
+
+                std::fs::write(&full_path, content)
+                    .map_err(|e| git2::Error::from_str(&format!("Failed to write file: {}", e)))?;
+
                 // Add the resolved file to the index
                 idx.add_path(&std::path::Path::new(path_str))?;
-                
+
                 // Mark conflict as resolved
                 let path = std::path::Path::new(path_str);
                 if let Err(e) = idx.conflict_remove(path) {
                     warn!("Failed to remove conflict for {:?}: {}", path_str, e);
                 } else {
                     resolved_count += 1;
-                    info!("Resolved conflict for file: {:?}", String::from_utf8_lossy(&our_entry.path));
+                    info!(
+                        "Resolved conflict for file: {:?}",
+                        String::from_utf8_lossy(&our_entry.path)
+                    );
                 }
             }
         }
-        
+
         // Second pass: for remaining conflicts, try their version if ours doesn't exist
         if idx.has_conflicts() {
             for conflict in &conflicts {
@@ -89,107 +101,130 @@ fn normal_merge(
                     let blob = repo.find_blob(their_entry.id)?;
                     let content = blob.content();
                     let path_str = std::str::from_utf8(&their_entry.path).unwrap_or("");
-                    
+
                     // Get the full path relative to repository working directory
-                    let repo_workdir = repo.workdir().ok_or_else(|| git2::Error::from_str("Repository has no working directory"))?;
+                    let repo_workdir = repo.workdir().ok_or_else(|| {
+                        git2::Error::from_str("Repository has no working directory")
+                    })?;
                     let full_path = repo_workdir.join(path_str);
-                    
+
                     // Ensure parent directories exist
                     if let Some(parent) = full_path.parent() {
-                        std::fs::create_dir_all(parent).map_err(|e| git2::Error::from_str(&format!("Failed to create directories: {}", e)))?;
+                        std::fs::create_dir_all(parent).map_err(|e| {
+                            git2::Error::from_str(&format!("Failed to create directories: {}", e))
+                        })?;
                     }
-                    
-                    std::fs::write(&full_path, content).map_err(|e| git2::Error::from_str(&format!("Failed to write file: {}", e)))?;
-                    
+
+                    std::fs::write(&full_path, content).map_err(|e| {
+                        git2::Error::from_str(&format!("Failed to write file: {}", e))
+                    })?;
+
                     // Add the resolved file to the index
                     idx.add_path(&std::path::Path::new(path_str))?;
-                    
+
                     // Mark conflict as resolved
                     let path = std::path::Path::new(path_str);
                     if let Err(e) = idx.conflict_remove(path) {
                         warn!("Failed to remove conflict for {:?}: {}", path_str, e);
                     } else {
                         resolved_count += 1;
-                        info!("Resolved conflict (no local version) for file: {:?}", 
-                             String::from_utf8_lossy(&their_entry.path));
+                        info!(
+                            "Resolved conflict (no local version) for file: {:?}",
+                            String::from_utf8_lossy(&their_entry.path)
+                        );
                     }
                 }
             }
         }
-        
+
         // Third pass: for any remaining conflicts, try ancestor version
         if idx.has_conflicts() {
             for conflict in &conflicts {
-                if conflict.our.is_none() && conflict.their.is_none() && conflict.ancestor.is_some() {
+                if conflict.our.is_none() && conflict.their.is_none() && conflict.ancestor.is_some()
+                {
                     let ancestor_entry = conflict.ancestor.as_ref().unwrap();
                     // Resolve by writing the ancestor version to the working directory
                     let blob = repo.find_blob(ancestor_entry.id)?;
                     let content = blob.content();
                     let path_str = std::str::from_utf8(&ancestor_entry.path).unwrap_or("");
-                    
+
                     // Get the full path relative to repository working directory
-                    let repo_workdir = repo.workdir().ok_or_else(|| git2::Error::from_str("Repository has no working directory"))?;
+                    let repo_workdir = repo.workdir().ok_or_else(|| {
+                        git2::Error::from_str("Repository has no working directory")
+                    })?;
                     let full_path = repo_workdir.join(path_str);
-                    
+
                     // Ensure parent directories exist
                     if let Some(parent) = full_path.parent() {
-                        std::fs::create_dir_all(parent).map_err(|e| git2::Error::from_str(&format!("Failed to create directories: {}", e)))?;
+                        std::fs::create_dir_all(parent).map_err(|e| {
+                            git2::Error::from_str(&format!("Failed to create directories: {}", e))
+                        })?;
                     }
-                    
-                    std::fs::write(&full_path, content).map_err(|e| git2::Error::from_str(&format!("Failed to write file: {}", e)))?;
-                    
+
+                    std::fs::write(&full_path, content).map_err(|e| {
+                        git2::Error::from_str(&format!("Failed to write file: {}", e))
+                    })?;
+
                     // Add the resolved file to the index
                     idx.add_path(&std::path::Path::new(path_str))?;
-                    
+
                     // Mark conflict as resolved
                     let path = std::path::Path::new(path_str);
                     if let Err(e) = idx.conflict_remove(path) {
                         warn!("Failed to remove conflict for {:?}: {}", path_str, e);
                     } else {
                         resolved_count += 1;
-                        info!("Resolved conflict (using ancestor) for file: {:?}", 
-                             String::from_utf8_lossy(&ancestor_entry.path));
+                        info!(
+                            "Resolved conflict (using ancestor) for file: {:?}",
+                            String::from_utf8_lossy(&ancestor_entry.path)
+                        );
                     }
                 }
             }
         }
-        
+
         info!("Resolved {}/{} conflicts", resolved_count, conflicts.len());
-        
+
         // Write the tree to repository
         let tree_id = idx.write_tree_to(repo)?;
-        
+
         // Checkout the resolved tree to update working directory
         let result_tree = repo.find_tree(tree_id)?;
         repo.checkout_tree(
             result_tree.as_object(),
-            Some(git2::build::CheckoutBuilder::default()
-                .force()
-                .allow_conflicts(false)
-            )
+            Some(
+                git2::build::CheckoutBuilder::default()
+                    .force()
+                    .allow_conflicts(false),
+            ),
         )?;
-        
+
         // Add all resolved files to the repository index
         let mut repo_index = repo.index()?;
         repo_index.add_all(["*"].iter(), git2::IndexAddOption::DEFAULT, None)?;
         repo_index.write()?;
-        
+
         // Verify no conflicts remain
         if repo_index.has_conflicts() {
-            error!("Could not resolve all conflicts automatically (resolved {}/{}). Aborting merge.", 
-                  resolved_count, conflicts.len());
-            
+            error!(
+                "Could not resolve all conflicts automatically (resolved {}/{}). Aborting merge.",
+                resolved_count,
+                conflicts.len()
+            );
+
             // Clean up: reset to local head
             let local_commit = repo.find_commit(local.id())?;
             repo.reset(local_commit.as_object(), git2::ResetType::Hard, None)?;
-            return Err(git2::Error::from_str("Could not resolve all merge conflicts automatically"));
+            return Err(git2::Error::from_str(
+                "Could not resolve all merge conflicts automatically",
+            ));
         }
-        
+
         // Write the resolved index and create tree
         idx.write()?;
         let tree_id = idx.write_tree()?;
         let result_tree = repo.find_tree(tree_id)?;
-        
+
         result_tree
     } else {
         // No conflicts, just write the tree

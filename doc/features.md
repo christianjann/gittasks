@@ -21,7 +21,7 @@ GitNote features intelligent automatic merge conflict resolution that handles co
 
 - **Three-Pass Resolution Strategy**: When conflicts occur during pull operations, GitNote applies a deterministic three-pass approach:
   1. **Local Priority**: Uses your local changes when available
-  2. **Remote Fallback**: Uses remote changes if no local version exists  
+  2. **Remote Fallback**: Uses remote changes if no local version exists
   3. **Ancestor Safety**: Falls back to common ancestor version to prevent data loss
 - **Transparent Operation**: Conflicts are resolved automatically in the background without user intervention
 - **Visual Feedback**: Loading indicators show when resolution is in progress

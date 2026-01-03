@@ -144,6 +144,7 @@ See [building.md](doc/building.md) for detailed build instructions.
 - Opening a local repository in device memory that was previously a remote cloned repo seems not to work, re-clone it
 
 # Future direction
+
 - Move more of the core logic and data handling into the Rust part
 - Maybe get rid of the database caching entirely and use a more thin layer on top of the Git abstraction
 - Make it much faster

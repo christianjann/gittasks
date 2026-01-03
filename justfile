@@ -1,6 +1,7 @@
 set windows-powershell := true
 
 # You need to open the project once in Android studio, then it should be there
+
 export JAVA_HOME := `grep '^java.home=' .gradle/config.properties | cut -d'=' -f2`
 
 main:
@@ -99,32 +100,32 @@ release-package:
         exit 1
     fi
     echo "✅ Git is clean."
-    
+
     # Get versionName from build.gradle.kts
     VERSION_NAME=$(grep 'versionName =' app/build.gradle.kts | sed 's/.*versionName = "\(.*\)".*/\1/')
     echo "Version name: $VERSION_NAME"
-    
+
     # Create git tag
     echo "Creating git tag v$VERSION_NAME..."
     git tag "v$VERSION_NAME"
     #git push origin "v$VERSION_NAME"
-    
+
     # Do release-build
     echo "Building release APK..."
     just release-build
-    
+
     # Create packages folder if not exists
     mkdir -p packages
-    
+
     # Move APK
     echo "Moving APK to packages/gitnote-release-${VERSION_NAME}.apk..."
     mv app/build/outputs/apk/release/app-release.apk packages/gitnotecje-release-${VERSION_NAME}.apk
-    
+
     # Bump version code and name
     echo "Bumping version..."
     CURRENT_CODE=$(grep 'versionCode =' app/build.gradle.kts | sed 's/.*versionCode = \([0-9]*\).*/\1/')
     NEW_CODE=$((CURRENT_CODE + 1))
-    
+
     # After release, increment patch or add .0 if no patch
     DOT_COUNT=$(echo "$VERSION_NAME" | tr -cd '.' | wc -c)
     if [ "$DOT_COUNT" -eq 1 ]; then
@@ -139,11 +140,11 @@ release-package:
         echo "Unexpected versionName format: $VERSION_NAME"
         exit 1
     fi
-    
+
     # Update build.gradle.kts
     sed -i "s/versionCode = $CURRENT_CODE/versionCode = $NEW_CODE/" app/build.gradle.kts
     sed -i "s/versionName = \"$VERSION_NAME\"/versionName = \"$NEW_NAME\"/" app/build.gradle.kts
-    
+
     echo "✅ Release package created: packages/gitnote-release-${VERSION_NAME}.apk"
     echo "Version bumped to $NEW_NAME (code: $NEW_CODE)"
 

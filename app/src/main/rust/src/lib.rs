@@ -90,7 +90,9 @@ pub extern "C" fn Java_io_github_christianjann_gitnotecje_manager_GitManagerKt_i
 }
 
 #[unsafe(no_mangle)]
-pub extern "C" fn Java_io_github_christianjann_gitnotecje_manager_GitManagerKt_createRepoLib<'local>(
+pub extern "C" fn Java_io_github_christianjann_gitnotecje_manager_GitManagerKt_createRepoLib<
+    'local,
+>(
     mut env: JNIEnv<'local>,
     _class: JClass<'local>,
     repo_path: JString<'local>,
@@ -105,7 +107,9 @@ pub extern "C" fn Java_io_github_christianjann_gitnotecje_manager_GitManagerKt_c
     OK
 }
 #[unsafe(no_mangle)]
-pub extern "C" fn Java_io_github_christianjann_gitnotecje_manager_GitManagerKt_openRepoLib<'local>(
+pub extern "C" fn Java_io_github_christianjann_gitnotecje_manager_GitManagerKt_openRepoLib<
+    'local,
+>(
     mut env: JNIEnv<'local>,
     _class: JClass<'local>,
     repo_path: JString<'local>,
@@ -260,7 +264,9 @@ mod callback {
     }
 }
 #[unsafe(no_mangle)]
-pub extern "C" fn Java_io_github_christianjann_gitnotecje_manager_GitManagerKt_cloneRepoLib<'local>(
+pub extern "C" fn Java_io_github_christianjann_gitnotecje_manager_GitManagerKt_cloneRepoLib<
+    'local,
+>(
     mut env: JNIEnv<'local>,
     _class: JClass<'local>,
     repo_path: JString<'local>,
@@ -303,7 +309,9 @@ pub extern "C" fn Java_io_github_christianjann_gitnotecje_manager_GitManagerKt_l
         .into_raw()
 }
 #[unsafe(no_mangle)]
-pub extern "C" fn Java_io_github_christianjann_gitnotecje_manager_GitManagerKt_commitAllLib<'local>(
+pub extern "C" fn Java_io_github_christianjann_gitnotecje_manager_GitManagerKt_commitAllLib<
+    'local,
+>(
     mut env: JNIEnv<'local>,
     _class: JClass<'local>,
     name: JString<'local>,
@@ -367,7 +375,12 @@ pub extern "C" fn Java_io_github_christianjann_gitnotecje_manager_GitManagerKt_p
 ) -> jint {
     let cred = Cred::from_jni(&mut env, &cred).unwrap();
     let name = env.get_string(&name).unwrap().to_str().unwrap().to_string();
-    let email = env.get_string(&email).unwrap().to_str().unwrap().to_string();
+    let email = env
+        .get_string(&email)
+        .unwrap()
+        .to_str()
+        .unwrap()
+        .to_string();
     unwrap_or_log!(libgit2::pull(cred, &name, &email), "pull");
     OK
 }
@@ -429,7 +442,9 @@ pub extern "C" fn Java_io_github_christianjann_gitnotecje_manager_GitManagerKt_i
 }
 
 #[unsafe(no_mangle)]
-pub extern "C" fn Java_io_github_christianjann_gitnotecje_manager_GitManagerKt_getTimestampsLib<'local>(
+pub extern "C" fn Java_io_github_christianjann_gitnotecje_manager_GitManagerKt_getTimestampsLib<
+    'local,
+>(
     mut env: JNIEnv<'local>,
     _class: JClass<'local>,
     j_map: JObject<'local>,
@@ -545,7 +560,9 @@ pub extern "C" fn Java_io_github_christianjann_gitnotecje_manager_MimeTypeManage
 }
 
 #[unsafe(no_mangle)]
-pub extern "C" fn Java_io_github_christianjann_gitnotecje_manager_GitManagerKt_getGitLogLib<'local>(
+pub extern "C" fn Java_io_github_christianjann_gitnotecje_manager_GitManagerKt_getGitLogLib<
+    'local,
+>(
     mut env: JNIEnv<'local>,
     _class: JClass<'local>,
     j_list: JObject<'local>,
