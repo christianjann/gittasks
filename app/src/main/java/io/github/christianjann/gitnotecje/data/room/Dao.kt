@@ -120,6 +120,7 @@ interface RepoDatabaseDao {
         sortOrder: SortOrder,
         includeSubfolders: Boolean,
         tag: String? = null,
+        tagIgnoresFolders: Boolean = false,
     ): PagingSource<Int, GridNote> {
 
         val (sortColumn, order) = when (sortOrder) {
@@ -129,13 +130,30 @@ interface RepoDatabaseDao {
             SortOrder.Oldest -> "lastModifiedTimeMillis" to "ASC"
         }
 
-        val whereClause = if (includeSubfolders) {
-            "WHERE relativePath LIKE :currentNoteFolderRelativePath || '%'"
-        } else {
-            if (currentNoteFolderRelativePath.isEmpty()) {
-                "WHERE relativePath NOT LIKE '%/%'"
-            } else {
-                "WHERE relativePath LIKE :currentNoteFolderRelativePath || '/%' AND relativePath NOT LIKE :currentNoteFolderRelativePath || '/%/%'"
+        val whereClause = buildString {
+            val conditions = mutableListOf<String>()
+            
+            // Add folder filtering unless we're in tag mode and ignoring folders
+            if (!(tag != null && tagIgnoresFolders)) {
+                if (includeSubfolders) {
+                    conditions.add("relativePath LIKE :currentNoteFolderRelativePath || '%'")
+                } else {
+                    if (currentNoteFolderRelativePath.isEmpty()) {
+                        conditions.add("relativePath NOT LIKE '%/%'")
+                    } else {
+                        conditions.add("relativePath LIKE :currentNoteFolderRelativePath || '/%' AND relativePath NOT LIKE :currentNoteFolderRelativePath || '/%/%'")
+                    }
+                }
+            }
+            
+            // Add tag filtering if tag is specified
+            if (tag != null) {
+                conditions.add("content LIKE '%- ' || :tag || '%'")
+            }
+            
+            if (conditions.isNotEmpty()) {
+                append("WHERE ")
+                append(conditions.joinToString(" AND "))
             }
         }
 
@@ -146,7 +164,6 @@ interface RepoDatabaseDao {
                        CASE WHEN content LIKE '%completed?: yes%' THEN 1 ELSE 0 END AS completed
                 FROM Notes
                 $whereClause
-                ${if (tag != null) "AND content LIKE '%- ' || :tag || '%'" else ""}
             )
             SELECT *,
                    CASE 
@@ -157,7 +174,18 @@ interface RepoDatabaseDao {
             ORDER BY completed ASC, $sortColumn $order
         """.trimIndent()
 
-        val args = if (tag != null) arrayOf(currentNoteFolderRelativePath, tag) else arrayOf(currentNoteFolderRelativePath)
+        val args = if (tag != null && tagIgnoresFolders) {
+            // When in tag mode and ignoring folders, no folder parameter needed
+            arrayOf(tag)
+        } else when {
+            includeSubfolders || currentNoteFolderRelativePath.isNotEmpty() -> {
+                if (tag != null) arrayOf(currentNoteFolderRelativePath, tag) else arrayOf(currentNoteFolderRelativePath)
+            }
+            else -> {
+                // Root folder case: no currentNoteFolderRelativePath parameter
+                if (tag != null) arrayOf(tag) else emptyArray()
+            }
+        }
         val query = SimpleSQLiteQuery(sql, args)
         return this.gridNotesRaw(query)
     }
@@ -168,6 +196,8 @@ interface RepoDatabaseDao {
         query: String,
         includeSubfolders: Boolean,
         tag: String? = null,
+        tagIgnoresFolders: Boolean = false,
+        searchIgnoresFilters: Boolean = false,
     ): PagingSource<Int, GridNote> {
 
         val (sortColumn, order) = when (sortOrder) {
@@ -191,14 +221,31 @@ interface RepoDatabaseDao {
             }
         }
 
-        val whereClause = if (includeSubfolders) {
-            "Notes.relativePath LIKE :currentNoteFolderRelativePath || '%'"
-        } else {
-            if (currentNoteFolderRelativePath.isEmpty()) {
-                "Notes.relativePath NOT LIKE '%/%'"
-            } else {
-                "Notes.relativePath LIKE :currentNoteFolderRelativePath || '/%' AND Notes.relativePath NOT LIKE :currentNoteFolderRelativePath || '/%/%'"
+        val whereClause = buildString {
+            val conditions = mutableListOf<String>()
+            
+            // Add folder filtering unless we're ignoring filters
+            if (!searchIgnoresFilters && !(tag != null && tagIgnoresFolders)) {
+                if (includeSubfolders) {
+                    conditions.add("Notes.relativePath LIKE :currentNoteFolderRelativePath || '%'")
+                } else {
+                    if (currentNoteFolderRelativePath.isEmpty()) {
+                        conditions.add("Notes.relativePath NOT LIKE '%/%'")
+                    } else {
+                        conditions.add("Notes.relativePath LIKE :currentNoteFolderRelativePath || '/%' AND Notes.relativePath NOT LIKE :currentNoteFolderRelativePath || '/%/%'")
+                    }
+                }
             }
+            
+            // Always add FTS match condition
+            conditions.add("NotesFts MATCH :query")
+            
+            // Add tag filtering if tag is specified
+            if (tag != null) {
+                conditions.add("Notes.content LIKE '%- ' || :tag || '%'")
+            }
+            
+            append(conditions.joinToString(" AND "))
         }
 
         val sql = """
@@ -209,11 +256,7 @@ interface RepoDatabaseDao {
                        CASE WHEN Notes.content LIKE '%completed?: yes%' THEN 1 ELSE 0 END AS completed
                 FROM Notes
                 JOIN NotesFts ON NotesFts.rowid = Notes.rowid
-                WHERE
-                    $whereClause
-                    AND
-                    NotesFts MATCH :query
-                    ${if (tag != null) "AND Notes.content LIKE '%- ' || :tag || '%'" else ""}
+                WHERE $whereClause
             )
             SELECT *,
                    CASE 
@@ -224,7 +267,18 @@ interface RepoDatabaseDao {
             ORDER BY completed ASC, score DESC, $sortColumn $order
         """.trimIndent()
 
-        val args = if (tag != null) arrayOf(currentNoteFolderRelativePath, ftsEscape(query), tag) else arrayOf(currentNoteFolderRelativePath, ftsEscape(query))
+        val args = if (searchIgnoresFilters || (tag != null && tagIgnoresFolders)) {
+            // When search ignores filters or tag mode ignores folders, no folder parameter needed
+            if (tag != null) arrayOf(ftsEscape(query), tag) else arrayOf(ftsEscape(query))
+        } else when {
+            includeSubfolders || currentNoteFolderRelativePath.isNotEmpty() -> {
+                if (tag != null) arrayOf(currentNoteFolderRelativePath, ftsEscape(query), tag) else arrayOf(currentNoteFolderRelativePath, ftsEscape(query))
+            }
+            else -> {
+                // Root folder case: no currentNoteFolderRelativePath parameter
+                if (tag != null) arrayOf(ftsEscape(query), tag) else arrayOf(ftsEscape(query))
+            }
+        }
         val query = SimpleSQLiteQuery(sql, args)
 
 

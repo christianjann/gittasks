@@ -292,7 +292,13 @@ class GridViewModel : ViewModel() {
 
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val pagingFlow = prefs.includeSubfolders.getFlow().flatMapLatest { includeSubfolders ->
+    val pagingFlow = combine(
+        prefs.includeSubfolders.getFlow(),
+        prefs.tagIgnoresFolders.getFlow(),
+        prefs.searchIgnoresFilters.getFlow()
+    ) { includeSubfolders, tagIgnoresFolders, searchIgnoresFilters ->
+        Triple(includeSubfolders, tagIgnoresFolders, searchIgnoresFilters)
+    }.flatMapLatest { (includeSubfolders, tagIgnoresFolders, searchIgnoresFilters) ->
         combine(
             currentNoteFolderRelativePath,
             prefs.sortOrder.getFlow(),
@@ -303,9 +309,9 @@ class GridViewModel : ViewModel() {
                 config = PagingConfig(pageSize = 50),
                 pagingSourceFactory = {
                     if (query.isEmpty()) {
-                        dao.gridNotes(currentNoteFolderRelativePath, sortOrder, includeSubfolders, selectedTag)
+                        dao.gridNotes(currentNoteFolderRelativePath, sortOrder, includeSubfolders, selectedTag, tagIgnoresFolders)
                     } else {
-                        dao.gridNotesWithQuery(currentNoteFolderRelativePath, sortOrder, query, includeSubfolders, selectedTag)
+                        dao.gridNotesWithQuery(currentNoteFolderRelativePath, sortOrder, query, includeSubfolders, selectedTag, tagIgnoresFolders, searchIgnoresFilters)
                     }
                 }
             ).flow.cachedIn(viewModelScope)
@@ -358,8 +364,6 @@ class GridViewModel : ViewModel() {
                     uiHelper.makeToast("${uiHelper.getString(R.string.failed_reload)}: $it")
                 }
                 res.onSuccess {
-                    // Reset to root folder after database reload since folder structure might have changed
-                    _currentNoteFolderRelativePath.emit("")
                     uiHelper.makeToast(uiHelper.getString(R.string.success_reload))
                 }
             } finally {

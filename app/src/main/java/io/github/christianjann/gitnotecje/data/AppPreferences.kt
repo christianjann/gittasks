@@ -151,6 +151,9 @@ class AppPreferences(
     val tagDisplayMode = enumPreference("tagDisplayMode", TagDisplayMode.None)
     val includeSubfolders = booleanPreference("includeSubfolders", true)
 
+    val tagIgnoresFolders = booleanPreference("tagIgnoresFolders", true)
+    val searchIgnoresFilters = booleanPreference("searchIgnoresFilters", true)
+
     val defaultExtension = stringPreference("defaultExtension", "md")
     val showLinesNumber = booleanPreference("showLinesNumber", false)
     val backgroundGitOperations = booleanPreference("backgroundGitOperations", false)

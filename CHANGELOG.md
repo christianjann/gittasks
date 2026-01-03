@@ -5,6 +5,13 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+### Added
+
+- Advanced Filtering Options: New settings for more flexible note filtering
+  - "Tag filtering ignores folders" (enabled by default): When filtering by tags, search across all folders instead of limiting to current folder
+  - "Search ignores all filters" (enabled by default): When searching, show results from all folders regardless of current folder and subfolder settings
+- Folder Context in Tag Mode: When using tag filtering, the current folder context is preserved in the navigation drawer for better user awareness
+
 ### Improved
 
 - Tag Display: Tags now wrap to multiple lines in list view for better readability when notes have many tags

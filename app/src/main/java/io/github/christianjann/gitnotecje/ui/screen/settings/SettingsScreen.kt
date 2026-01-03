@@ -185,6 +185,26 @@ fun SettingsScreen(
                 }
             )
 
+            val tagIgnoresFolders by vm.prefs.tagIgnoresFolders.getAsState()
+            ToggleableSettings(
+                title = stringResource(R.string.tag_ignores_folders),
+                subtitle = stringResource(R.string.tag_ignores_folders_subtitle),
+                checked = tagIgnoresFolders,
+                onCheckedChange = {
+                    vm.update { vm.prefs.tagIgnoresFolders.update(it) }
+                }
+            )
+
+            val searchIgnoresFilters by vm.prefs.searchIgnoresFilters.getAsState()
+            ToggleableSettings(
+                title = stringResource(R.string.search_ignores_filters),
+                subtitle = stringResource(R.string.search_ignores_filters_subtitle),
+                checked = searchIgnoresFilters,
+                onCheckedChange = {
+                    vm.update { vm.prefs.searchIgnoresFilters.update(it) }
+                }
+            )
+
             val backgroundGitOperations by vm.prefs.backgroundGitOperations.getAsState()
             ToggleableSettings(
                 title = stringResource(R.string.background_git_operations),

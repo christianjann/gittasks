@@ -253,9 +253,7 @@ fun DrawerScreen(
                     showTags.value = newShowTags
                     if (!newShowTags) { // switching to folder mode
                         onTagSelected(null)
-                    } else { // switching to tag mode
-                        openFolder("")
-                    }
+                    } // when switching to tag mode, keep current folder
                 },
                 noteBeingMoved = noteBeingMoved,
                 onMoveNoteToFolder = onMoveNoteToFolder,

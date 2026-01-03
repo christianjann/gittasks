@@ -51,6 +51,10 @@
     <string name="tag_display_both">Both views</string>
     <string name="include_subfolders">Include subfolders</string>
     <string name="include_subfolders_subtitle">Show notes from subfolders when browsing a folder</string>
+    <string name="tag_ignores_folders">Tag filtering ignores folders</string>
+    <string name="tag_ignores_folders_subtitle">When filtering by tag, show notes from all folders instead of current folder only</string>
+    <string name="search_ignores_filters">Search ignores all filters</string>
+    <string name="search_ignores_filters_subtitle">When searching, show results from all folders regardless of current folder and subfolder settings</string>
     <string name="background_git_operations">Background git operations</string>
     <string name="background_git_operations_subtitle">Perform git pull/push in background during refresh to avoid blocking UI</string>
     <string name="folder_filters">Folder filters</string>
