@@ -804,52 +804,10 @@ pub fn is_change() -> Result<bool, Error> {
     Ok(count > 0)
 }
 
-fn find_timestamp(repo: &Repository, file_path: String) -> anyhow::Result<Option<(String, i64)>> {
-    // Use revwalk to find the last commit that touched this path
-    let mut revwalk = repo.revwalk()?;
-    revwalk.push_head()?;
-    revwalk.set_sorting(git2::Sort::TIME)?;
-
-    for oid_result in revwalk {
-        let oid = oid_result?;
-        let commit = repo.find_commit(oid)?;
-
-        // Check if this commit touches the file
-        if commit
-            .tree()?
-            .get_path(std::path::Path::new(&file_path))
-            .is_ok()
-        {
-            // We want to check if this commit modified the file_path compared to its parent(s)
-            let parent = commit.parents().next();
-
-            let is_modified = match parent {
-                Some(parent) => {
-                    // Compare trees between commit and its first parent
-                    let parent_tree = parent.tree()?;
-                    let current_tree = commit.tree()?;
-
-                    let diff = repo.diff_tree_to_tree(
-                        Some(&parent_tree),
-                        Some(&current_tree),
-                        Some(git2::DiffOptions::new().pathspec(&file_path)),
-                    )?;
-
-                    diff.deltas().len() > 0
-                }
-                // Initial commit, consider as modified
-                None => true,
-            };
-
-            if is_modified {
-                return Ok(Some((file_path, commit.time().seconds() * 1000)));
-            }
-        }
-    }
-    Ok(None)
-}
-
 pub fn get_timestamps() -> Result<HashMap<String, i64>, Error> {
+    let start = std::time::Instant::now();
+    log::debug!("Starting get_timestamps");
+
     let repo = REPO.lock().expect("repo lock");
     let repo = repo.as_ref().expect("repo");
 
@@ -864,9 +822,9 @@ pub fn get_timestamps() -> Result<HashMap<String, i64>, Error> {
 
     let mut file_timestamps = HashMap::new();
 
-    // Get the list of files in the repo at HEAD
+    // Get the list of supported files in the repo at HEAD
     let tree = head.tree()?;
-
+    let mut supported_files = Vec::new();
     tree.walk(TreeWalkMode::PreOrder, |root, entry| {
         if entry.kind() == Some(git2::ObjectType::Blob)
             && let Some(name) = entry.name()
@@ -875,12 +833,97 @@ pub fn get_timestamps() -> Result<HashMap<String, i64>, Error> {
             && is_extension_supported(extension)
         {
             let path = format!("{root}{name}");
-            if let Ok(Some((path, time))) = find_timestamp(repo, path) {
-                file_timestamps.insert(path, time);
-            }
+            supported_files.push(path);
         }
         TreeWalkResult::Ok
     })?;
+
+    log::debug!("Found {} supported files to process", supported_files.len());
+
+    // Create a set for fast lookup
+    let supported_files_set: std::collections::HashSet<String> =
+        supported_files.into_iter().collect();
+
+    // Walk through commits in reverse chronological order (newest first)
+    let mut revwalk = repo.revwalk()?;
+    revwalk.push_head()?;
+    revwalk.set_sorting(git2::Sort::TIME)?;
+
+    let mut commits_processed = 0;
+    const MAX_COMMITS_TO_PROCESS: usize = 100;
+
+    for oid_result in revwalk {
+        if commits_processed >= MAX_COMMITS_TO_PROCESS {
+            log::debug!("Processed {} commits, stopping", MAX_COMMITS_TO_PROCESS);
+            break;
+        }
+        commits_processed += 1;
+
+        let oid = oid_result?;
+        let commit = repo.find_commit(oid)?;
+
+        // Skip commits we've already processed timestamps for
+        let commit_time = commit.time().seconds() * 1000;
+
+        // Check if this commit modifies any of our supported files
+        let parent = commit.parents().next();
+
+        if let Some(parent) = parent {
+            if let (Ok(parent_tree), Ok(current_tree)) = (parent.tree(), commit.tree()) {
+                // Get diff between this commit and its parent
+                if let Ok(diff) = repo.diff_tree_to_tree(
+                    Some(&parent_tree),
+                    Some(&current_tree),
+                    None, // No pathspec to get all changes
+                ) {
+                    // Check each delta to see if it affects our supported files
+                    for delta in diff.deltas() {
+                        if let Some(path) = delta.new_file().path() {
+                            if let Some(path_str) = path.to_str() {
+                                if supported_files_set.contains(path_str) {
+                                    // This file was modified in this commit
+                                    file_timestamps.insert(path_str.to_string(), commit_time);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            // Initial commit - all files are "modified"
+            if let Ok(tree) = commit.tree() {
+                tree.walk(TreeWalkMode::PreOrder, |root, entry| {
+                    if entry.kind() == Some(git2::ObjectType::Blob)
+                        && let Some(name) = entry.name()
+                    {
+                        let path = format!("{root}{name}");
+                        if supported_files_set.contains(&path) {
+                            file_timestamps.insert(path, commit_time);
+                        }
+                    }
+                    TreeWalkResult::Ok
+                })?;
+            }
+        }
+
+        // If we've found timestamps for all files, we can stop early
+        if file_timestamps.len() >= supported_files_set.len() {
+            log::debug!(
+                "Found timestamps for all {} files after {} commits",
+                supported_files_set.len(),
+                commits_processed
+            );
+            break;
+        }
+    }
+
+    let duration = start.elapsed();
+    log::debug!(
+        "get_timestamps completed in {}ms, processed {} commits, found {} timestamps",
+        duration.as_millis(),
+        commits_processed,
+        file_timestamps.len()
+    );
 
     Ok(file_timestamps)
 }

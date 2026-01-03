@@ -20,6 +20,11 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
   - Added check to skip database update if repository is in invalid state
   - Database sync runs asynchronously in the background to avoid blocking app startup
   - Prevents multiple concurrent sync jobs from being launched
+- Timestamp Calculation Performance: Dramatically improved database resync performance from minutes to seconds
+  - Optimized timestamp calculation algorithm from O(files × commits) to O(commits × modified_files)
+  - Changed from per-file commit traversal to processing commits in chronological order and updating all modified files
+  - Reduced excessive logging and eliminated hanging issues during timestamp calculation
+  - Maintains accurate file modification timestamps while providing massive performance improvement
 
 ## [26.01.2]
 

@@ -139,7 +139,6 @@ See [building.md](doc/building.md) for detailed build instructions.
 # Current limitation
 
 - Android does not differentiate case for file name, so if you have a folder named `A` and another folder named `a`, `a` will not be displayed.
-- Resync and reload of the database when there was an remote change by some other Git client takes forever
 - Opening a local repository in device memory that was previously a remote cloned repo seems not to work, re-clone it
 
 # Future direction
