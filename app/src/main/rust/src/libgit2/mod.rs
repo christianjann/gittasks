@@ -342,10 +342,10 @@ fn setup_repository_after_clone(repo: &Repository) -> Result<(), Error> {
         let has_master_branch = repo.find_branch("master", git2::BranchType::Local).is_ok();
 
         if !has_main_branch && !has_master_branch {
-            // No main or master branch, create master branch from current HEAD
+            // No main or master branch, create main branch from current HEAD
             let head_commit = repo.head()?.peel_to_commit()?;
-            repo.branch("master", &head_commit, false)?;
-            repo.set_head("refs/heads/master")?;
+            repo.branch("main", &head_commit, false)?;
+            repo.set_head("refs/heads/main")?;
         }
     }
 
@@ -385,20 +385,20 @@ fn create_initial_commit_and_branch(repo: &Repository) -> Result<(), Error> {
 
     // Create main branch
     let head_commit = repo.head()?.peel_to_commit()?;
-    match repo.branch("master", &head_commit, false) {
+    match repo.branch("main", &head_commit, false) {
         Ok(_) => {}
         Err(e) if e.raw_code() == -4 => {
             // Branch already exists, update it to point to the new commit
-            if let Ok(mut branch) = repo.find_branch("master", git2::BranchType::Local) {
+            if let Ok(mut branch) = repo.find_branch("main", git2::BranchType::Local) {
                 branch
                     .get_mut()
-                    .set_target(head_commit.id(), "Update master branch to initial commit")?;
+                    .set_target(head_commit.id(), "Update main branch to initial commit")?;
             }
         }
-        Err(e) => return Err(Error::git2(e, "create master branch")),
+        Err(e) => return Err(Error::git2(e, "create main branch")),
     }
-    repo.set_head("refs/heads/master")
-        .map_err(|e| Error::git2(e, "set head to master"))?;
+    repo.set_head("refs/heads/main")
+        .map_err(|e| Error::git2(e, "set head to main"))?;
 
     Ok(())
 }
