@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.TextButton
@@ -401,6 +402,7 @@ private fun SyncStateIcon(
     state: SyncState,
     onConsumeOkSyncState: () -> Unit
 ) {
+    var showErrorDialog by remember { mutableStateOf(false) }
     var modifier: Modifier = Modifier
 
     if (state.isLoading()) {
@@ -422,16 +424,16 @@ private fun SyncStateIcon(
         is SyncState.Error -> {
             Icon(
                 painter = painterResource(R.drawable.cloud_alert_24px),
-                contentDescription = "Sync Error",
-                modifier = modifier,
+                contentDescription = stringResource(R.string.sync_failed),
+                modifier = modifier.clickable { showErrorDialog = true },
             )
         }
 
         is SyncState.Offline -> {
             Icon(
                 painter = painterResource(R.drawable.cloud_alert_24px),
-                contentDescription = "Offline",
-                modifier = modifier,
+                contentDescription = stringResource(R.string.sync_offline_message),
+                modifier = modifier.clickable { showErrorDialog = true },
             )
         }
 
@@ -458,19 +460,42 @@ private fun SyncStateIcon(
 
         is SyncState.Pull -> Icon(
             imageVector = Icons.Default.CloudDownload,
-            contentDescription = "Pulling",
-            modifier = modifier,
+            contentDescription = stringResource(R.string.sync_pulling_message),
+            modifier = modifier.clickable { showErrorDialog = true },
         )
 
         is SyncState.Push -> Icon(
             imageVector = Icons.Default.CloudUpload,
-            contentDescription = "Pushing",
-            modifier = modifier,
+            contentDescription = stringResource(R.string.sync_pushing_message),
+            modifier = modifier.clickable { showErrorDialog = true },
         )
 
         is SyncState.Reloading -> CircularProgressIndicator(
             modifier = Modifier.size(24.dp),
             strokeWidth = 2.dp
+        )
+    }
+
+    if (showErrorDialog) {
+        AlertDialog(
+            onDismissRequest = { showErrorDialog = false },
+            title = { Text(stringResource(R.string.sync_status_title)) },
+            text = {
+                Text(
+                    when (state) {
+                        is SyncState.Error -> stringResource(R.string.sync_failed)
+                        is SyncState.Offline -> stringResource(R.string.sync_offline_message)
+                        is SyncState.Pull -> stringResource(R.string.sync_pulling_message)
+                        is SyncState.Push -> stringResource(R.string.sync_pushing_message)
+                        else -> ""
+                    }
+                )
+            },
+            confirmButton = {
+                TextButton(onClick = { showErrorDialog = false }) {
+                    Text(stringResource(R.string.ok))
+                }
+            }
         )
     }
 }

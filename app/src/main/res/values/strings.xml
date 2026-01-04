@@ -224,4 +224,9 @@
     <string name="add">Add</string>
     <string name="search_or_add_tag">Search or add tag</string>
     <string name="no_tags_match_search">No tags match your search</string>
+    <string name="sync_status_title">Sync Status</string>
+    <string name="sync_offline_message">Sync will resume when connection is restored</string>
+    <string name="sync_pulling_message">Pulling changes from remote repository</string>
+    <string name="sync_pushing_message">Pushing changes to remote repository</string>
+    <string name="ok">OK</string>
 </resources>

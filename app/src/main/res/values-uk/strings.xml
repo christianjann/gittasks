@@ -156,4 +156,9 @@
     <string name="no_tags_selected">Теги не вибрано</string>
     <string name="all_tags_selected">Усі теги вибрано</string>
     <string name="confirm">Підтвердити</string>
+    <string name="sync_status_title">Стан синхронізації</string>
+    <string name="sync_offline_message">Синхронізація відновиться після відновлення з\'єднання</string>
+    <string name="sync_pulling_message">Завантаження змін із віддаленого репозиторію</string>
+    <string name="sync_pushing_message">Надсилання змін до віддаленого репозиторію</string>
+    <string name="ok">OK</string>
 </resources>

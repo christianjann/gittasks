@@ -185,4 +185,9 @@
     <string name="add">Adicionar</string>
     <string name="search_or_add_tag">Buscar ou adicionar tag</string>
     <string name="no_tags_match_search">Nenhuma tag corresponde à sua busca</string>
+    <string name="sync_status_title">Status de sincronização</string>
+    <string name="sync_offline_message">A sincronização será retomada quando a conexão for restaurada</string>
+    <string name="sync_pulling_message">Baixando alterações do repositório remoto</string>
+    <string name="sync_pushing_message">Enviando alterações para o repositório remoto</string>
+    <string name="ok">OK</string>
 </resources>

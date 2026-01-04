@@ -193,4 +193,9 @@
     <string name="add">Přidat</string>
     <string name="search_or_add_tag">Hledat nebo přidat štítek</string>
     <string name="no_tags_match_search">Žádné štítky nevyhovují vašemu hledání</string>
+    <string name="sync_status_title">Stav synchronizace</string>
+    <string name="sync_offline_message">Synchronizace bude pokračovat po obnovení připojení</string>
+    <string name="sync_pulling_message">Stahování změn ze vzdáleného repozitáře</string>
+    <string name="sync_pushing_message">Odesílání změn do vzdáleného repozitáře</string>
+    <string name="ok">OK</string>
 </resources>

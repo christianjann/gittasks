@@ -204,4 +204,9 @@
     <string name="add">Ajouter</string>
     <string name="search_or_add_tag">Rechercher ou ajouter un tag</string>
     <string name="no_tags_match_search">Aucun tag ne correspond à votre recherche</string>
+    <string name="sync_status_title">État de synchronisation</string>
+    <string name="sync_offline_message">La synchronisation reprendra lorsque la connexion sera restaurée</string>
+    <string name="sync_pulling_message">Récupération des modifications depuis le dépôt distant</string>
+    <string name="sync_pushing_message">Envoi des modifications vers le dépôt distant</string>
+    <string name="ok">OK</string>
 </resources>

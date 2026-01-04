@@ -224,4 +224,9 @@
     <string name="add">Hinzufügen</string>
     <string name="search_or_add_tag">Tag suchen oder hinzufügen</string>
     <string name="no_tags_match_search">Keine Tags entsprechen Ihrer Suche</string>
+    <string name="sync_status_title">Synchronisationsstatus</string>
+    <string name="sync_offline_message">Synchronisation wird fortgesetzt, wenn die Verbindung wiederhergestellt ist</string>
+    <string name="sync_pulling_message">Änderungen aus dem Remote-Repository ziehen</string>
+    <string name="sync_pushing_message">Änderungen in das Remote-Repository pushen</string>
+    <string name="ok">OK</string>
 </resources>

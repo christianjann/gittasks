@@ -13,6 +13,9 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
   - Search functionality within the dialog to filter available tags
   - Keyboard-friendly interface with proper focus management
   - Supports all languages with complete translations
+- Cloud Sync Error States: Added clickable error icons that show detailed status dialogs
+  - Tap sync error or offline icons to view detailed status information
+  - Improves accessibility and user understanding of sync issues
 
 ### Fixed
 
