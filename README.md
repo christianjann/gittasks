@@ -16,7 +16,14 @@
 
 Android note-taking app with Git integration. A personal fork of GitNote, optimized for efficient markdown-based note management with advanced features like tag filtering, Git log viewing, and seamless synchronization.
 
-## Quick Start
+## User Quick Start
+
+1. **Set up a Git repository**: Create a private Git repository on GitHub, GitLab, or your own server to store your notes
+2. **Install GitNoteCJE**: Download and install the app from the [GitHub releases page](https://github.com/christianjann/gitnote/releases) or build it yourself following the developer instructions below
+3. **Explore examples**: Check out the [examples](./doc/examples/) and copy them to your repository for inspiration
+4. **Start taking notes**: Enjoy seamless markdown note-taking with Git synchronization!
+
+## Developer Quick Start
 
 1. **Install dependencies**: Rust, Android Studio, Android SDK, JDK
 2. **Clone repository**: `git clone https://github.com/christianjann/gitnotecje.git`
@@ -126,6 +133,7 @@ _Supported Architecture: `arm64-v8a`, `x86_64`_
 - [Building the app](./doc/building.md)
 - [Markdown header format](./doc/design/markdown_header.md)
 - [Contributing](./CONTRIBUTING.md)
+- [Changelog](./CHANGELOG.md)
 
 # Build System
 
