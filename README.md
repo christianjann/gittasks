@@ -132,6 +132,7 @@ _Supported Architecture: `arm64-v8a`, `x86_64`_
 - [Detailed features documentation](./doc/features.md)
 - [Building the app](./doc/building.md)
 - [Markdown header format](./doc/design/markdown_header.md)
+- [App architecture](./doc/design/app_architecture.md)
 - [Contributing](./CONTRIBUTING.md)
 - [Changelog](./CHANGELOG.md)
 
