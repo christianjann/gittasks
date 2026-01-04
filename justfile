@@ -114,7 +114,7 @@ release-package:
     # Create git tag
     echo "Creating git tag v$VERSION_NAME..."
     git tag "v$VERSION_NAME"
-    #git push origin "v$VERSION_NAME"
+    git push origin "v$VERSION_NAME"
 
     # Do release-build
     echo "Building release APK..."
