@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [26.01.4]
+
 ### Added
 
 - Tag Editing Interface: Added intuitive tag editing dialog accessible from note context menus
