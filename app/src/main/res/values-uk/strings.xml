@@ -160,5 +160,6 @@
     <string name="sync_offline_message">Синхронізація відновиться після відновлення з\'єднання</string>
     <string name="sync_pulling_message">Завантаження змін із віддаленого репозиторію</string>
     <string name="sync_pushing_message">Надсилання змін до віддаленого репозиторію</string>
+    <string name="opening_repository">Відкриття репозиторію Git</string>
     <string name="ok">OK</string>
 </resources>

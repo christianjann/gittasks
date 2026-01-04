@@ -228,5 +228,6 @@
     <string name="sync_offline_message">Synchronisation wird fortgesetzt, wenn die Verbindung wiederhergestellt ist</string>
     <string name="sync_pulling_message">Änderungen aus dem Remote-Repository ziehen</string>
     <string name="sync_pushing_message">Änderungen in das Remote-Repository pushen</string>
+    <string name="opening_repository">Git-Repository wird geöffnet</string>
     <string name="ok">OK</string>
 </resources>

@@ -274,6 +274,5 @@ flowchart TD
 1. **Centralized State**: Single source of truth for note data across ViewModels
 2. **Offline Mode**: Graceful degradation when Git operations fail
 3. **Pagination Optimization**: Load note content on-demand, not metadata only
-4. **Loading States**: Add loading indicators for background operations
 
 This design provides a solid foundation for a responsive, data-consistent note-taking app with Git integration.

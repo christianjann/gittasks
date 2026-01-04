@@ -197,5 +197,6 @@
     <string name="sync_offline_message">Synchronizace bude pokračovat po obnovení připojení</string>
     <string name="sync_pulling_message">Stahování změn ze vzdáleného repozitáře</string>
     <string name="sync_pushing_message">Odesílání změn do vzdáleného repozitáře</string>
+    <string name="opening_repository">Otevírání Git repozitáře</string>
     <string name="ok">OK</string>
 </resources>

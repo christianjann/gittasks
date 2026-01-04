@@ -208,5 +208,6 @@
     <string name="sync_offline_message">La synchronisation reprendra lorsque la connexion sera restaurée</string>
     <string name="sync_pulling_message">Récupération des modifications depuis le dépôt distant</string>
     <string name="sync_pushing_message">Envoi des modifications vers le dépôt distant</string>
+    <string name="opening_repository">Ouverture du dépôt Git</string>
     <string name="ok">OK</string>
 </resources>

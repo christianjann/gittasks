@@ -189,5 +189,6 @@
     <string name="sync_offline_message">A sincronização será retomada quando a conexão for restaurada</string>
     <string name="sync_pulling_message">Baixando alterações do repositório remoto</string>
     <string name="sync_pushing_message">Enviando alterações para o repositório remoto</string>
+    <string name="opening_repository">Abrindo repositório Git</string>
     <string name="ok">OK</string>
 </resources>

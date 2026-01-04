@@ -10,6 +10,7 @@ import io.github.christianjann.gitnotecje.helper.StoragePermissionHelper
 import io.github.christianjann.gitnotecje.helper.UiHelper
 import io.github.christianjann.gitnotecje.manager.GitException
 import io.github.christianjann.gitnotecje.manager.GitExceptionType
+import io.github.christianjann.gitnotecje.manager.SyncState
 import io.github.christianjann.gitnotecje.ui.model.StorageConfiguration
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -73,6 +74,9 @@ class MainViewModel : ViewModel() {
         Log.i(TAG, "startSync called")
         if (syncJob?.isActive != true) {
             syncJob = CoroutineScope(Dispatchers.IO).launch { //maybe set to Dispatchers.Default
+                // Set opening state
+                storageManager.setSyncState(SyncState.Opening)
+                
                 // Open the repository first
                 val storageConfig = when (prefs.storageConfig.get()) {
                     StorageConfig.App -> {
@@ -89,9 +93,12 @@ class MainViewModel : ViewModel() {
                 if (openResult.isFailure) {
                     val exception = openResult.exceptionOrNull()
                     Log.e(TAG, "Failed to open repo: $exception")
+                    storageManager.setSyncState(SyncState.Error)
                     return@launch
                 }
                 Log.i(TAG, "Repo opened successfully")
+                // Clear opening state - let normal sync states take over
+                storageManager.setSyncState(SyncState.Ok(false))
                 prefs.applyGitAuthorDefaults(null, gitManager.currentSignature())
 
                 val lastSyncTime = prefs.lastDatabaseSyncTime.get()

@@ -34,8 +34,10 @@ sealed interface SyncState {
 
     object Reloading : SyncState
 
+    object Opening : SyncState
+
     fun isLoading(): Boolean {
-        return this is Pull || this is Push || this is Reloading
+        return this is Pull || this is Push || this is Reloading || this is Opening
     }
 }
 
@@ -235,16 +237,20 @@ class StorageManager {
         try {
             if (isDatabaseOutOfSync()) {
                 Log.d(TAG, "Database is out of sync, updating...")
+                // Show sync indicator in top grid
+                _syncState.emit(SyncState.Reloading)
                 // Show user feedback that sync is happening
                 withContext(Dispatchers.Main) {
                     uiHelper.makeToast(uiHelper.getString(R.string.syncing_repository))
                 }
                 updateDatabaseWithoutLocker().onFailure {
                     Log.e(TAG, "Failed to update database: ${it.message}")
+                    _syncState.emit(SyncState.Error)
                     withContext(Dispatchers.Main) {
                         uiHelper.makeToast(uiHelper.getString(R.string.sync_failed))
                     }
                 }.onSuccess {
+                    _syncState.emit(SyncState.Ok(false))
                     withContext(Dispatchers.Main) {
                         uiHelper.makeToast(uiHelper.getString(R.string.sync_success))
                     }
@@ -254,6 +260,7 @@ class StorageManager {
             }
         } catch (e: Exception) {
             Log.e(TAG, "Error checking database sync status: ${e.message}", e)
+            _syncState.emit(SyncState.Error)
         }
     }
 

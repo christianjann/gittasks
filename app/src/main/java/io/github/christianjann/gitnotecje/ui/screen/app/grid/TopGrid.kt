@@ -35,6 +35,7 @@ import androidx.compose.material.icons.automirrored.rounded.ViewList
 import androidx.compose.material.icons.filled.CloudDone
 import androidx.compose.material.icons.filled.CloudDownload
 import androidx.compose.material.icons.filled.CloudUpload
+import androidx.compose.material.icons.filled.FolderOpen
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material.icons.rounded.MoreVert
@@ -470,9 +471,21 @@ private fun SyncStateIcon(
             modifier = modifier.clickable { showErrorDialog = true },
         )
 
-        is SyncState.Reloading -> CircularProgressIndicator(
-            modifier = Modifier.size(24.dp),
-            strokeWidth = 2.dp
+        is SyncState.Reloading -> Box(
+            modifier = Modifier
+                .size(24.dp)
+                .clickable { showErrorDialog = true }
+        ) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(24.dp),
+                strokeWidth = 2.dp
+            )
+        }
+
+        is SyncState.Opening -> Icon(
+            imageVector = Icons.Default.FolderOpen,
+            contentDescription = stringResource(R.string.opening_repository),
+            modifier = modifier.clickable { showErrorDialog = true },
         )
     }
 
@@ -487,6 +500,8 @@ private fun SyncStateIcon(
                         is SyncState.Offline -> stringResource(R.string.sync_offline_message)
                         is SyncState.Pull -> stringResource(R.string.sync_pulling_message)
                         is SyncState.Push -> stringResource(R.string.sync_pushing_message)
+                        is SyncState.Opening -> stringResource(R.string.opening_repository)
+                        is SyncState.Reloading -> stringResource(R.string.reload_database)
                         else -> ""
                     }
                 )

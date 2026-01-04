@@ -228,5 +228,6 @@
     <string name="sync_offline_message">Sync will resume when connection is restored</string>
     <string name="sync_pulling_message">Pulling changes from remote repository</string>
     <string name="sync_pushing_message">Pushing changes to remote repository</string>
+    <string name="opening_repository">Opening Git repository</string>
     <string name="ok">OK</string>
 </resources>

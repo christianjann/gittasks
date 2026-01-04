@@ -5,6 +5,12 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+### Added
+- Repository Opening Indicator: Added visual feedback in the top grid when the Git repository is being opened on app startup
+  - Shows folder open icon with pulsing animation during repository initialization
+  - Provides clear indication that the app is loading and accessing the repository
+  - Differentiates from other sync states with unique visual styling
+
 ### Performance
 - App Launch Time: Optimized repository synchronization timing for faster release build startup
 
