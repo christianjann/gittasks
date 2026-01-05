@@ -50,8 +50,8 @@ android {
         applicationId = "io.github.christianjann.gitnotecje"
         minSdk = 30
         targetSdk = 36
-        versionCode = 21
-        versionName = "26.01.6"
+        versionCode = 22
+        versionName = "26.01.7"
 
         buildConfigField(
             "String",
