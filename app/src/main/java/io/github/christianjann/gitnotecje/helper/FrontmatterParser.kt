@@ -1,12 +1,13 @@
 package io.github.christianjann.gitnotecje.helper
 
 import java.time.Instant
+import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
 object FrontmatterParser {
 
-    private val updatedFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss'Z'").withZone(ZoneOffset.UTC)
+    private val updatedFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss'Z'").withZone(ZoneId.systemDefault())
 
     private val completedRegex = Regex("completed\\?\\s*:\\s*\\w+", RegexOption.IGNORE_CASE)
 

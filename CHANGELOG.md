@@ -19,6 +19,11 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
   - Reverted Compose BOM version to 2025.09.00 to restore correct handle positioning
   - Affects text input fields in the editor, file name field, and search bar
 
+- **Frontmatter Timestamp Localization**: Fixed frontmatter timestamps to use local time instead of UTC
+  - Updated timestamps in note frontmatter now display in the user's local timezone
+  - Database timestamps remain unchanged and continue to use UTC internally
+  - Improves user experience by showing familiar local time in note metadata
+
 ## [26.01.8]
 
 ### Fixed
