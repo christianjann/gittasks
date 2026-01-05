@@ -73,6 +73,9 @@ class StorageManager {
     private var scheduledPull: GitOperation.Pull? = null
     private var scheduledPullTimer: kotlinx.coroutines.Job? = null
 
+    // Track if we're in app initialization to prevent cancelling critical operations
+    private var isInitializing = false
+
     sealed class GitOperation {
         data class Commit(val author: GitAuthor, val commitMessages: MutableList<String>) : GitOperation()
         data class Pull(val cred: Cred?, val author: GitAuthor) : GitOperation()
@@ -709,8 +712,13 @@ class StorageManager {
         _syncState.emit(SyncState.Ok(true))
     }
 
+    fun setInitializing(initializing: Boolean) {
+        isInitializing = initializing
+        Log.d(TAG, "Initialization mode set to: $initializing")
+    }
+
     suspend fun shutdown() {
-        Log.d(TAG, "Shutting down StorageManager")
+        Log.d(TAG, "Shutting down StorageManager, isInitializing=$isInitializing")
         
         // Cancel any scheduled pull timer
         scheduledPullTimer?.cancel()
@@ -724,9 +732,16 @@ class StorageManager {
         executingGitJob?.cancel()
         executingGitJob = null
         
-        // Cancel current operation job and wait for queue completion
-        currentOperationJob?.cancel()
-        waitForQueueCompletion()
+        // Handle current operation based on initialization state
+        if (isInitializing) {
+            // During initialization, wait for critical operations to complete
+            Log.d(TAG, "Waiting for initialization operations to complete...")
+            waitForQueueCompletion()
+        } else {
+            // Outside initialization, cancel current operation
+            currentOperationJob?.cancel()
+            waitForQueueCompletion()
+        }
         
         Log.d(TAG, "StorageManager shutdown complete")
     }

@@ -119,13 +119,18 @@ class MainViewModel : ViewModel() {
                 // This will automatically update the database after completion
                 // Only perform these expensive operations on the first app start, not on screen rotations
                 if (!initialSyncCompleted) {
-                    val backgroundGitOps = prefs.backgroundGitOperations.getBlocking()
-                    Log.i(TAG, "Background git ops enabled: $backgroundGitOps")
-                    if (backgroundGitOps) {
-                        storageManager.performBackgroundGitOperations(immediate = true)
-                    } else {
-                        // If background git ops are disabled, still update database
-                        storageManager.updateDatabaseIfNeeded()
+                    storageManager.setInitializing(true)
+                    try {
+                        val backgroundGitOps = prefs.backgroundGitOperations.getBlocking()
+                        Log.i(TAG, "Background git ops enabled: $backgroundGitOps")
+                        if (backgroundGitOps) {
+                            storageManager.performBackgroundGitOperations(immediate = true)
+                        } else {
+                            // If background git ops are disabled, still update database
+                            storageManager.updateDatabaseIfNeeded()
+                        }
+                    } finally {
+                        storageManager.setInitializing(false)
                     }
                     
                     initialSyncCompleted = true
