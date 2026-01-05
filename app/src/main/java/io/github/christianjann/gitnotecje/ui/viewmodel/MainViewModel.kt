@@ -116,7 +116,7 @@ class MainViewModel : ViewModel() {
                 val backgroundGitOps = prefs.backgroundGitOperations.getBlocking()
                 Log.i(TAG, "Background git ops enabled: $backgroundGitOps")
                 if (backgroundGitOps) {
-                    storageManager.performBackgroundGitOperations()
+                    storageManager.performBackgroundGitOperations(immediate = true)
                 } else {
                     // If background git ops are disabled, still update database
                     storageManager.updateDatabaseIfNeeded()

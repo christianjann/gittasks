@@ -222,7 +222,7 @@ class GridViewModel : ViewModel() {
             val backgroundGitOps = prefs.backgroundGitOperations.getBlocking()
             storageManager.updateDatabaseAndRepo(includeGitOperations = !backgroundGitOps)
             if (backgroundGitOps) {
-                storageManager.performBackgroundGitOperations()
+                storageManager.performBackgroundGitOperations(immediate = true)
             }
             refreshSelectedNotes()
             _isRefreshing.emit(false)

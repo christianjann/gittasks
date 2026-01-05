@@ -7,10 +7,11 @@ import io.github.christianjann.gitnotecje.data.AppPreferences
 import io.github.christianjann.gitnotecje.data.room.Note
 import io.github.christianjann.gitnotecje.data.room.NoteFolder
 import io.github.christianjann.gitnotecje.data.NoteRepository
+import io.github.christianjann.gitnotecje.ui.model.Cred
+import io.github.christianjann.gitnotecje.ui.model.GitAuthor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExecutorCoroutineDispatcher
-import kotlinx.coroutines.asCoroutineDispatcher
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,7 +19,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
-import java.util.concurrent.Executors
 import kotlin.Result.Companion.failure
 import kotlin.Result.Companion.success
 
@@ -64,12 +64,20 @@ class StorageManager {
     private val locker = Mutex()
     private var executingGitJob: kotlinx.coroutines.Job? = null
     private var waitingGitJob: kotlinx.coroutines.Job? = null
+    private var lastBackgroundSyncTime: Long = 0
 
-    // Custom dispatcher for git operations to avoid blocking Dispatchers.IO
-    private val gitDispatcher: ExecutorCoroutineDispatcher = Executors.newFixedThreadPool(2).asCoroutineDispatcher()
+    // Unified queue for git operations
+    private val gitOperationQueue = mutableListOf<GitOperation>()
+    private var currentOperationJob: kotlinx.coroutines.Job? = null
+    private var lastPullRequestTime: Long = 0
+    private var scheduledPull: GitOperation.Pull? = null
+    private var scheduledPullTimer: kotlinx.coroutines.Job? = null
 
-    // Pending commit messages for background operations
-    private val pendingCommitMessages = mutableListOf<String>()
+    sealed class GitOperation {
+        data class Commit(val author: GitAuthor, val commitMessages: MutableList<String>) : GitOperation()
+        data class Pull(val cred: Cred?, val author: GitAuthor) : GitOperation()
+    }
+
 
     private val _syncState: MutableStateFlow<SyncState> = MutableStateFlow(SyncState.Ok(true))
     val syncState: StateFlow<SyncState> = _syncState
@@ -130,132 +138,204 @@ class StorageManager {
     }
 
     /**
-     * Perform git pull and push operations in the background
-     * Uses a two-job system: one executing and one waiting
+     * Queues a pull operation with debouncing. Commits are handled through queueCommit().
      */
-    fun performBackgroundGitOperations() {
-        Log.d(TAG, "performBackgroundGitOperations called")
-        
-        when {
-            // No jobs running - start executing job
-            executingGitJob == null && waitingGitJob == null -> {
-                Log.d(TAG, "Starting new executing job")
-                startExecutingJob()
+    suspend fun performBackgroundGitOperations(immediate: Boolean = false) {
+        val currentTime = System.currentTimeMillis()
+        val debounceMs = if (immediate) 0L else prefs.backgroundGitDelaySeconds.getBlocking() * 1000L
+
+        Log.d(TAG, "performBackgroundGitOperations called, immediate=$immediate")
+
+        // Queue pull operation with debouncing
+        queuePullOperation(currentTime, debounceMs)
+    }
+
+    /**
+     * Queues a commit operation immediately (no debouncing)
+     */
+    suspend fun queueCommit(author: GitAuthor, commitMessage: String) {
+        Log.d(TAG, "queueCommit: $commitMessage")
+        val cred = prefs.cred()
+        val remoteUrl = prefs.remoteUrl.getBlocking()
+        val backgroundGitOps = prefs.backgroundGitOperations.getBlocking()
+
+        synchronized(gitOperationQueue) {
+            // Check if there's already a commit operation queued - if so, add to its message list
+            val existingCommitIndex = gitOperationQueue.indexOfFirst { it is GitOperation.Commit }
+            if (existingCommitIndex >= 0) {
+                // Add to existing commit operation
+                val existingOp = gitOperationQueue[existingCommitIndex] as GitOperation.Commit
+                existingOp.commitMessages.add(commitMessage)
+                Log.d(TAG, "Added message to existing commit operation, now has ${existingOp.commitMessages.size} messages")
+            } else {
+                // Create new commit operation with message list
+                gitOperationQueue.add(GitOperation.Commit(author, mutableListOf(commitMessage)))
             }
-            
-            // Executing job running, no waiting job - start waiting job
-            executingGitJob != null && waitingGitJob == null -> {
-                Log.d(TAG, "Starting new waiting job")
-                startWaitingJob()
+        }
+        processQueue()
+
+        // If background git operations are enabled, queue pull operation with delay
+        if (backgroundGitOps && remoteUrl.isNotEmpty()) {
+            performBackgroundGitOperations()
+        }
+    }
+
+
+
+    private suspend fun queuePullOperation(currentTime: Long, debounceMs: Long) {
+        val cred = prefs.cred()
+        val author = prefs.gitAuthor()
+
+        if (debounceMs == 0L) {
+            // Immediate pull
+            synchronized(gitOperationQueue) {
+                // Cancel any existing scheduled pull
+                scheduledPullTimer?.cancel()
+                scheduledPullTimer = null
+                scheduledPull = null
+
+                // Remove any existing pull operations
+                gitOperationQueue.removeAll { it is GitOperation.Pull }
+
+                // Add immediate pull
+                gitOperationQueue.add(GitOperation.Pull(cred, author))
+                processQueue()
             }
-            
-            // Both jobs running - do nothing, waiting job will handle when executing finishes
-            else -> {
-                Log.d(TAG, "Both executing and waiting jobs running, ignoring request")
+        } else {
+            // Scheduled pull with debouncing
+            synchronized(gitOperationQueue) {
+                // Cancel any existing scheduled pull
+                scheduledPullTimer?.cancel()
+                scheduledPullTimer = null
+                scheduledPull = null
+
+                // Always apply the full debounce delay for pull operations
+                Log.d(TAG, "Queuing pull operation with debounce delay: ${debounceMs}ms")
+                scheduledPull = GitOperation.Pull(cred, author)
+
+                // Schedule processing after the debounce delay
+                scheduledPullTimer = CoroutineScope(Dispatchers.Default + SupervisorJob()).launch {
+                    delay(debounceMs)
+                    synchronized(gitOperationQueue) {
+                        scheduledPull?.let { pull ->
+                            gitOperationQueue.add(pull)
+                            scheduledPull = null
+                            processQueue()
+                        }
+                    }
+                }
+
+                lastPullRequestTime = currentTime
             }
         }
     }
-    
-    private fun startExecutingJob() {
-        executingGitJob = CoroutineScope(gitDispatcher).launch {
-            try {
-                performGitOperations()
-            } finally {
-                executingGitJob = null
-                // If there's a waiting job, promote it to executing
-                waitingGitJob?.let { waiting ->
-                    Log.d(TAG, "Promoting waiting job to executing")
-                    waitingGitJob = null
-                    executingGitJob = waiting
-                    // The waiting job will now run its operations
+
+    private fun processQueue() {
+        synchronized(gitOperationQueue) {
+            if (gitOperationQueue.isEmpty() || currentOperationJob?.isActive == true) {
+                return
+            }
+
+            val operation = gitOperationQueue.removeAt(0)
+            currentOperationJob = CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    when (operation) {
+                        is GitOperation.Commit -> performQueuedCommit(operation.author, operation.commitMessages)
+                        is GitOperation.Pull -> performQueuedPull(operation.cred, operation.author)
+                    }
+                } finally {
+                    currentOperationJob = null
+                    // Process next operation if any
+                    processQueue()
                 }
             }
         }
     }
-    
-    private fun startWaitingJob() {
-        waitingGitJob = CoroutineScope(gitDispatcher).launch {
-            try {
-                // Wait for the executing job to finish
-                executingGitJob?.join()
-                // Now perform our operations
-                performGitOperations()
-            } finally {
-                waitingGitJob = null
+
+    private suspend fun waitForQueueCompletion() {
+        // Wait for any currently executing operation to complete
+        currentOperationJob?.join()
+        // Also wait for any queued operations to complete
+        while (true) {
+            synchronized(gitOperationQueue) {
+                if (gitOperationQueue.isEmpty() && currentOperationJob?.isActive != true) {
+                    break
+                }
+            }
+            delay(10) // Small delay to avoid busy waiting
+        }
+    }
+
+    private suspend fun performQueuedCommit(author: GitAuthor, commitMessages: List<String>) {
+        val commitMessage = createConsolidatedCommitMessage(commitMessages)
+        Log.d(TAG, "performQueuedCommit: committing ${commitMessages.size} operations with message: '$commitMessage'")
+        gitManager.commitAll(author, commitMessage).onFailure {
+            Log.e(TAG, "Queued commit failed: ${it.message}")
+        }
+    }
+
+    private fun createConsolidatedCommitMessage(commitMessages: List<String>): String {
+        return when (commitMessages.size) {
+            0 -> "gitnote changes"
+            1 -> commitMessages.first()
+            else -> {
+                val subject = "gitnote changes (${commitMessages.size} operations)"
+                val body = commitMessages.joinToString("\n") { "- $it" }
+                "$subject\n\n$body"
             }
         }
     }
-    
-    private suspend fun performGitOperations() {
-        // Add configurable delay to batch operations
-        val delaySeconds = prefs.backgroundGitDelaySeconds.getBlocking()
-        if (delaySeconds > 0) {
-            Log.d(TAG, "Delaying background git operations for $delaySeconds seconds")
-            delay(delaySeconds * 1000L)
-        }
 
-        val cred = prefs.cred()
-        val author = prefs.gitAuthor()
+    private suspend fun performQueuedPull(cred: Cred?, author: GitAuthor) {
         val remoteUrl = prefs.remoteUrl.get()
-        var syncFailed = false
+        if (remoteUrl.isEmpty()) return
 
-        Log.d(TAG, "Remote URL: $remoteUrl")
+        try {
+            Log.d(TAG, "performQueuedPull: starting queued pull")
 
-        // Commit any pending changes before syncing
-        val commitMessages = synchronized(pendingCommitMessages) {
-            pendingCommitMessages.toList().also { pendingCommitMessages.clear() }
-        }
-        if (commitMessages.isNotEmpty()) {
-            val commitMessage = createBackgroundCommitMessage(commitMessages)
-            gitManager.commitAll(author, commitMessage).onFailure {
-                Log.e(TAG, "Failed to commit pending changes: ${it.message}")
-                // Continue with sync even if commit fails
-            }
-        }
+            val commitBeforePull = gitManager.lastCommit()
 
-        var pullChangedHead = false
-        val commitBeforePull = if (remoteUrl.isNotEmpty()) gitManager.lastCommit() else ""
-
-        if (remoteUrl.isNotEmpty()) {
-            Log.d(TAG, "Starting pull operation")
+            // Pull
             _syncState.emit(SyncState.Pull)
             gitManager.pull(cred, author).onFailure {
-                Log.e(TAG, "Pull failed: ${it.message}")
-                syncFailed = true
+                Log.e(TAG, "Queued pull failed: ${it.message}")
                 _syncState.emit(SyncState.Offline)
-                // Don't show toast for background operations
-            }.onSuccess {
-                Log.d(TAG, "Pull succeeded")
-                val commitAfterPull = gitManager.lastCommit()
-                pullChangedHead = commitAfterPull != commitBeforePull
-                Log.d(TAG, "Pull changed HEAD: $pullChangedHead (before: $commitBeforePull, after: $commitAfterPull)")
+                return
             }
-        }
 
-        if (remoteUrl.isNotEmpty()) {
-            Log.d(TAG, "Starting push operation")
+            val commitAfterPull = gitManager.lastCommit()
+            val pullChangedHead = commitAfterPull != commitBeforePull
+            Log.d(TAG, "Queued pull succeeded, changed HEAD: $pullChangedHead")
+
+            // Push after successful pull
             _syncState.emit(SyncState.Push)
             gitManager.push(cred).onFailure {
-                syncFailed = true
+                Log.e(TAG, "Queued push failed: ${it.message}")
                 _syncState.emit(SyncState.Offline)
-                // Don't show toast for background operations
+                return
             }
-        }
 
-        if (!syncFailed) {
             _syncState.emit(SyncState.Ok(false))
-            // Update database only if pull brought in changes
-            Log.d(TAG, "pullChangedHead=$pullChangedHead, will ${if (pullChangedHead) "update" else "skip"} database update")
+
+            // Update database if pull brought in remote changes
             if (pullChangedHead) {
+                Log.d(TAG, "Queued pull brought remote changes, updating database")
                 updateDatabaseIfNeeded()
             } else {
-                // No remote changes, just update the commit hash to current HEAD
+                // No remote changes, just ensure database commit is up to date with current HEAD
                 val currentHead = gitManager.lastCommit()
-                Log.d(TAG, "Updating databaseCommit to current HEAD: $currentHead")
-                prefs.databaseCommit.update(currentHead)
+                val databaseCommit = prefs.databaseCommit.get()
+                if (currentHead != databaseCommit) {
+                    Log.d(TAG, "Updating database commit hash to current HEAD: $currentHead")
+                    prefs.databaseCommit.update(currentHead)
+                }
             }
+        } finally {
+            // Operation complete
         }
     }
+    
+
 
     /**
      * Update the database with the last files
@@ -329,34 +409,38 @@ class StorageManager {
     suspend fun updateDatabaseIfNeeded() {
         Log.d(TAG, "updateDatabaseIfNeeded called")
         try {
-            val shouldUpdate = isDatabaseOutOfSync()
-            Log.d(TAG, "updateDatabaseIfNeeded: shouldUpdate=$shouldUpdate")
-            if (shouldUpdate) {
-                Log.d(TAG, "Database needs updating, starting update...")
-                // Show sync indicator in top grid
-                _syncState.emit(SyncState.Reloading)
-                // Show user feedback that sync is happening
+            val fsCommit = gitManager.lastCommit()
+            val databaseCommit = prefs.databaseCommit.get()
+            
+            Log.d(TAG, "updateDatabaseIfNeeded: fsCommit=$fsCommit, databaseCommit=$databaseCommit")
+            
+            if (fsCommit == databaseCommit) {
+                Log.d(TAG, "Database is already in sync with current HEAD, skipping update")
+                return
+            }
+            
+            Log.d(TAG, "Database needs updating, starting update...")
+            // Show sync indicator in top grid
+            _syncState.emit(SyncState.Reloading)
+            // Show user feedback that sync is happening
+            withContext(Dispatchers.Main) {
+                uiHelper.makeToast(uiHelper.getString(R.string.syncing_repository))
+            }
+            updateDatabaseWithoutLocker().onFailure {
+                Log.e(TAG, "Failed to update database: ${it.message}")
+                _syncState.emit(SyncState.Error)
                 withContext(Dispatchers.Main) {
-                    uiHelper.makeToast(uiHelper.getString(R.string.syncing_repository))
+                    uiHelper.makeToast(uiHelper.getString(R.string.sync_failed))
                 }
-                updateDatabaseWithoutLocker().onFailure {
-                    Log.e(TAG, "Failed to update database: ${it.message}")
-                    _syncState.emit(SyncState.Error)
-                    withContext(Dispatchers.Main) {
-                        uiHelper.makeToast(uiHelper.getString(R.string.sync_failed))
-                    }
-                }.onSuccess {
-                    Log.d(TAG, "Database update successful")
-                    _syncState.emit(SyncState.Ok(false))
-                    withContext(Dispatchers.Main) {
-                        uiHelper.makeToast(uiHelper.getString(R.string.sync_success))
-                    }
+            }.onSuccess {
+                Log.d(TAG, "Database update successful")
+                _syncState.emit(SyncState.Ok(false))
+                withContext(Dispatchers.Main) {
+                    uiHelper.makeToast(uiHelper.getString(R.string.sync_success))
                 }
-            } else {
-                Log.d(TAG, "Database is already in sync, skipping update")
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Error checking database sync status: ${e.message}", e)
+            Log.e(TAG, "Error updating database: ${e.message}", e)
             _syncState.emit(SyncState.Error)
         }
     }
@@ -365,8 +449,12 @@ class StorageManager {
      * Best effort
      */
     suspend fun updateNote(new: Note, previous: Note, onUpdated: suspend () -> Unit = {}): Result<Unit> = locker.withLock {
-        Log.d(TAG, "updateNote: previous = $previous")
-        Log.d(TAG, "updateNote: new = $new")
+        if (prefs.debugFeaturesEnabled.getBlocking()) {
+            Log.d(TAG, "updateNote: previous = $previous")
+            Log.d(TAG, "updateNote: new = $new")
+        } else {
+            Log.d(TAG, "updateNote: ${previous.relativePath}")
+        }
 
         val result = update(
             commitMessage = "gitnote changed ${previous.relativePath}",
@@ -423,7 +511,11 @@ class StorageManager {
      * Best effort
      */
     suspend fun createNote(note: Note): Result<Unit> = locker.withLock {
-        Log.d(TAG, "createNote: $note")
+        if (prefs.debugFeaturesEnabled.getBlocking()) {
+            Log.d(TAG, "createNote: $note")
+        } else {
+            Log.d(TAG, "createNote: ${note.relativePath}")
+        }
 
         update(
             commitMessage = "gitnote created ${note.relativePath}"
@@ -450,7 +542,11 @@ class StorageManager {
 
     suspend fun deleteNote(note: Note): Result<Unit> = locker.withLock {
 
-        Log.d(TAG, "deleteNote: $note")
+        if (prefs.debugFeaturesEnabled.getBlocking()) {
+            Log.d(TAG, "deleteNote: $note")
+        } else {
+            Log.d(TAG, "deleteNote: ${note.relativePath}")
+        }
         update(
             commitMessage = "gitnote deleted ${note.relativePath}"
         ) {
@@ -480,7 +576,11 @@ class StorageManager {
             val repoPath = prefs.repoPath()
             notes.forEach { note ->
 
-                Log.d(TAG, "deleting $note")
+                if (prefs.debugFeaturesEnabled.getBlocking()) {
+                    Log.d(TAG, "deleting $note")
+                } else {
+                    Log.d(TAG, "deleting ${note.relativePath}")
+                }
                 val file = note.toFileFs(repoPath)
 
                 file.delete().onFailure {
@@ -539,18 +639,6 @@ class StorageManager {
     }
 
 
-    private fun createBackgroundCommitMessage(commitMessages: List<String>): String {
-        return when (commitMessages.size) {
-            0 -> "gitnote background sync"
-            1 -> commitMessages.first()
-            else -> {
-                val subject = "gitnote background sync (${commitMessages.size} changes)"
-                val body = commitMessages.joinToString("\n") { "- $it" }
-                "$subject\n\n$body"
-            }
-        }
-    }
-
     private suspend fun <T> update(
         commitMessage: String,
         onUpdated: suspend () -> Unit = {},
@@ -566,25 +654,6 @@ class StorageManager {
 
         var syncFailed = false
 
-        // Only commit pending changes before making new changes if background git ops are disabled
-        if (!backgroundGitOps) {
-            gitManager.commitAll(
-                author,
-                "commit from gitnote, before doing a change"
-            ).onFailure {
-                return@withContext failure(it)
-            }
-        }
-
-        // Only perform pull/push synchronously if background git operations are disabled
-        if (!backgroundGitOps && remoteUrl.isNotEmpty()) {
-            _syncState.emit(SyncState.Pull)
-            gitManager.pull(cred, author).onFailure {
-                syncFailed = true
-                _syncState.emit(SyncState.Offline)
-            }
-        }
-
         val payload = f().fold(
             onFailure = {
                 return@withContext failure(it)
@@ -598,19 +667,24 @@ class StorageManager {
             onUpdated()
         }
 
-        // Handle commits based on background git ops setting
-        if (!backgroundGitOps) {
-            gitManager.commitAll(author, commitMessage).onFailure {
-                return@withContext failure(it)
-            }
-        } else {
-            // Collect commit message for background commit
-            synchronized(pendingCommitMessages) {
-                pendingCommitMessages.add(commitMessage)
+        // Queue commit operation (will execute when it's its turn in the queue)
+        queueCommit(author, commitMessage)
+
+        // Handle pull/push based on background git ops setting
+        if (!backgroundGitOps && remoteUrl.isNotEmpty()) {
+            // For synchronous mode, wait for any queued operations to complete first
+            waitForQueueCompletion()
+
+            _syncState.emit(SyncState.Pull)
+            gitManager.pull(cred, author).onFailure {
+                syncFailed = true
+                _syncState.emit(SyncState.Offline)
+            }.onSuccess {
+                // Update database commit after successful pull
+                prefs.databaseCommit.update(gitManager.lastCommit())
             }
         }
 
-        // Only perform push synchronously if background git operations are disabled
         if (!backgroundGitOps && remoteUrl.isNotEmpty()) {
             _syncState.emit(SyncState.Push)
             gitManager.push(cred).onFailure {
@@ -619,16 +693,8 @@ class StorageManager {
             }
         }
 
-        // Only update database commit if not using background git operations
-        // For background operations, it will be updated after the operations complete
-        if (!backgroundGitOps) {
-            prefs.databaseCommit.update(gitManager.lastCommit())
-        }
-
-        // If background git operations are enabled, perform them asynchronously
-        if (backgroundGitOps) {
-            performBackgroundGitOperations()
-        } else if (!syncFailed) {
+        // Background git operations are now handled in queueCommit
+        if (!syncFailed) {
             _syncState.emit(SyncState.Ok(false))
         }
 

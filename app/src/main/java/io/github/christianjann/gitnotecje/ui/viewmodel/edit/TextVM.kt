@@ -124,7 +124,11 @@ open class TextVM() : ViewModel() {
         _content.value = textFieldValue.copy()
         history.add(HistoryItem(textFieldValue))
 
-        Log.d(TAG, "init: $previousNote, $editType")
+        if (prefs.debugFeaturesEnabled.getBlocking()) {
+            Log.d(TAG, "init: $previousNote, $editType")
+        } else {
+            Log.d(TAG, "init: ${previousNote.relativePath}, $editType")
+        }
     }
 
     constructor(
@@ -147,7 +151,11 @@ open class TextVM() : ViewModel() {
         _content.value = textFieldValue.copy()
         history.add(HistoryItem(textFieldValue))
 
-        Log.d(TAG, "init saved: $previousNote, $editType")
+        if (prefs.debugFeaturesEnabled.getBlocking()) {
+            Log.d(TAG, "init saved: $previousNote, $editType")
+        } else {
+            Log.d(TAG, "init saved: ${previousNote.relativePath}, $editType")
+        }
     }
 
     enum class IsSimilarResult {

@@ -5,6 +5,31 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+### Fixed
+
+- **Git Operation Queue and Debouncing**: Implemented a unified queue system for all git operations to prevent data races and ensure proper debouncing
+  - Commits are queued and executed immediately when it's their turn
+  - Pull operations are queued with configurable debouncing delay (default 5 seconds) to prevent excessive syncs during rapid editing
+  - Pull operations are immediate for app startup and manual refresh, but delayed for note changes
+  - Ensures at least one pull/push operation after the last commit to keep remote repository in sync
+  - Prevents conflicts between simultaneous commit and pull operations
+  - Consolidates multiple commit operations into single commits with detailed change logs
+  - Fixed logic issue where pull operations were processed immediately due to queue processing in finally block
+  - Implemented scheduled pull mechanism using coroutines to properly delay queue addition
+- **Data Race Prevention**: Eliminated potential data races during rapid consecutive changes
+  - All git operations (commits and pulls) now use a unified queue system
+  - Operations execute sequentially to prevent conflicts
+  - Background sync operations wait for queued operations to complete
+  - Improves performance and reduces server load during intensive editing sessions
+- **Database Sync Stability**: Improved database synchronization logic to prevent unnecessary updates
+  - Database commit hash is only updated after successful pulls that bring remote changes
+  - Prevents database reloading when background sync only pushes local commits
+  - Eliminates UI flickering during rapid consecutive note changes
+- **Privacy Protection**: Enhanced logging to protect user privacy in production
+  - Note content is only logged when debug features are enabled
+  - Production logs only show note paths to prevent accidental content exposure
+  - Applied to updateNote, createNote, deleteNote, and TextVM operations
+
 ## [26.01.7]
 
 ### Added

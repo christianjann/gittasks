@@ -147,11 +147,11 @@ class GitManager {
 
     }
 
-    // todo: update this shit
     suspend fun lastCommit(): String = safelyAccessLibGit2 {
-        Log.d(TAG, "last commit")
         if (!isRepoInitialized) throw GitException(GitExceptionType.RepoNotInit)
-        lastCommitLib()
+        val commitHash = lastCommitLib()
+        Log.d(TAG, "last commit: $commitHash")
+        commitHash
     }.getOrDefault("") ?: ""
 
     suspend fun commitAll(author: GitAuthor, message: String): Result<Unit> = safelyAccessLibGit2 {
