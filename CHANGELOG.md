@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [26.01.8]
+
 ### Fixed
 
 - **Screen Rotation Stability**: Fixed `RepoNotInit` errors during device screen rotation
