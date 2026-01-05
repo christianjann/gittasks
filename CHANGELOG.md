@@ -5,6 +5,13 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+### Added
+
+- **Git Operation Timeouts**: Cherry-picked from original GitNote - Added 7-second timeout for remote git operations (push and pull)
+  - Prevents operations from hanging indefinitely on slow or unresponsive servers
+  - Improves app responsiveness and user experience on unreliable networks
+  - Applied globally through libgit2 configuration during initialization
+
 ### Fixed
 
 - **Text Selection Handle Positioning**: Fixed incorrect positioning of text selection handles in Compose BOM 2025.12.01
