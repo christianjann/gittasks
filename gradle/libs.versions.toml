@@ -10,7 +10,10 @@ core-ktx = "1.17.0"
 lifecycle-runtime = "2.9.3"
 activity-compose = "1.11.0"
 datastore-preferences = "1.1.7"
-compose-bom = "2025.12.01"
+
+# reverting back, "2025.12.01" has a strange bug where the Text Selection Handles
+# are displayed directly above the cursor and not below where it belongs
+compose-bom = "2025.09.00"
 room = "2.8.0"
 sqlite = "3.49.0"
 paging = "3.3.6"

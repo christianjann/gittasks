@@ -5,6 +5,13 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+### Fixed
+
+- **Text Selection Handle Positioning**: Fixed incorrect positioning of text selection handles in Compose BOM 2025.12.01
+  - Text selection handles were displayed above the cursor instead of below where they belong
+  - Reverted Compose BOM version to 2025.09.00 to restore correct handle positioning
+  - Affects text input fields in the editor, file name field, and search bar
+
 ## [26.01.8]
 
 ### Fixed
