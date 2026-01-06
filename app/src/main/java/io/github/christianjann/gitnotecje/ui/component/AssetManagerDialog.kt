@@ -140,7 +140,7 @@ fun AssetManagerDialog(
     if (showDialog.value) {
         AlertDialog(
             onDismissRequest = { showDialog.value = false },
-            title = { Text("Asset Manager") },
+            title = { Text(stringResource(R.string.asset_manager_title)) },
             text = {
                 Column(
                     modifier = Modifier.fillMaxWidth(),
@@ -157,7 +157,7 @@ fun AssetManagerDialog(
                         ) {
                             Icon(Icons.Default.Add, contentDescription = null)
                             Spacer(modifier = Modifier.width(4.dp))
-                            Text("Import Asset")
+                            Text(stringResource(R.string.import_asset))
                         }
                     }
 
@@ -189,7 +189,7 @@ fun AssetManagerDialog(
                                     tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
                                 )
                                 Text(
-                                    "No assets found",
+                                    stringResource(R.string.no_assets_found),
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
                                 )
@@ -250,7 +250,7 @@ fun AssetManagerDialog(
                             }
                         }
                     }) {
-                        Text("Discard")
+                        Text(stringResource(R.string.discard))
                     }
                 }
             } else null,
@@ -295,13 +295,13 @@ fun AssetManagerDialog(
                             }
                         }
                     }) {
-                        Text("Commit")
+                        Text(stringResource(R.string.commit))
                     }
                 }
             } else {
                 {
                     TextButton(onClick = { showDialog.value = false }) {
-                        Text("Close")
+                        Text(stringResource(R.string.close))
                     }
                 }
             }
@@ -367,7 +367,7 @@ private fun AssetItem(
                 IconButton(onClick = onExport) {
                     Icon(
                         Icons.Default.Download,
-                        contentDescription = "Export asset",
+                        contentDescription = stringResource(R.string.export_asset),
                         tint = MaterialTheme.colorScheme.primary
                     )
                 }
@@ -375,7 +375,7 @@ private fun AssetItem(
                 IconButton(onClick = onDelete) {
                     Icon(
                         Icons.Default.Delete,
-                        contentDescription = "Delete asset",
+                        contentDescription = stringResource(R.string.delete_asset),
                         tint = MaterialTheme.colorScheme.error
                     )
                 }

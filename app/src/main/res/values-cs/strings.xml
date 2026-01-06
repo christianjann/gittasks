@@ -179,6 +179,14 @@
     <string name="move_note">Přesunout poznámku</string>
     <string name="show_git_log">Zobrazit GIT log</string>
     <string name="asset_manager">Správce assetů</string>
+    <string name="asset_manager_title">Správce assetů</string>
+    <string name="import_asset">Importovat asset</string>
+    <string name="no_assets_found">Nebyly nalezeny žádné assety</string>
+    <string name="export_asset">Exportovat asset</string>
+    <string name="delete_asset">Smazat asset</string>
+    <string name="discard">Zahodit</string>
+    <string name="commit">Potvrdit</string>
+    <string name="close">Zavřít</string>
     <string name="tags">Štítky</string>
     <string name="all_notes">Všechny poznámky</string>
     <string name="tag_ignores_folders">Filtrování štítků ignoruje složky</string>

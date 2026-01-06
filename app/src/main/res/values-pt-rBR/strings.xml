@@ -171,6 +171,14 @@
     <string name="move_note">Mover nota</string>
     <string name="show_git_log">Mostrar log do GIT</string>
     <string name="asset_manager">Gerenciador de assets</string>
+    <string name="asset_manager_title">Gerenciador de Assets</string>
+    <string name="import_asset">Importar Asset</string>
+    <string name="no_assets_found">Nenhum asset encontrado</string>
+    <string name="export_asset">Exportar asset</string>
+    <string name="delete_asset">Excluir asset</string>
+    <string name="discard">Descartar</string>
+    <string name="commit">Confirmar</string>
+    <string name="close">Fechar</string>
     <string name="tags">Tags</string>
     <string name="all_notes">Todas as notas</string>
     <string name="tag_ignores_folders">Filtragem por tag ignora pastas</string>

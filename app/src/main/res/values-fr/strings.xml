@@ -190,6 +190,14 @@
     <string name="move_note">Déplacer la note</string>
     <string name="show_git_log">Afficher le journal GIT</string>
     <string name="asset_manager">Gestionnaire d\'assets</string>
+    <string name="asset_manager_title">Gestionnaire d\'assets</string>
+    <string name="import_asset">Importer un asset</string>
+    <string name="no_assets_found">Aucun asset trouvé</string>
+    <string name="export_asset">Exporter l\'asset</string>
+    <string name="delete_asset">Supprimer l\'asset</string>
+    <string name="discard">Annuler</string>
+    <string name="commit">Valider</string>
+    <string name="close">Fermer</string>
     <string name="tags">Tags</string>
     <string name="all_notes">Toutes les notes</string>
     <string name="tag_ignores_folders">Le filtrage par tag ignore les dossiers</string>

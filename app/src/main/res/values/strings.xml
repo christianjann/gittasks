@@ -25,6 +25,14 @@
     <string name="language_german">Deutsch</string>
     <string name="show_git_log">Show GIT log</string>
     <string name="asset_manager">Asset manager</string>
+    <string name="asset_manager_title">Asset Manager</string>
+    <string name="import_asset">Import Asset</string>
+    <string name="no_assets_found">No assets found</string>
+    <string name="export_asset">Export asset</string>
+    <string name="delete_asset">Delete asset</string>
+    <string name="discard">Discard</string>
+    <string name="commit">Commit</string>
+    <string name="close">Close</string>
     <string name="search_in_notes">Search in notes</string>
     <string name="user_interface">User interface</string>
     <string name="dynamic_colors">Dynamic colors</string>
