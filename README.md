@@ -156,10 +156,11 @@ See [building.md](doc/building.md) for detailed build instructions.
 - Android does not differentiate case for file name, so if you have a folder named `A` and another folder named `a`, `a` will not be displayed.
 - Device memory storage is significantly slower than app memory (up to 200x). See [Storage Options and Performance](./doc/features.md#storage-options-and-performance) for details. Use app memory where possible.
 - Automatic setup of a remote GitHub repo seems not to work, use manual setup instead
-- When you create a local repository then you can't configure a remote later, so in that case better use deice memory to be able to access the notes outside of the app
+- When you create a local repository then you can't configure a remote later, so in that case better use device memory to be able to access the notes outside of the app
 
 # Future direction
 
+- Create a `_conflict.md` file in conflict resolution, so the user can easily choose which one to kep or edit
 - Move more of the core logic and data handling into the Rust part?
 - Maybe get rid of the database caching entirely and use a more thin layer on top of the Git abstraction?
 
