@@ -193,8 +193,77 @@ pub fn init_lib(home_path: String) {
 pub fn create_repo(repo_path: &str) -> Result<(), Error> {
     let repo = Repository::init(repo_path).map_err(|e| Error::git2(e, "Repository::init"))?;
 
+    // Create initial welcome commit so repository is never empty
+    create_initial_welcome_commit(&repo)?;
+
     REPO.lock().unwrap().replace(repo);
 
+    Ok(())
+}
+
+fn create_initial_welcome_commit(repo: &Repository) -> Result<(), Error> {
+    // Create a welcome.md file
+    let welcome_path = repo.path().parent().unwrap().join("welcome.md");
+    let welcome_content = r#"# Welcome to GitNoteCJE!
+
+Thanks for using GitNoteCJE - your markdown notes with git version control.
+
+## Getting Started
+
+- Create new notes by tapping the + button
+- Edit notes by tapping on them
+- All your notes are automatically versioned with git
+- Sync with remote repositories to backup your notes
+
+You can delete this file or edit it as you like!
+"#;
+    
+    std::fs::write(&welcome_path, welcome_content).map_err(|e| {
+        error!("Failed to write welcome.md file: {}", e);
+        git2::Error::from_str(&format!("IO error: {}", e))
+    })?;
+
+    // Add welcome.md to index
+    let mut index = repo.index().map_err(|e| Error::git2(e, "index"))?;
+    index
+        .add_path(Path::new("welcome.md"))
+        .map_err(|e| Error::git2(e, "add_path"))?;
+    index.write().map_err(|e| Error::git2(e, "write index"))?;
+
+    // Create tree
+    let tree_oid = index
+        .write_tree()
+        .map_err(|e| Error::git2(e, "write_tree"))?;
+    let tree = repo
+        .find_tree(tree_oid)
+        .map_err(|e| Error::git2(e, "find_tree"))?;
+
+    // Create signature
+    let sig = Signature::now("GitNoteCJE", "gitnote@localhost")
+        .map_err(|e| Error::git2(e, "Signature::now"))?;
+
+    // Create initial commit
+    repo.commit(Some("HEAD"), &sig, &sig, "Welcome to GitNoteCJE!", &tree, &[])
+        .map_err(|e| Error::git2(e, "initial commit"))?;
+
+    // Create main branch
+    let head_commit = repo.head()?.peel_to_commit()?;
+    match repo.branch("main", &head_commit, false) {
+        Ok(_) => {}
+        Err(e) if e.raw_code() == -4 => {
+            // Branch already exists, update it
+            if let Ok(mut branch) = repo.find_branch("main", git2::BranchType::Local) {
+                branch
+                    .get_mut()
+                    .set_target(head_commit.id(), "Update main branch to initial commit")?;
+            }
+        }
+        Err(e) => return Err(Error::git2(e, "create main branch")),
+    }
+    repo.set_head("refs/heads/main")
+        .map_err(|e| Error::git2(e, "set head to main"))?;
+
+    info!("Created initial welcome commit for new repository");
     Ok(())
 }
 
@@ -418,13 +487,7 @@ pub fn last_commit() -> Option<String> {
     let repo = REPO.lock().expect("repo lock");
     let repo = repo.as_ref()?;
 
-    // Verify the repository is still valid
-    if repo.head().is_err() {
-        warn!("Repository appears to be in invalid state, returning None for last_commit");
-        return None;
-    }
-
-    // new repo have no commit, so this function can fail
+    // new repo have no commit, so this function returns None (not an error)
     let head = repo.refname_to_id("HEAD").ok()?;
 
     Some(head.to_string())
@@ -433,12 +496,6 @@ pub fn last_commit() -> Option<String> {
 pub fn signature() -> Option<(String, String)> {
     let repo = REPO.lock().expect("repo lock");
     let repo = repo.as_ref()?;
-
-    // Verify the repository is still valid
-    if repo.head().is_err() {
-        warn!("Repository appears to be in invalid state, returning None for signature");
-        return None;
-    }
 
     if let Ok(signature) = repo.signature() {
         let name = signature.name().unwrap_or_default().to_string();
@@ -449,25 +506,30 @@ pub fn signature() -> Option<(String, String)> {
         }
     }
 
-    let head = repo.head().ok()?;
-    let commit = head.peel_to_commit().ok()?;
-    let author = commit.author();
+    // Try to get signature from last commit (if repository has commits)
+    if let Ok(head) = repo.head() {
+        if let Ok(commit) = head.peel_to_commit() {
+            let author = commit.author();
+            return Some((
+                author.name().unwrap_or_default().to_string(),
+                author.email().unwrap_or_default().to_string(),
+            ));
+        }
+    }
 
-    Some((
-        author.name().unwrap_or_default().to_string(),
-        author.email().unwrap_or_default().to_string(),
-    ))
+    // For new repositories with no commits, return default values
+    Some(("GitNoteCJE".to_string(), "gitnote@localhost".to_string()))
 }
 
 pub fn commit_all(name: &str, email: &str, message: &str) -> Result<(), Error> {
     let repo = REPO.lock().expect("repo lock");
     let repo = repo.as_ref().expect("repo");
 
-    // Verify the repository is still valid
+    // Repository should have at least initial commit
     if repo.head().is_err() {
-        warn!("Repository appears to be in invalid state, cannot commit");
+        warn!("Repository has no commits - this should not happen for properly initialized repos");
         return Err(Error::git2(
-            git2::Error::from_str("Repository in invalid state"),
+            git2::Error::from_str("Repository has no commits"),
             "commit",
         ));
     }
@@ -539,11 +601,20 @@ pub fn push(cred: Option<Cred>) -> Result<(), Error> {
     let repo = REPO.lock().expect("repo lock");
     let repo = repo.as_ref().expect("repo");
 
-    // Verify the repository is still valid
+    // Empty repositories cannot be pushed
     if repo.head().is_err() {
-        warn!("Repository appears to be in invalid state, cannot push");
+        warn!("Attempted to push empty repository");
         return Err(Error::git2(
-            git2::Error::from_str("Repository in invalid state"),
+            git2::Error::from_str("Cannot push empty repository - create a commit first"),
+            "push",
+        ));
+    }
+
+    // Empty repositories cannot be pushed
+    if repo.head().is_err() {
+        warn!("Attempted to push empty repository");
+        return Err(Error::git2(
+            git2::Error::from_str("Cannot push empty repository - create a commit first"),
             "push",
         ));
     }
@@ -652,13 +723,29 @@ pub fn sync(cred: Option<Cred>) -> Result<(), Error> {
     let mut repo_guard = REPO.lock().expect("repo lock");
     let repo = repo_guard.as_mut().expect("repo");
 
-    // Verify the repository is still valid
+    // Empty repositories need initial setup from remote
     if repo.head().is_err() {
-        warn!("Repository appears to be in invalid state, cannot sync");
-        return Err(Error::git2(
-            git2::Error::from_str("Repository in invalid state"),
-            "sync",
-        ));
+        info!("Syncing empty repository - fetching from remote");
+        // For empty repos, just fetch - this will set up remote tracking
+        let mut remote = repo
+            .find_remote(REMOTE)
+            .map_err(|e| Error::git2(e, "find_remote"))?;
+
+        let mut callbacks = RemoteCallbacks::new();
+        callbacks.certificate_check(|_cert, _| Ok(CertificateCheckStatus::CertificateOk));
+
+        if let Some(c) = &cred {
+            callbacks.credentials(move |_url, _username_from_url, _allowed_types| credential_helper(c));
+        }
+
+        let mut fetch_options = FetchOptions::new();
+        fetch_options.remote_callbacks(callbacks);
+
+        remote
+            .fetch(&[] as &[&str], Some(&mut fetch_options), None)
+            .map_err(|e| Error::git2(e, "fetch"))?;
+
+        return Ok(());
     }
 
     let branch = current_branch(repo)?;
@@ -747,11 +834,11 @@ pub fn pull(cred: Option<Cred>, name: &str, email: &str) -> Result<(), Error> {
     let repo = REPO.lock().expect("repo lock");
     let repo = repo.as_ref().expect("repo");
 
-    // Verify the repository is still valid
+    // Empty repositories cannot be pulled - use sync instead
     if repo.head().is_err() {
-        warn!("Repository appears to be in invalid state, cannot pull");
+        warn!("Attempted to pull empty repository - use sync instead");
         return Err(Error::git2(
-            git2::Error::from_str("Repository in invalid state"),
+            git2::Error::from_str("Cannot pull empty repository - use sync instead"),
             "pull",
         ));
     }
@@ -828,9 +915,9 @@ pub fn is_change() -> Result<bool, Error> {
     let repo = REPO.lock().expect("repo lock");
     let repo = repo.as_ref().expect("repo");
 
-    // Verify the repository is still valid
+    // Empty repositories have no changes
     if repo.head().is_err() {
-        warn!("Repository appears to be in invalid state, assuming no changes");
+        debug!("Repository has no commits yet, returning no changes");
         return Ok(false);
     }
 
@@ -853,9 +940,9 @@ pub fn get_timestamps() -> Result<HashMap<String, i64>, Error> {
     let repo = REPO.lock().expect("repo lock");
     let repo = repo.as_ref().expect("repo");
 
-    // Verify the repository is still valid by checking if we can access basic properties
+    // Empty repositories have no commits to timestamp
     if let Err(_) = repo.head() {
-        warn!("Repository appears to be in invalid state, returning empty timestamps");
+        debug!("Repository has no commits yet, returning empty timestamps");
         return Ok(HashMap::new());
     }
 
@@ -1002,9 +1089,9 @@ pub fn get_git_log(limit: usize) -> Result<Vec<GitLogEntry>, Error> {
     let repo = REPO.lock().expect("repo lock");
     let repo = repo.as_ref().expect("repo");
 
-    // Verify the repository is still valid
+    // Empty repositories have no commits yet
     if repo.head().is_err() {
-        warn!("Repository appears to be in invalid state, returning empty log");
+        debug!("Repository has no commits yet, returning empty log");
         return Ok(Vec::new());
     }
 

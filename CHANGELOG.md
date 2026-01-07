@@ -5,6 +5,15 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+### Fixed
+
+- **Repository Initialization**: Fixed empty repository handling to ensure proper git operations
+  - Local repositories now automatically created with initial welcome commit
+  - Welcome message (`welcome.md`) greets new users and explains basic functionality
+  - Eliminates "repository in invalid state" errors when creating first note
+  - Empty repository checks now use appropriate logging (debug/info/warning) for better diagnostics
+  - Git log and other query functions handle empty repositories gracefully
+
 ## [26.01.11]
 
 ### Fixed
