@@ -155,6 +155,8 @@ See [building.md](doc/building.md) for detailed build instructions.
 
 - Android does not differentiate case for file name, so if you have a folder named `A` and another folder named `a`, `a` will not be displayed.
 - Device memory storage is significantly slower than app memory (up to 200x). See [Storage Options and Performance](./doc/features.md#storage-options-and-performance) for details. Use app memory where possible.
+- Automatic setup of a remote GitHub repo seems not to work, use manual setup instead
+- When you create a local repository then you can't configure a remote later, so in that case better use deice memory to be able to access the notes outside of the app
 
 # Future direction
 
