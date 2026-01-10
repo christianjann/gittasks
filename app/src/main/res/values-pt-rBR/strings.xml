@@ -119,7 +119,7 @@
     <string name="read_only_mode_activate">Ativar modo somente leitura</string>
     <string name="read_only_mode_deactive">"Desativar modo domente leitura "</string>
     <string name="authorize_gittasks_title">Fazer Fetch dos metadados dos repositórios</string>
-    <string name="authorize_gittasks">Autorizar Gitnote e fazer Fetch dos metadados dos repositórios</string>
+    <string name="authorize_gittasks">Autorizar GitTasks e fazer Fetch dos metadados dos repositórios</string>
     <string name="clone_url">URL para clonar</string>
     <string name="url_explain_create_remote_repo">Vá para o site, crie um repositório e copie a url para git clone</string>
     <string name="url_explain_enter_url">Digite a url de git clone</string>
