@@ -11,6 +11,6 @@
         android:strokeLineJoin="bevel" />
     <path
         android:fillAlpha="0.91"
-        android:fillColor="#376A80"
+        android:fillColor="#601993"
         android:pathData="M1,1h432v432h-432z" />
 </vector>
