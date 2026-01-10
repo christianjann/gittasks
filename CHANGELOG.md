@@ -54,7 +54,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
   - Improved context visibility while editing by allowing upward scrolling
   - Applied to both plain text and markdown editing modes
 
-- **Git Operation Timeouts**: Cherry-picked from original GitNote - Added 7-second timeout for remote git operations (push and pull)
+- **Git Operation Timeouts**: Cherry-picked from original GitTasks - Added 7-second timeout for remote git operations (push and pull)
   - Prevents operations from hanging indefinitely on slow or unresponsive servers
   - Improves app responsiveness and user experience on unreliable networks
   - Applied globally through libgit2 configuration during initialization
@@ -245,8 +245,8 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
   - Fixed "too many redirects or authentication replays; class=Http (34)" errors by providing clear instructions to use Personal Access Tokens/App Passwords instead of passwords
   - Enhanced user experience when authentication fails during Git operations
 - Git Author Defaults: Added default email fallback to prevent commit failures when creating new local repositories
-  - Git author name defaults to "gitnote" when empty
-  - Git author email defaults to "gitnote@localhost" when empty
+  - Git author name defaults to "gittasks" when empty
+  - Git author email defaults to "gittasks@localhost" when empty
 
 ## [26.01.1]
 

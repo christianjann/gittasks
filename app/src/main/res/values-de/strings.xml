@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">GitNoteCJE</string>
+    <string name="app_name" translatable="false">GitTasks</string>
     <string name="system_theme">System</string>
     <string name="light_theme">Hell</string>
     <string name="dark_theme">Dunkel</string>
@@ -179,8 +179,8 @@
 
     <string name="read_only_mode_activate">Schreibgeschützten Modus aktivieren</string>
     <string name="read_only_mode_deactive">Schreibgeschützten Modus deaktivieren</string>
-    <string name="authorize_gitnote_title">Repository-Metadaten abrufen</string>
-    <string name="authorize_gitnote">GitNote autorisieren und Repository-Metadaten abrufen</string>
+    <string name="authorize_gittasks_title">Repository-Metadaten abrufen</string>
+    <string name="authorize_gittasks">GitTasks autorisieren und Repository-Metadaten abrufen</string>
     <string name="clone_url">Klon-URL</string>
     <string name="url_explain_create_remote_repo">Gehen Sie zur Website, erstellen Sie ein Repository und kopieren Sie dessen Git-Klon-URL</string>
     <string name="url_explain_enter_url">Geben Sie die Git-Klon-URL ein</string>

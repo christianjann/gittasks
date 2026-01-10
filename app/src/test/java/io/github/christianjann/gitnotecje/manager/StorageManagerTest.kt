@@ -1,4 +1,4 @@
-package io.github.christianjann.gitnotecje.manager
+package io.github.christianjann.gittasks.manager
 
 import kotlinx.coroutines.*
 import kotlinx.coroutines.test.*
@@ -28,10 +28,10 @@ class StorageManagerTest {
         // Test the logic directly without accessing private function
         val singleMessage = listOf("test change")
         val consolidated = when (singleMessage.size) {
-            0 -> "gitnote changes"
+            0 -> "gittasks changes"
             1 -> singleMessage.first()
             else -> {
-                val subject = "gitnote changes (${singleMessage.size} operations)"
+                val subject = "gittasks changes (${singleMessage.size} operations)"
                 val body = singleMessage.joinToString("\n") { "- $it" }
                 "$subject\n\n$body"
             }
@@ -40,27 +40,27 @@ class StorageManagerTest {
 
         val multipleMessages = listOf("change 1", "change 2", "change 3")
         val consolidatedMultiple = when (multipleMessages.size) {
-            0 -> "gitnote changes"
+            0 -> "gittasks changes"
             1 -> multipleMessages.first()
             else -> {
-                val subject = "gitnote changes (${multipleMessages.size} operations)"
+                val subject = "gittasks changes (${multipleMessages.size} operations)"
                 val body = multipleMessages.joinToString("\n") { "- $it" }
                 "$subject\n\n$body"
             }
         }
-        assertEquals("gitnote changes (3 operations)\n\n- change 1\n- change 2\n- change 3", consolidatedMultiple)
+        assertEquals("gittasks changes (3 operations)\n\n- change 1\n- change 2\n- change 3", consolidatedMultiple)
 
         val emptyMessages = emptyList<String>()
         val consolidatedEmpty = when (emptyMessages.size) {
-            0 -> "gitnote changes"
+            0 -> "gittasks changes"
             1 -> emptyMessages.first()
             else -> {
-                val subject = "gitnote changes (${emptyMessages.size} operations)"
+                val subject = "gittasks changes (${emptyMessages.size} operations)"
                 val body = emptyMessages.joinToString("\n") { "- $it" }
                 "$subject\n\n$body"
             }
         }
-        assertEquals("gitnote changes", consolidatedEmpty)
+        assertEquals("gittasks changes", consolidatedEmpty)
     }
 
     @Test

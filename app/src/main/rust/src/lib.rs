@@ -61,7 +61,7 @@ impl Display for Error {
 }
 
 #[unsafe(no_mangle)]
-pub extern "C" fn Java_io_github_christianjann_gitnotecje_manager_GitManagerKt_initLib<'local>(
+pub extern "C" fn Java_io_github_christianjann_gittasks_manager_GitManagerKt_initLib<'local>(
     mut env: JNIEnv<'local>,
     _class: JClass<'local>,
     home_path: JString<'local>,
@@ -90,7 +90,7 @@ pub extern "C" fn Java_io_github_christianjann_gitnotecje_manager_GitManagerKt_i
 }
 
 #[unsafe(no_mangle)]
-pub extern "C" fn Java_io_github_christianjann_gitnotecje_manager_GitManagerKt_createRepoLib<
+pub extern "C" fn Java_io_github_christianjann_gittasks_manager_GitManagerKt_createRepoLib<
     'local,
 >(
     mut env: JNIEnv<'local>,
@@ -107,7 +107,7 @@ pub extern "C" fn Java_io_github_christianjann_gitnotecje_manager_GitManagerKt_c
     OK
 }
 #[unsafe(no_mangle)]
-pub extern "C" fn Java_io_github_christianjann_gitnotecje_manager_GitManagerKt_openRepoLib<
+pub extern "C" fn Java_io_github_christianjann_gittasks_manager_GitManagerKt_openRepoLib<
     'local,
 >(
     mut env: JNIEnv<'local>,
@@ -176,7 +176,7 @@ impl Cred {
         let class_name: String = env.get_string(&class_name_jstring)?.into();
 
         match class_name.as_str() {
-            "io.github.christianjann.gitnotecje.ui.model.Cred$UserPassPlainText" => {
+            "io.github.christianjann.gittasks.ui.model.Cred$UserPassPlainText" => {
                 let username_obj: JString = env
                     .get_field(cred_obj, "username", "Ljava/lang/String;")?
                     .l()?
@@ -191,7 +191,7 @@ impl Cred {
 
                 Ok(Some(Cred::UserPassPlainText { username, password }))
             }
-            "io.github.christianjann.gitnotecje.ui.model.Cred$Ssh" => {
+            "io.github.christianjann.gittasks.ui.model.Cred$Ssh" => {
                 let username_key_obj: JString = env
                     .get_field(cred_obj, "username", "Ljava/lang/String;")?
                     .l()?
@@ -264,7 +264,7 @@ mod callback {
     }
 }
 #[unsafe(no_mangle)]
-pub extern "C" fn Java_io_github_christianjann_gitnotecje_manager_GitManagerKt_cloneRepoLib<
+pub extern "C" fn Java_io_github_christianjann_gittasks_manager_GitManagerKt_cloneRepoLib<
     'local,
 >(
     mut env: JNIEnv<'local>,
@@ -295,7 +295,7 @@ pub extern "C" fn Java_io_github_christianjann_gitnotecje_manager_GitManagerKt_c
     OK
 }
 #[unsafe(no_mangle)]
-pub extern "C" fn Java_io_github_christianjann_gitnotecje_manager_GitManagerKt_lastCommitLib(
+pub extern "C" fn Java_io_github_christianjann_gittasks_manager_GitManagerKt_lastCommitLib(
     env: JNIEnv,
     _class: JClass,
 ) -> jstring {
@@ -309,7 +309,7 @@ pub extern "C" fn Java_io_github_christianjann_gitnotecje_manager_GitManagerKt_l
         .into_raw()
 }
 #[unsafe(no_mangle)]
-pub extern "C" fn Java_io_github_christianjann_gitnotecje_manager_GitManagerKt_commitAllLib<
+pub extern "C" fn Java_io_github_christianjann_gittasks_manager_GitManagerKt_commitAllLib<
     'local,
 >(
     mut env: JNIEnv<'local>,
@@ -328,7 +328,7 @@ pub extern "C" fn Java_io_github_christianjann_gitnotecje_manager_GitManagerKt_c
 }
 
 #[unsafe(no_mangle)]
-pub extern "C" fn Java_io_github_christianjann_gitnotecje_manager_GitManagerKt_checkoutPathLib<
+pub extern "C" fn Java_io_github_christianjann_gittasks_manager_GitManagerKt_checkoutPathLib<
     'local,
 >(
     mut env: JNIEnv<'local>,
@@ -343,7 +343,7 @@ pub extern "C" fn Java_io_github_christianjann_gitnotecje_manager_GitManagerKt_c
 }
 
 #[unsafe(no_mangle)]
-pub extern "C" fn Java_io_github_christianjann_gitnotecje_manager_GitManagerKt_currentSignatureLib<
+pub extern "C" fn Java_io_github_christianjann_gittasks_manager_GitManagerKt_currentSignatureLib<
     'local,
 >(
     mut env: JNIEnv<'local>,
@@ -370,7 +370,7 @@ pub extern "C" fn Java_io_github_christianjann_gitnotecje_manager_GitManagerKt_c
     pair_obj.into_raw()
 }
 #[unsafe(no_mangle)]
-pub extern "C" fn Java_io_github_christianjann_gitnotecje_manager_GitManagerKt_pushLib<'local>(
+pub extern "C" fn Java_io_github_christianjann_gittasks_manager_GitManagerKt_pushLib<'local>(
     mut env: JNIEnv<'local>,
     _class: JClass<'local>,
     cred: JString<'local>,
@@ -381,7 +381,7 @@ pub extern "C" fn Java_io_github_christianjann_gitnotecje_manager_GitManagerKt_p
 }
 
 #[unsafe(no_mangle)]
-pub extern "C" fn Java_io_github_christianjann_gitnotecje_manager_GitManagerKt_pullLib<'local>(
+pub extern "C" fn Java_io_github_christianjann_gittasks_manager_GitManagerKt_pullLib<'local>(
     mut env: JNIEnv<'local>,
     _class: JClass<'local>,
     cred: JString<'local>,
@@ -401,7 +401,7 @@ pub extern "C" fn Java_io_github_christianjann_gitnotecje_manager_GitManagerKt_p
 }
 
 #[unsafe(no_mangle)]
-pub extern "C" fn Java_io_github_wiiznokes_gitnote_manager_GitManagerKt_syncLib<'local>(
+pub extern "C" fn Java_io_github_wiiznokes_gittasks_manager_GitManagerKt_syncLib<'local>(
     mut env: JNIEnv<'local>,
     _class: JClass<'local>,
     cred: JString<'local>,
@@ -412,7 +412,7 @@ pub extern "C" fn Java_io_github_wiiznokes_gitnote_manager_GitManagerKt_syncLib<
 }
 
 #[unsafe(no_mangle)]
-pub extern "C" fn Java_io_github_christianjann_gitnotecje_manager_GitManagerKt_syncLib<'local>(
+pub extern "C" fn Java_io_github_christianjann_gittasks_manager_GitManagerKt_syncLib<'local>(
     mut env: JNIEnv<'local>,
     _class: JClass<'local>,
     cred: JString<'local>,
@@ -423,14 +423,14 @@ pub extern "C" fn Java_io_github_christianjann_gitnotecje_manager_GitManagerKt_s
 }
 
 #[unsafe(no_mangle)]
-pub extern "C" fn Java_io_github_christianjann_gitnotecje_manager_GitManagerKt_freeLib(
+pub extern "C" fn Java_io_github_christianjann_gittasks_manager_GitManagerKt_freeLib(
     _env: JNIEnv,
     _class: JClass,
 ) {
 }
 
 #[unsafe(no_mangle)]
-pub extern "C" fn Java_io_github_christianjann_gitnotecje_manager_GitManagerKt_closeRepoLib(
+pub extern "C" fn Java_io_github_christianjann_gittasks_manager_GitManagerKt_closeRepoLib(
     _env: JNIEnv,
     _class: JClass,
 ) {
@@ -438,7 +438,7 @@ pub extern "C" fn Java_io_github_christianjann_gitnotecje_manager_GitManagerKt_c
 }
 
 #[unsafe(no_mangle)]
-pub extern "C" fn Java_io_github_christianjann_gitnotecje_manager_GitManagerKt_cleanupRepoLib(
+pub extern "C" fn Java_io_github_christianjann_gittasks_manager_GitManagerKt_cleanupRepoLib(
     _env: JNIEnv,
     _class: JClass,
 ) -> jint {
@@ -447,7 +447,7 @@ pub extern "C" fn Java_io_github_christianjann_gitnotecje_manager_GitManagerKt_c
 }
 
 #[unsafe(no_mangle)]
-pub extern "C" fn Java_io_github_christianjann_gitnotecje_manager_GitManagerKt_isChangeLib(
+pub extern "C" fn Java_io_github_christianjann_gittasks_manager_GitManagerKt_isChangeLib(
     _env: JNIEnv,
     _class: JClass,
 ) -> jint {
@@ -457,7 +457,7 @@ pub extern "C" fn Java_io_github_christianjann_gitnotecje_manager_GitManagerKt_i
 }
 
 #[unsafe(no_mangle)]
-pub extern "C" fn Java_io_github_christianjann_gitnotecje_manager_GitManagerKt_getTimestampsLib<
+pub extern "C" fn Java_io_github_christianjann_gittasks_manager_GitManagerKt_getTimestampsLib<
     'local,
 >(
     mut env: JNIEnv<'local>,
@@ -515,7 +515,7 @@ fn get_timestamps_jni<'local, 'a>(
 }
 
 #[unsafe(no_mangle)]
-pub extern "C" fn Java_io_github_christianjann_gitnotecje_manager_GitManagerKt_generateSshKeysLib<
+pub extern "C" fn Java_io_github_christianjann_gittasks_manager_GitManagerKt_generateSshKeysLib<
     'local,
 >(
     mut env: JNIEnv<'local>,
@@ -546,7 +546,7 @@ pub extern "C" fn Java_io_github_christianjann_gitnotecje_manager_GitManagerKt_g
 }
 
 #[unsafe(no_mangle)]
-pub extern "C" fn Java_io_github_christianjann_gitnotecje_manager_MimeTypeManagerKt_extensionTypeLib<
+pub extern "C" fn Java_io_github_christianjann_gittasks_manager_MimeTypeManagerKt_extensionTypeLib<
     'local,
 >(
     mut env: JNIEnv<'local>,
@@ -562,7 +562,7 @@ pub extern "C" fn Java_io_github_christianjann_gitnotecje_manager_MimeTypeManage
 }
 
 #[unsafe(no_mangle)]
-pub extern "C" fn Java_io_github_christianjann_gitnotecje_manager_MimeTypeManagerKt_isExtensionSupported<
+pub extern "C" fn Java_io_github_christianjann_gittasks_manager_MimeTypeManagerKt_isExtensionSupported<
     'local,
 >(
     mut env: JNIEnv<'local>,
@@ -575,7 +575,7 @@ pub extern "C" fn Java_io_github_christianjann_gitnotecje_manager_MimeTypeManage
 }
 
 #[unsafe(no_mangle)]
-pub extern "C" fn Java_io_github_christianjann_gitnotecje_manager_GitManagerKt_getGitLogLib<
+pub extern "C" fn Java_io_github_christianjann_gittasks_manager_GitManagerKt_getGitLogLib<
     'local,
 >(
     mut env: JNIEnv<'local>,
@@ -601,7 +601,7 @@ fn get_git_log_jni<'local>(
     let list_class = env.get_object_class(j_list)?;
     let add_method = env.get_method_id(&list_class, "add", "(Ljava/lang/Object;)Z")?;
 
-    let entry_class = env.find_class("io/github/christianjann/gitnotecje/manager/GitLogEntry")?;
+    let entry_class = env.find_class("io/github/christianjann/gittasks/manager/GitLogEntry")?;
     let entry_ctor = env.get_method_id(
         &entry_class,
         "<init>",

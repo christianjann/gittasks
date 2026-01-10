@@ -1,5 +1,5 @@
 {
-  description = "Dev shell for building GitNote (Android + Rust) on NixOS";
+  description = "Dev shell for building GitTasks (Android + Rust) on NixOS";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";

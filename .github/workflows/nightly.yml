@@ -63,11 +63,11 @@ jobs:
           mkdir -p packages
           # warning: do not use github.event syntax here
           # https://stackoverflow.com/questions/71458189/github-action-workflow-call-does-not-use-up-to-date-input-values
-          mv app/build/outputs/apk/nightly/app-nightly.apk packages/gitnote-nightly.apk
+          mv app/build/outputs/apk/nightly/app-nightly.apk packages/gittasks-nightly.apk
 
       - uses: actions/upload-artifact@v5
         with:
-          name: gitnote-nightly
+          name: gittasks-nightly
           path: packages/*
           if-no-files-found: error
 

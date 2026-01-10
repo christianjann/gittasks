@@ -1,14 +1,14 @@
-package io.github.christianjann.gitnotecje
+package io.github.christianjann.gittasks
 
 import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import io.github.christianjann.gitnotecje.data.room.Note
-import io.github.christianjann.gitnotecje.data.room.NoteFolder
-import io.github.christianjann.gitnotecje.data.room.RepoDatabase
-import io.github.christianjann.gitnotecje.data.room.RepoDatabase.Companion.buildFactory
-import io.github.christianjann.gitnotecje.data.room.RepoDatabaseDao
+import io.github.christianjann.gittasks.data.room.Note
+import io.github.christianjann.gittasks.data.room.NoteFolder
+import io.github.christianjann.gittasks.data.room.RepoDatabase
+import io.github.christianjann.gittasks.data.room.RepoDatabase.Companion.buildFactory
+import io.github.christianjann.gittasks.data.room.RepoDatabaseDao
 import io.requery.android.database.sqlite.SQLiteDatabaseConfiguration.MEMORY_DB_PATH
 import kotlinx.coroutines.test.runTest
 import org.junit.After

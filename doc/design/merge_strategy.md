@@ -1,8 +1,8 @@
-# GitNote Merge Strategy
+# GitTasks Merge Strategy
 
 ## Overview
 
-GitNote implements automatic merge conflict resolution for pull operations to provide a seamless user experience. When merge conflicts occur during synchronization, the system attempts to resolve them automatically rather than requiring manual intervention.
+GitTasks implements automatic merge conflict resolution for pull operations to provide a seamless user experience. When merge conflicts occur during synchronization, the system attempts to resolve them automatically rather than requiring manual intervention.
 
 ## Automatic Conflict Resolution
 
@@ -15,7 +15,7 @@ Merge conflicts happen when:
 
 ### Resolution Strategy
 
-GitNote uses a **three-pass automatic resolution strategy** with clear precedence rules:
+GitTasks uses a **three-pass automatic resolution strategy** with clear precedence rules:
 
 #### Pass 1: Prefer Local Changes ("Our" Version)
 

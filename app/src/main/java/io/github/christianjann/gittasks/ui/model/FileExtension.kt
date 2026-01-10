@@ -1,0 +1,38 @@
+package io.github.christianjann.gittasks.ui.model
+
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+import java.io.Serializable
+
+
+// todo: add more or find another solution
+// https://www.reddit.com/r/Kotlin/comments/195k46c/lib_for_filtering_ascii_files/
+
+
+@Parcelize
+sealed class FileExtension(val text: String) : Parcelable, Serializable {
+
+
+    class Md : FileExtension("md")
+    class Txt : FileExtension("txt")
+    class Adoc : FileExtension("adoc")
+    class Asciidoc : FileExtension("asciidoc")
+    class Other(private val customText: String) : FileExtension(customText)
+
+    companion object {
+
+        val entries = arrayListOf(Md(), Txt(), Adoc(), Asciidoc())
+        fun match(extension: String): FileExtension {
+            entries.forEach {
+                if (it.text.equals(extension, ignoreCase = true)) {
+                    return it
+                }
+            }
+            return Other(extension)
+        }
+    }
+
+    override fun toString(): String {
+        return text
+    }
+}

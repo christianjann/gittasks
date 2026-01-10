@@ -1,17 +1,17 @@
 #!/bin/bash
 
-# GitNote Release Key Generation Script
+# GitTasks Release Key Generation Script
 # This script generates a signing keystore for Android release builds
 # and stores the generated keys in release-keys.env
 
 set -e
 
-echo "GitNote Release Key Generation"
+echo "GitTasks Release Key Generation"
 echo "=============================="
 
 # Configuration
 KEYSTORE_FILE="app/key.jks"
-KEY_ALIAS="gitnote_release_key"
+KEY_ALIAS="gittasks_release_key"
 ENV_FILE="release-keys.env"
 
 # Generate random passwords
@@ -46,11 +46,11 @@ keytool -genkeypair \
     -validity 10000 \
     -storepass "$STORE_PASSWORD" \
     -keypass "$KEY_PASSWORD" \
-    -dname "CN=GitNote, OU=Development, O=GitNote, L=Unknown, ST=Unknown, C=US"
+    -dname "CN=GitTasks, OU=Development, O=GitTasks, L=Unknown, ST=Unknown, C=US"
 
 # Store the keys in the environment file
 cat > "$ENV_FILE" << EOF
-# GitNote Release Keys - Generated on $(date)
+# GitTasks Release Keys - Generated on $(date)
 # This file contains sensitive information and should never be committed to version control
 KEY_ALIAS=$KEY_ALIAS
 KEY_PASSWORD=$KEY_PASSWORD

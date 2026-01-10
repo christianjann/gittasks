@@ -1,6 +1,6 @@
-# GitNote Build Instructions
+# GitTasks Build Instructions
 
-This file documents the build commands for the GitNote Android app, which uses Kotlin, Rust (via JNI), and Gradle.
+This file documents the build commands for the GitTasks Android app, which uses Kotlin, Rust (via JNI), and Gradle.
 
 ## Prerequisites
 

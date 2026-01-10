@@ -204,9 +204,9 @@ pub fn create_repo(repo_path: &str) -> Result<(), Error> {
 fn create_initial_welcome_commit(repo: &Repository) -> Result<(), Error> {
     // Create a welcome.md file
     let welcome_path = repo.path().parent().unwrap().join("welcome.md");
-    let welcome_content = r#"# Welcome to GitNoteCJE!
+    let welcome_content = r#"# Welcome to GitTasks!
 
-Thanks for using GitNoteCJE - your markdown notes with git version control.
+Thanks for using GitTasks - your markdown notes with git version control.
 
 ## Getting Started
 
@@ -239,11 +239,11 @@ You can delete this file or edit it as you like!
         .map_err(|e| Error::git2(e, "find_tree"))?;
 
     // Create signature
-    let sig = Signature::now("GitNoteCJE", "gitnote@localhost")
+    let sig = Signature::now("GitTasks", "gittasks@localhost")
         .map_err(|e| Error::git2(e, "Signature::now"))?;
 
     // Create initial commit
-    repo.commit(Some("HEAD"), &sig, &sig, "Welcome to GitNoteCJE!", &tree, &[])
+    repo.commit(Some("HEAD"), &sig, &sig, "Welcome to GitTasks!", &tree, &[])
         .map_err(|e| Error::git2(e, "initial commit"))?;
 
     // Create main branch
@@ -456,7 +456,7 @@ fn create_initial_commit_and_branch(repo: &Repository) -> Result<(), Error> {
         .map_err(|e| Error::git2(e, "find_tree"))?;
 
     // Create signature
-    let sig = Signature::now("GitNoteCJE", "gitnote@localhost")
+    let sig = Signature::now("GitTasks", "gittasks@localhost")
         .map_err(|e| Error::git2(e, "Signature::now"))?;
 
     // Create initial commit
@@ -518,7 +518,7 @@ pub fn signature() -> Option<(String, String)> {
     }
 
     // For new repositories with no commits, return default values
-    Some(("GitNoteCJE".to_string(), "gitnote@localhost".to_string()))
+    Some(("GitTasks".to_string(), "gittasks@localhost".to_string()))
 }
 
 pub fn commit_all(name: &str, email: &str, message: &str) -> Result<(), Error> {

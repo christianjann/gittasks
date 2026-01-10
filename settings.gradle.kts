@@ -14,5 +14,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "gitnote"
+rootProject.name = "gittasks"
 include(":app")

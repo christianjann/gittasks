@@ -20,11 +20,11 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
--keep class io.github.christianjann.gitnotecje.ui.model.Cred { *; }
--keep class io.github.christianjann.gitnotecje.ui.model.Cred$* { *; }
+-keep class io.github.christianjann.gittasks.ui.model.Cred { *; }
+-keep class io.github.christianjann.gittasks.ui.model.Cred$* { *; }
 
 # Keep GitManager and related classes to prevent ProGuard from breaking git operations
-#-keep class io.github.christianjann.gitnotecje.manager.GitManager { *; }
+#-keep class io.github.christianjann.gittasks.manager.GitManager { *; }
 
 # Keep JNI-related classes
-#-keep class io.github.christianjann.gitnotecje.** { *; }
+#-keep class io.github.christianjann.gittasks.** { *; }

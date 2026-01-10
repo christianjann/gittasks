@@ -22,12 +22,12 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.GitNote">
+        android:theme="@style/Theme.GitTasks">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
             android:exported="true"
-            android:theme="@style/Theme.GitNote"
+            android:theme="@style/Theme.GitTasks"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -39,7 +39,7 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="gitnote-identity" android:host="register-callback" />
+                <data android:scheme="gittasks-identity" android:host="register-callback" />
             </intent-filter>
         </activity>
 

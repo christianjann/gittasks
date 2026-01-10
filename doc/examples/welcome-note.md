@@ -1,5 +1,5 @@
 ---
-title: Welcome to GitNote
+title: Welcome to GitTasks
 created: 2025-12-31T10:00:00Z
 updated: 2025-12-31T10:00:00Z
 tags:
@@ -8,9 +8,9 @@ tags:
   - markdown
 ---
 
-# Welcome to GitNote! 📝
+# Welcome to GitTasks! 📝
 
-GitNote is a powerful note-taking app that combines the simplicity of Markdown with the power of Git version control.
+GitTasks is a powerful note-taking app that combines the simplicity of Markdown with the power of Git version control.
 
 ## Key Features
 

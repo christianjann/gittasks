@@ -39,7 +39,7 @@ function greet(name) {
   return `Hello, ${name}!`;
 }
 
-console.log(greet("GitNote"));
+console.log(greet("GitTasks"));
 ```
 
 ```python
@@ -62,13 +62,13 @@ print(fibonacci(10))
 
 ## Links and Images
 
-[GitNote Repository](https://github.com/wiiznokes/gitnote)
+[GitTasks Repository](https://github.com/wiiznokes/gittasks)
 
 ![Remote Image](https://picsum.photos/200/100)
 
 ![Local Image](542-200x100.jpg)
 
-![GitNote SVG App Icon](app_icon.svg)
+![GitTasks SVG App Icon](app_icon.svg)
 
 ## Blockquotes
 

@@ -1,6 +1,6 @@
-# GitNote Features
+# GitTasks Features
 
-GitNote is a Git-based note-taking app for Android that integrates seamlessly with Git repositories for version control and synchronization.
+GitTasks is a Git-based note-taking app for Android that integrates seamlessly with Git repositories for version control and synchronization.
 
 ## Core Features
 
@@ -16,7 +16,7 @@ GitNote is a Git-based note-taking app for Android that integrates seamlessly wi
 
 ### Background Git Operations
 
-GitNote features a sophisticated background synchronization system that prevents UI blocking during rapid successive changes while ensuring data consistency.
+GitTasks features a sophisticated background synchronization system that prevents UI blocking during rapid successive changes while ensuring data consistency.
 
 #### How It Works
 
@@ -45,11 +45,11 @@ GitNote features a sophisticated background synchronization system that prevents
 
 ### Automatic Merge Conflict Resolution
 
-GitNote features intelligent automatic merge conflict resolution that handles conflicts seamlessly during synchronization, eliminating the need for manual conflict resolution.
+GitTasks features intelligent automatic merge conflict resolution that handles conflicts seamlessly during synchronization, eliminating the need for manual conflict resolution.
 
 #### How It Works
 
-- **Three-Pass Resolution Strategy**: When conflicts occur during pull operations, GitNote applies a deterministic three-pass approach:
+- **Three-Pass Resolution Strategy**: When conflicts occur during pull operations, GitTasks applies a deterministic three-pass approach:
   1. **Local Priority**: Uses your local changes when available
   2. **Remote Fallback**: Uses remote changes if no local version exists
   3. **Ancestor Safety**: Falls back to common ancestor version to prevent data loss
@@ -85,7 +85,7 @@ GitNote features intelligent automatic merge conflict resolution that handles co
 
 ### Storage Options and Performance
 
-GitNote supports two storage locations with dramatically different performance characteristics:
+GitTasks supports two storage locations with dramatically different performance characteristics:
 
 | Operation          | App Memory | Device Memory    |
 | ------------------ | ---------- | ---------------- |
@@ -103,7 +103,7 @@ GitNote supports two storage locations with dramatically different performance c
 
 ### Tag Filtering
 
-GitNote supports filtering notes by tags defined in the frontmatter, allowing users to quickly find related notes.
+GitTasks supports filtering notes by tags defined in the frontmatter, allowing users to quickly find related notes.
 
 #### How It Works
 
@@ -148,7 +148,7 @@ This behavior ensures a smooth user experience by reducing the need for manual d
 
 ### Tag Editing
 
-GitNote provides an intuitive tag editing interface that allows you to manage tags directly from the note grid and list views, with real-time synchronization to ensure the tag editor always shows current tags.
+GitTasks provides an intuitive tag editing interface that allows you to manage tags directly from the note grid and list views, with real-time synchronization to ensure the tag editor always shows current tags.
 
 #### How It Works
 
@@ -185,7 +185,7 @@ The tag editor maintains perfect synchronization with the note's current state:
 
 ### Advanced Filtering Options
 
-GitNote provides configurable filtering options that give users more control over how tag filtering and search behave across folder boundaries.
+GitTasks provides configurable filtering options that give users more control over how tag filtering and search behave across folder boundaries.
 
 #### Tag Filtering Ignores Folders
 
@@ -238,7 +238,7 @@ When enabled (default), search operations show results from all folders in the r
 
 ### Folder Display Mode
 
-GitNote allows users to control whether notes from subfolders are included when browsing a folder, providing flexible folder navigation options.
+GitTasks allows users to control whether notes from subfolders are included when browsing a folder, providing flexible folder navigation options.
 
 #### How It Works
 
@@ -290,7 +290,7 @@ GitNote allows users to control whether notes from subfolders are included when 
 
 ### Reload Spinner
 
-GitNote provides visual feedback during long-running database reload operations to improve user experience.
+GitTasks provides visual feedback during long-running database reload operations to improve user experience.
 
 #### How It Works
 
@@ -314,7 +314,7 @@ GitNote provides visual feedback during long-running database reload operations 
 
 ### Scrollbars
 
-GitNote provides custom scroll indicators for both grid and list views to improve navigation when browsing through long lists of notes. This feature is opt-in and can be enabled in the settings.
+GitTasks provides custom scroll indicators for both grid and list views to improve navigation when browsing through long lists of notes. This feature is opt-in and can be enabled in the settings.
 
 #### How It Works
 
@@ -347,7 +347,7 @@ GitNote provides custom scroll indicators for both grid and list views to improv
 
 ### Tag Display Mode
 
-GitNote allows users to control tag visibility across different view modes and provides improved readability for notes with multiple tags.
+GitTasks allows users to control tag visibility across different view modes and provides improved readability for notes with multiple tags.
 
 #### How It Works
 
@@ -382,7 +382,7 @@ Without wrapping (previous behavior):
 
 ### Read-Only Mode
 
-GitNote features a read-only mode that transforms the note editing experience into a clean, distraction-free markdown preview with interactive elements.
+GitTasks features a read-only mode that transforms the note editing experience into a clean, distraction-free markdown preview with interactive elements.
 
 #### How It Works
 
@@ -403,7 +403,7 @@ GitNote features a read-only mode that transforms the note editing experience in
 
 #### Example Workflow
 
-1. Open GitNote and access the three-dot menu in the main grid view.
+1. Open GitTasks and access the three-dot menu in the main grid view.
 2. Select "Activate read only mode" to switch to preview mode.
 3. Open any note to see it rendered as formatted markdown.
 4. Click on task checkboxes to toggle completion status.
@@ -418,7 +418,7 @@ GitNote features a read-only mode that transforms the note editing experience in
 
 ### Asset Management
 
-GitNote includes an initial asset management system that allows you to import, organize, and insert images and files into your notes with seamless Git integration.
+GitTasks includes an initial asset management system that allows you to import, organize, and insert images and files into your notes with seamless Git integration.
 
 #### How It Works
 
@@ -432,7 +432,7 @@ GitNote includes an initial asset management system that allows you to import, o
 
 #### Markdown Integration
 
-- **Automatic Link Insertion**: When inserting assets into markdown, GitNote automatically calculates the correct relative path from the note's location to the assets folder
+- **Automatic Link Insertion**: When inserting assets into markdown, GitTasks automatically calculates the correct relative path from the note's location to the assets folder
 - **Image Button**: Access asset insertion through the image button in the markdown formatting toolbar
 - **Vertical Scrolling**: If the formatting toolbar has many buttons, scroll horizontally to find the image button
 - **Relative Paths**: Links are generated as `![alt](relative/path/to/assets/filename.ext)` for proper portability
@@ -460,12 +460,12 @@ This is an initial implementation with planned expansions:
 1. Import an image using the asset manager (accessible via the image button in markdown editor)
 2. The asset is saved to `assets/filename.jpg` and committed to Git
 3. In your markdown note, click the image button in the formatting toolbar
-4. Select the imported asset - GitNote inserts `![filename](../assets/filename.jpg)` (path adjusted based on note location)
+4. Select the imported asset - GitTasks inserts `![filename](../assets/filename.jpg)` (path adjusted based on note location)
 5. The image displays correctly in both editing and read-only modes
 
 ### Enhanced Text Editing
 
-GitNote provides improved text editing capabilities for better note-taking experience.
+GitTasks provides improved text editing capabilities for better note-taking experience.
 
 #### Vertical Scrolling
 
@@ -482,7 +482,7 @@ GitNote provides improved text editing capabilities for better note-taking exper
 
 ### Git Log Viewer
 
-GitNote provides direct access to the git commit history of your notes repository, allowing you to track changes and see the evolution of your notes over time.
+GitTasks provides direct access to the git commit history of your notes repository, allowing you to track changes and see the evolution of your notes over time.
 
 #### How It Works
 
@@ -501,7 +501,7 @@ GitNote provides direct access to the git commit history of your notes repositor
 
 ## Completion Checkbox Feature
 
-GitNote now supports marking notes as completed using a checkbox in the UI, tied to the `completed?` field in the frontmatter.
+GitTasks now supports marking notes as completed using a checkbox in the UI, tied to the `completed?` field in the frontmatter.
 
 ### How It Works
 
@@ -528,13 +528,13 @@ GitNote now supports marking notes as completed using a checkbox in the UI, tied
    completed?: no
    ---
    ```
-2. Open the note in GitNote; a checkbox appears.
+2. Open the note in GitTasks; a checkbox appears.
 3. Click the checkbox to mark as complete; the file updates to `completed?: yes`.
 4. Sync with Git to persist changes across devices.
 
 ### Interactive Checkboxes in Markdown
 
-GitNote supports interactive checkboxes directly within rendered markdown content, allowing you to toggle task completion without switching to edit mode.
+GitTasks supports interactive checkboxes directly within rendered markdown content, allowing you to toggle task completion without switching to edit mode.
 
 #### How It Works
 
@@ -626,7 +626,7 @@ The FAB provides quick access to create new notes and tasks directly.
 
 ## Move Note Feature
 
-GitNote allows moving notes between folders using an intuitive drag-and-drop style interface.
+GitTasks allows moving notes between folders using an intuitive drag-and-drop style interface.
 
 ### How It Works
 
@@ -654,7 +654,7 @@ GitNote allows moving notes between folders using an intuitive drag-and-drop sty
 
 ## Convert to Task/Note Feature
 
-GitNote allows quick conversion between regular notes and task-like notes via the long-press menu.
+GitTasks allows quick conversion between regular notes and task-like notes via the long-press menu.
 
 ### How It Works
 
@@ -679,7 +679,7 @@ GitNote allows quick conversion between regular notes and task-like notes via th
 
 ## Frontmatter Hiding (Read-Only Mode Feature)
 
-As part of GitNote's read-only mode, YAML frontmatter is automatically hidden when viewing Markdown notes to provide a clean, distraction-free reading experience.
+As part of GitTasks's read-only mode, YAML frontmatter is automatically hidden when viewing Markdown notes to provide a clean, distraction-free reading experience.
 
 ### How It Works
 
@@ -717,7 +717,7 @@ Will display in view mode as:
 
 ## Show Full Title in List View
 
-GitNote allows long note titles to wrap to multiple lines in list view instead of being truncated with ellipsis.
+GitTasks allows long note titles to wrap to multiple lines in list view instead of being truncated with ellipsis.
 
 ### How It Works
 
@@ -750,7 +750,7 @@ Cut Off At The End Of The Line
 
 ## Frontmatter Title Display
 
-GitNote allows users to display frontmatter titles instead of filenames in note cards, providing more meaningful and descriptive note titles.
+GitTasks allows users to display frontmatter titles instead of filenames in note cards, providing more meaningful and descriptive note titles.
 
 ### How It Works
 
@@ -792,7 +792,7 @@ This allows titles with special characters like colons (:) and slashes (/) that 
 
 ## Background Git Operations
 
-GitNote features a sophisticated background synchronization system that prevents UI blocking during rapid successive changes while ensuring data consistency.
+GitTasks features a sophisticated background synchronization system that prevents UI blocking during rapid successive changes while ensuring data consistency.
 
 ### How It Works
 

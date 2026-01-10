@@ -13,7 +13,7 @@ pub struct SshKeys {
 }
 
 pub fn gen_keys() -> anyhow::Result<SshKeys> {
-    let comment = "GitNote";
+    let comment = "GitTasks";
 
     let pair = Ed25519Keypair::random(&mut OsRng);
 

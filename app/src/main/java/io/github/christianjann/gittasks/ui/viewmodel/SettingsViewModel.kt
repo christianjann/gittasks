@@ -1,0 +1,47 @@
+package io.github.christianjann.gittasks.ui.viewmodel
+
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import io.github.christianjann.gittasks.MyApp
+import io.github.christianjann.gittasks.R
+import io.github.christianjann.gittasks.data.AppPreferences
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+
+class SettingsViewModel : ViewModel() {
+
+    val prefs: AppPreferences = MyApp.appModule.appPreferences
+    private val storageManager = MyApp.appModule.storageManager
+    val uiHelper = MyApp.appModule.uiHelper
+
+    fun update(f: suspend () -> Unit) {
+        viewModelScope.launch {
+            f()
+        }
+    }
+
+    fun closeRepo() {
+        CoroutineScope(Dispatchers.IO).launch {
+            storageManager.closeRepo()
+        }
+    }
+
+    fun reloadDatabase() {
+        CoroutineScope(Dispatchers.IO).launch {
+            uiHelper.makeToast(uiHelper.getString(R.string.reloading_database))
+            val res = storageManager.updateDatabase(force = true)
+            res.onFailure {
+                if (prefs.debugFeaturesEnabled.getBlocking()) {
+                    uiHelper.makeToast("${uiHelper.getString(R.string.failed_reload)}: $it")
+                }
+            }
+            res.onSuccess {
+                if (prefs.debugFeaturesEnabled.getBlocking()) {
+                    uiHelper.makeToast(uiHelper.getString(R.string.success_reload))
+                }
+            }
+        }
+    }
+}

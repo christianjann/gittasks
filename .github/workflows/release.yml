@@ -75,7 +75,7 @@ jobs:
           mkdir -p packages
           # warning: do not use github.event syntax here
           # https://stackoverflow.com/questions/71458189/github-action-workflow-call-does-not-use-up-to-date-input-values
-          mv app/build/outputs/apk/release/app-release.apk packages/gitnote-release-${{ inputs.version }}.apk
+          mv app/build/outputs/apk/release/app-release.apk packages/gittasks-release-${{ inputs.version }}.apk
 
       - name: Set prerelease flag
         if: ${{ github.event.inputs.prerelease == 'true' }}

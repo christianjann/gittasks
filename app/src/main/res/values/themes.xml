@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.GitNote" parent="android:Theme.Material.NoActionBar">
+    <style name="Theme.GitTasks" parent="android:Theme.Material.NoActionBar">
         <!-- impossible to integrate rn because of Android doc
         blocking: contrast between android icon and the status bar
 

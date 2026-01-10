@@ -1,37 +1,37 @@
-# Baseline profile for GitNote app
+# Baseline profile for GitTasks app
 # This file contains classes that should be optimized for better performance
 
 # Application class
-Lio/github/christianjann/gitnotecje/MyApp;
+Lio/github/christianjann/gittasks/MyApp;
 
 # Main Activity
-Lio/github/christianjann/gitnotecje/MainActivity;
+Lio/github/christianjann/gittasks/MainActivity;
 
 # Navigation (maybe remove?)
-Lio/github/christianjann/gitnotecje/ui/screen/app/AppNav;
-Lio/github/christianjann/gitnotecje/ui/screen/app/AppScreen;
+Lio/github/christianjann/gittasks/ui/screen/app/AppNav;
+Lio/github/christianjann/gittasks/ui/screen/app/AppScreen;
 
 # Screens (maybe remove?)
-Lio/github/christianjann/gitnotecje/ui/screen/app/grid/GridScreen;
-Lio/github/christianjann/gitnotecje/ui/screen/settings/SettingsNav;
+Lio/github/christianjann/gittasks/ui/screen/app/grid/GridScreen;
+Lio/github/christianjann/gittasks/ui/screen/settings/SettingsNav;
 
 # Git Manager and related classes
-Lio/github/christianjann/gitnotecje/manager/GitManager;
-HSPLio/github/christianjann/gitnotecje/manager/GitManager;-><init>()V
-HSPLio/github/christianjann/gitnotecje/manager/GitManager;->openRepo(Ljava/lang/String;)Lio/github/christianjann/gitnotecje/manager/Result;
-HSPLio/github/christianjann/gitnotecje/manager/GitManager;->currentSignature()Lio/github/christianjann/gitnotecje/data/Signature;
+Lio/github/christianjann/gittasks/manager/GitManager;
+HSPLio/github/christianjann/gittasks/manager/GitManager;-><init>()V
+HSPLio/github/christianjann/gittasks/manager/GitManager;->openRepo(Ljava/lang/String;)Lio/github/christianjann/gittasks/manager/Result;
+HSPLio/github/christianjann/gittasks/manager/GitManager;->currentSignature()Lio/github/christianjann/gittasks/data/Signature;
 
 # StorageManager
-Lio/github/christianjann/gitnotecje/manager/StorageManager;
-HSPLio/github/christianjann/gitnotecje/manager/StorageManager;->performBackgroundGitOperations()V
+Lio/github/christianjann/gittasks/manager/StorageManager;
+HSPLio/github/christianjann/gittasks/manager/StorageManager;->performBackgroundGitOperations()V
 
 # ViewModels
-Lio/github/christianjann/gitnotecje/ui/viewmodel/GridViewModel;
-Lio/github/christianjann/gitnotecje/ui/viewmodel/MainViewModel;
+Lio/github/christianjann/gittasks/ui/viewmodel/GridViewModel;
+Lio/github/christianjann/gittasks/ui/viewmodel/MainViewModel;
 
 # Data classes
-Lio/github/christianjann/gitnotecje/data/model/Note;
-Lio/github/christianjann/gitnotecje/ui/model/GridNote;
+Lio/github/christianjann/gittasks/data/model/Note;
+Lio/github/christianjann/gittasks/ui/model/GridNote;
 
 # Room database
-Lio/github/christianjann/gitnotecje/data/room/RepoDatabase;
+Lio/github/christianjann/gittasks/data/room/RepoDatabase;

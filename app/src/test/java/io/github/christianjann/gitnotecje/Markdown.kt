@@ -1,7 +1,7 @@
-package io.github.christianjann.gitnotecje
+package io.github.christianjann.gittasks
 
-import io.github.christianjann.gitnotecje.ui.viewmodel.edit.ListItemInfo
-import io.github.christianjann.gitnotecje.ui.viewmodel.edit.ListType
+import io.github.christianjann.gittasks.ui.viewmodel.edit.ListItemInfo
+import io.github.christianjann.gittasks.ui.viewmodel.edit.ListType
 import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull

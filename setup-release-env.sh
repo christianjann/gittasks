@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# GitNote Release Environment Setup
+# GitTasks Release Environment Setup
 # This script loads environment variables from release-keys.env for release builds
 
 ENV_FILE="release-keys.env"
 
-echo "Setting up GitNote release environment variables..."
+echo "Setting up GitTasks release environment variables..."
 echo "=================================================="
 
 # Check if the environment file exists

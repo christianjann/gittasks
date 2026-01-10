@@ -138,8 +138,8 @@ release-package:
     mkdir -p packages
 
     # Move APK
-    echo "Moving APK to packages/gitnote-release-${VERSION_NAME}.apk..."
-    mv app/build/outputs/apk/release/app-release.apk packages/gitnotecje-release-${VERSION_NAME}.apk
+    echo "Moving APK to packages/gittasks-release-${VERSION_NAME}.apk..."
+    mv app/build/outputs/apk/release/app-release.apk packages/gittasks-release-${VERSION_NAME}.apk
 
     # Bump version code and name
     echo "Bumping version..."
@@ -165,13 +165,13 @@ release-package:
     sed -i "s/versionCode = $CURRENT_CODE/versionCode = $NEW_CODE/" app/build.gradle.kts
     sed -i "s/versionName = \"$VERSION_NAME\"/versionName = \"$NEW_NAME\"/" app/build.gradle.kts
 
-    echo "✅ Release package created: packages/gitnote-release-${VERSION_NAME}.apk"
+    echo "✅ Release package created: packages/gittasks-release-${VERSION_NAME}.apk"
     echo "Version bumped to $NEW_NAME (code: $NEW_CODE)"
 
 release-package-install:
     #!/usr/bin/env bash
     echo "Finding latest release package..."
-    LATEST_PACKAGE=$(ls -t packages/gitnotecje-release-*.apk | head -1)
+    LATEST_PACKAGE=$(ls -t packages/gittasks-release-*.apk | head -1)
     if [ -z "$LATEST_PACKAGE" ]; then
         echo "❌ No release packages found in packages/"
         exit 1

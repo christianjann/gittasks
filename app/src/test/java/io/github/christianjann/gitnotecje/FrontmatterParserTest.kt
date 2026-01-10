@@ -1,6 +1,6 @@
-package io.github.christianjann.gitnotecje
+package io.github.christianjann.gittasks
 
-import io.github.christianjann.gitnotecje.helper.FrontmatterParser
+import io.github.christianjann.gittasks.helper.FrontmatterParser
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

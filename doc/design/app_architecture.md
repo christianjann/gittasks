@@ -1,8 +1,8 @@
-# GitNote App Design Document
+# GitTasks App Design Document
 
 ## Overview
 
-GitNote is an Android note-taking application that integrates with Git for version control and synchronization. The app uses a clean architecture with MVVM pattern, leveraging Jetpack Compose for UI, Room for local database, and libgit2 (via JNI) for Git operations.
+GitTasks is an Android note-taking application that integrates with Git for version control and synchronization. The app uses a clean architecture with MVVM pattern, leveraging Jetpack Compose for UI, Room for local database, and libgit2 (via JNI) for Git operations.
 
 This document describes the core components and their interactions, focusing on data flow, state management, and refresh mechanisms.
 

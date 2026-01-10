@@ -1,6 +1,6 @@
-package io.github.christianjann.gitnotecje
+package io.github.christianjann.gittasks
 
-import io.github.christianjann.gitnotecje.helper.NameValidation
+import io.github.christianjann.gittasks.helper.NameValidation
 
 import kotlin.test.Test
 
