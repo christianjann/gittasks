@@ -5,6 +5,17 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [26.01.13]
+
+### Changed
+
+- **App Rebrand**: Renamed application from GitNoteCJE to GitTasks
+  - Updated all internal references, themes, and configurations
+  - Modified default Git author name from "gitnote" to "gittasks"
+- **Frontmatter Title Preference**: Changed `preferFrontmatterTitle` setting to be enabled by default
+  - Notes with frontmatter metadata will now use the title from frontmatter by default
+  - Users can still disable this in settings if they prefer filename-based titles
+
 ## [26.01.12]
 
 ### Fixed
