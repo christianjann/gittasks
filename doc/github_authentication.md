@@ -88,6 +88,7 @@ The app requests the `repo` scope, which provides:
 - **Deploy key management**: Enables adding SSH keys to repositories for git operations
 
 **Why these permissions are needed:**
+
 - GitTasks needs to list your repositories (including private ones) to let you choose which one to clone
 - Creating new repositories programmatically requires repository creation permissions
 - Adding SSH deploy keys to repositories requires write access to repository settings
@@ -122,15 +123,18 @@ The app requests the `repo` scope, which provides:
 ## Troubleshooting
 
 **OAuth Issues:**
+
 - Ensure your GitHub OAuth app is properly configured with the correct callback URL
 - Check that the app has the necessary permissions granted
 
 **SSH Key Issues:**
+
 - Verify the public key is correctly added to GitHub
 - Ensure the private key is properly imported into GitTasks
 - Test SSH connection: `ssh -T git@github.com`
 
 **Token Issues:**
+
 - Confirm the personal access token has the correct scopes
 - Check token expiration date
 - Ensure you're using the token as the password (not your actual password)

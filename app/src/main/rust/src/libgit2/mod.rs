@@ -217,7 +217,7 @@ Thanks for using GitTasks - your markdown notes with git version control.
 
 You can delete this file or edit it as you like!
 "#;
-    
+
     std::fs::write(&welcome_path, welcome_content).map_err(|e| {
         error!("Failed to write welcome.md file: {}", e);
         git2::Error::from_str(&format!("IO error: {}", e))
@@ -735,7 +735,8 @@ pub fn sync(cred: Option<Cred>) -> Result<(), Error> {
         callbacks.certificate_check(|_cert, _| Ok(CertificateCheckStatus::CertificateOk));
 
         if let Some(c) = &cred {
-            callbacks.credentials(move |_url, _username_from_url, _allowed_types| credential_helper(c));
+            callbacks
+                .credentials(move |_url, _username_from_url, _allowed_types| credential_helper(c));
         }
 
         let mut fetch_options = FetchOptions::new();

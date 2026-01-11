@@ -107,9 +107,7 @@ pub extern "C" fn Java_io_github_christianjann_gittasks_manager_GitManagerKt_cre
     OK
 }
 #[unsafe(no_mangle)]
-pub extern "C" fn Java_io_github_christianjann_gittasks_manager_GitManagerKt_openRepoLib<
-    'local,
->(
+pub extern "C" fn Java_io_github_christianjann_gittasks_manager_GitManagerKt_openRepoLib<'local>(
     mut env: JNIEnv<'local>,
     _class: JClass<'local>,
     repo_path: JString<'local>,

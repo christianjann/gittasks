@@ -22,6 +22,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
   - Personal access token authentication for HTTPS cloning
   - Deploy key configuration for repository-specific access
   - Included authentication flow screenshots and troubleshooting guide
+
 ## [26.01.13]
 
 ### Changed
