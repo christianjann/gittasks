@@ -62,7 +62,7 @@ print(fibonacci(10))
 
 ## Links and Images
 
-[GitTasks Repository](https://github.com/wiiznokes/gittasks)
+[GitTasks Repository](https://github.com/christianjann/gittasks)
 
 ![Remote Image](https://picsum.photos/200/100)
 

@@ -401,17 +401,6 @@ pub extern "C" fn Java_io_github_christianjann_gittasks_manager_GitManagerKt_pul
 }
 
 #[unsafe(no_mangle)]
-pub extern "C" fn Java_io_github_wiiznokes_gittasks_manager_GitManagerKt_syncLib<'local>(
-    mut env: JNIEnv<'local>,
-    _class: JClass<'local>,
-    cred: JString<'local>,
-) -> jint {
-    let cred = Cred::from_jni(&mut env, &cred).unwrap();
-    unwrap_or_log!(libgit2::sync(cred), "sync");
-    OK
-}
-
-#[unsafe(no_mangle)]
 pub extern "C" fn Java_io_github_christianjann_gittasks_manager_GitManagerKt_syncLib<'local>(
     mut env: JNIEnv<'local>,
     _class: JClass<'local>,
