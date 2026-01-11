@@ -5,6 +5,23 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [26.01.14]
+
+### Changed
+
+- **GitHub OAuth Implementation**: Updated OAuth flow for improved compatibility
+  - New GitHub OAuth application with updated client credentials
+  - Added explicit `redirect_uri` parameter to ensure proper mobile browser handling
+  - Enhanced OAuth callback handling for better 2FA support
+
+### Added
+
+- **GitHub Authentication Documentation**: Comprehensive guide covering all authentication methods
+  - Detailed OAuth setup with security and privacy explanations
+  - SSH key authentication (automatic and manual setup)
+  - Personal access token authentication for HTTPS cloning
+  - Deploy key configuration for repository-specific access
+  - Included authentication flow screenshots and troubleshooting guide
 ## [26.01.13]
 
 ### Changed
