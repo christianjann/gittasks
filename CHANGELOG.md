@@ -5,6 +5,10 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed two times 150 in NoteMinWidth menu
+
 ## [26.01.15]
 
 ### Added
