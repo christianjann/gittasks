@@ -123,6 +123,11 @@
     <string name="success_note_update">Note mise à jour avec succès</string>
     <string name="success_note_create">Note créée avec succès</string>
 
+    <plurals name="move_selected_notes" tools:ignore="MissingQuantity">
+        <item quantity="one" tools:ignore="ImpliedQuantity">Déplacer la note sélectionnée</item>
+        <item quantity="other">Déplacer les notes sélectionnées</item>
+    </plurals>
+
     <plurals name="delete_selected_notes" tools:ignore="MissingQuantity">
         <item quantity="one" tools:ignore="ImpliedQuantity">Supprimer la note selectionnée</item>
         <item quantity="other">Supprimer les notes selectionnées</item>

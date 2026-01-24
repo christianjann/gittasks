@@ -390,6 +390,13 @@ private fun SelectableTopBar(
                         options = listOf(
                             CustomDropDownModel(
                                 text = pluralStringResource(
+                                    R.plurals.move_selected_notes,
+                                    selectedNotesNumber
+                                ),
+                                onClick = { vm.startMoveSelectedNotes() }
+                            ),
+                            CustomDropDownModel(
+                                text = pluralStringResource(
                                     R.plurals.delete_selected_notes,
                                     selectedNotesNumber
                                 ),

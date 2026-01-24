@@ -162,6 +162,11 @@
     <string name="sync_success">Repository synced successfully</string>
     <string name="sync_failed">Failed to sync with remote repository</string>
 
+    <plurals name="move_selected_notes">
+        <item quantity="one">Move selected note</item>
+        <item quantity="other">Move selected notes</item>
+    </plurals>
+
     <plurals name="delete_selected_notes">
         <item quantity="one">Delete selected note</item>
         <item quantity="other">Delete selected notes</item>

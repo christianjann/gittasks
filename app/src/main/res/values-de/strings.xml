@@ -162,6 +162,11 @@
     <string name="sync_success">Repository erfolgreich synchronisiert</string>
     <string name="sync_failed">Synchronisation mit Remote-Repository fehlgeschlagen</string>
 
+    <plurals name="move_selected_notes">
+        <item quantity="one">Ausgewählte Notiz verschieben</item>
+        <item quantity="other">Ausgewählte Notizen verschieben</item>
+    </plurals>
+
     <plurals name="delete_selected_notes">
         <item quantity="one">Ausgewählte Notiz löschen</item>
         <item quantity="other">Ausgewählte Notizen löschen</item>

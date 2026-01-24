@@ -95,11 +95,13 @@ fun RowNFoldersNavigation(
     showTags: Boolean,
     onToggleMode: () -> Unit,
     noteBeingMoved: Note?,
+    notesBeingMovedCount: Int = 0,
     onMoveNoteToFolder: (String) -> Unit,
     onCancelMove: () -> Unit,
     onHomeClick: () -> Unit,
     scrollBehavior: TopAppBarScrollBehavior? = null,
 ) {
+    val isMovingNotes = noteBeingMoved != null || notesBeingMovedCount > 0
     val containers = if (currentPath.isEmpty()) emptyList() else currentPath.split('/')
 
     TopAppBar(
@@ -159,7 +161,7 @@ fun RowNFoldersNavigation(
             }
         },
         actions = {
-            if (noteBeingMoved != null) {
+            if (isMovingNotes) {
                 IconButton(onClick = { onMoveNoteToFolder(currentPath) }) {
                     SimpleIcon(
                         imageVector = Icons.Filled.Check
@@ -219,16 +221,18 @@ fun DrawerScreen(
     selectedTag: String?,
     onTagSelected: (String?) -> Unit,
     noteBeingMoved: Note?,
+    notesBeingMovedCount: Int = 0,
     onMoveNoteToFolder: (String) -> Unit,
     onCancelMove: () -> Unit,
     syncState: SyncState,
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(),) {
 
+    val isMovingNotes = noteBeingMoved != null || notesBeingMovedCount > 0
     val showTags = rememberSaveable { mutableStateOf(false) }
 
     // Switch to folder mode when starting to move a note
-    LaunchedEffect(noteBeingMoved) {
-        if (noteBeingMoved != null && showTags.value) {
+    LaunchedEffect(noteBeingMoved, notesBeingMovedCount) {
+        if (isMovingNotes && showTags.value) {
             showTags.value = false
             onTagSelected(null)
         }
@@ -245,7 +249,7 @@ fun DrawerScreen(
 
     // Auto-close drawer when navigating to a leaf folder (no subfolders)
     LaunchedEffect(drawerFolders) {
-        if (currentNoteFolderRelativePath.isNotEmpty() && drawerFolders.isEmpty() && noteBeingMoved == null) {
+        if (currentNoteFolderRelativePath.isNotEmpty() && drawerFolders.isEmpty() && !isMovingNotes) {
             scope.launch { drawerState.close() }
         }
     }
@@ -265,6 +269,7 @@ fun DrawerScreen(
                     } // when switching to tag mode, keep current folder
                 },
                 noteBeingMoved = noteBeingMoved,
+                notesBeingMovedCount = notesBeingMovedCount,
                 onMoveNoteToFolder = onMoveNoteToFolder,
                 onCancelMove = onCancelMove,
                 onHomeClick = {
@@ -461,7 +466,7 @@ fun DrawerScreen(
                                                 },
                                                 onClick = {
                                                     openFolder(drawerNoteFolder.noteFolder.relativePath)
-                                                    if (!drawerNoteFolder.hasChildren && noteBeingMoved == null) {
+                                                    if (!drawerNoteFolder.hasChildren && !isMovingNotes) {
                                                         scope.launch { drawerState.close() }
                                                     }
                                                 }

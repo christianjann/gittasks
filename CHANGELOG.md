@@ -5,6 +5,13 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+### Added
+
+- Multi-Select Move: Move multiple notes at once
+  - Select multiple notes and choose "Move selected notes" from the menu
+  - Navigate to destination folder using the drawer
+  - All selected notes are moved in a single Git commit
+
 ### Fixed
 
 - Fixed two times 150 in NoteMinWidth menu

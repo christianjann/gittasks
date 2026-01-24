@@ -183,6 +183,8 @@ fun GridScreen(
 
     val drawerScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
+    val notesBeingMoved by vm.notesBeingMoved.collectAsState()
+
     ModalNavigationDrawer(drawerState = drawerState, drawerContent = {
         ModalDrawerSheet {
             DrawerScreen(
@@ -196,6 +198,7 @@ fun GridScreen(
                 selectedTag = vm.selectedTag.collectAsState<String?>().value,
                 onTagSelected = { vm.selectTag(it) },
                 noteBeingMoved = vm.noteBeingMoved.collectAsState().value,
+                notesBeingMovedCount = notesBeingMoved.size,
                 onMoveNoteToFolder = { vm.moveNoteToFolder(it) },
                 onCancelMove = { vm.cancelMoveNote() },
                 syncState = vm.syncState.collectAsState().value,
@@ -210,15 +213,18 @@ fun GridScreen(
 
         val wasMoving = remember { mutableStateOf(false) }
 
-        LaunchedEffect(noteBeingMoved) {
-            if (noteBeingMoved == null && wasMoving.value) {
+        // Track when we're done moving (either single note or multiple notes)
+        LaunchedEffect(noteBeingMoved, notesBeingMoved) {
+            val isCurrentlyMoving = noteBeingMoved != null || notesBeingMoved.isNotEmpty()
+            if (!isCurrentlyMoving && wasMoving.value) {
                 drawerState.close()
             }
-            wasMoving.value = noteBeingMoved != null
+            wasMoving.value = isCurrentlyMoving
         }
 
-        LaunchedEffect(noteBeingMoved) {
-            if (noteBeingMoved != null) {
+        // Open drawer when starting to move a note (single or multiple)
+        LaunchedEffect(noteBeingMoved, notesBeingMoved) {
+            if (noteBeingMoved != null || notesBeingMoved.isNotEmpty()) {
                 drawerState.open()
             }
         }

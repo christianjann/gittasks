@@ -112,6 +112,11 @@
     <string name="success_note_create">Poznámka úspěšně vytvořena</string>
     <string name="error_delete_folder">Nelze smazat složku: %1$s</string>
 
+    <plurals name="move_selected_notes">
+        <item quantity="one">Přesunout vybranou poznámku</item>
+        <item quantity="other">Přesunout vybrané poznámky</item>
+    </plurals>
+
     <plurals name="delete_selected_notes">
         <item quantity="one">Smazat vybranou poznámku</item>
         <item quantity="other">Smazat vybrané poznámky</item>

@@ -117,6 +117,9 @@ class GridViewModel : ViewModel() {
     private val _noteBeingMoved = MutableStateFlow<Note?>(null)
     val noteBeingMoved: StateFlow<Note?> = _noteBeingMoved.asStateFlow()
 
+    private val _notesBeingMoved = MutableStateFlow<List<Note>>(emptyList())
+    val notesBeingMoved: StateFlow<List<Note>> = _notesBeingMoved.asStateFlow()
+
     private val _showEditTagsDialog = MutableStateFlow(false)
     val showEditTagsDialog: StateFlow<Boolean> = _showEditTagsDialog.asStateFlow()
 
@@ -133,6 +136,13 @@ class GridViewModel : ViewModel() {
         }
     }
 
+    fun startMoveSelectedNotes() {
+        viewModelScope.launch {
+            _notesBeingMoved.emit(selectedNotes.value)
+            _selectedNotes.emit(emptyList())
+        }
+    }
+
     fun selectTag(tag: String?) {
         viewModelScope.launch {
             _selectedTag.emit(tag)
@@ -142,6 +152,7 @@ class GridViewModel : ViewModel() {
     fun cancelMoveNote() {
         viewModelScope.launch {
             _noteBeingMoved.emit(null)
+            _notesBeingMoved.emit(emptyList())
         }
     }
 
@@ -191,6 +202,20 @@ class GridViewModel : ViewModel() {
     }
 
     fun moveNoteToFolder(folderRelativePath: String) {
+        // Handle multiple notes being moved
+        val notes = notesBeingMoved.value
+        if (notes.isNotEmpty()) {
+            viewModelScope.launch {
+                val result = storageManager.moveNotes(notes, folderRelativePath)
+                result.onFailure { e ->
+                    uiHelper.makeToast("Failed to move notes: $e")
+                }
+                _notesBeingMoved.emit(emptyList())
+            }
+            return
+        }
+        
+        // Handle single note being moved
         val note = noteBeingMoved.value ?: return
         viewModelScope.launch {
             val newRelativePath = "$folderRelativePath/${note.fullName()}"

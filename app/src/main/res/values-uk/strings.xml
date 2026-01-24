@@ -111,6 +111,11 @@
     <string name="success_note_create">Нотатку успішно створено</string>
     <string name="error_delete_folder">Не вдалося видалити папку: %1$s</string>
 
+    <plurals name="move_selected_notes">
+        <item quantity="one">Перемістити вибрану нотатку</item>
+        <item quantity="other">Перемістити вибрані нотатки</item>
+    </plurals>
+
     <plurals name="delete_selected_notes">
         <item quantity="one">Видалити вибрану нотатку</item>
         <item quantity="other">Видалити вибрані нотатки</item>

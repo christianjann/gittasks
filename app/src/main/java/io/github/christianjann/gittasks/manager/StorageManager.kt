@@ -597,6 +597,54 @@ class StorageManager {
         }
     }
 
+    suspend fun moveNotes(notes: List<Note>, folderRelativePath: String): Result<Unit> = locker.withLock {
+        Log.d(TAG, "moveNotes: ${notes.size} notes to $folderRelativePath")
+
+        update(
+            commitMessage = "gittasks moved ${notes.size} notes to $folderRelativePath"
+        ) {
+            val repoPath = prefs.repoPath()
+            
+            notes.forEach { note ->
+                val newRelativePath = "$folderRelativePath/${note.fullName()}"
+                val newNote = note.copy(relativePath = newRelativePath)
+                
+                if (prefs.debugFeaturesEnabled.getBlocking()) {
+                    Log.d(TAG, "moving $note to $newRelativePath")
+                } else {
+                    Log.d(TAG, "moving ${note.relativePath} to $newRelativePath")
+                }
+                
+                noteRepository.removeNote(note)
+                noteRepository.insertNote(newNote)
+                
+                val previousFile = note.toFileFs(repoPath)
+                
+                if (previousFile.exist()) {
+                    previousFile.delete().onFailure {
+                        val message = uiHelper.getString(R.string.error_delete_file, previousFile.path, it.message)
+                        Log.e(TAG, message)
+                        uiHelper.makeToast(message)
+                    }
+                }
+                
+                val newFile = newNote.toFileFs(repoPath)
+                newFile.create().onFailure {
+                    val message = uiHelper.getString(R.string.error_create_file, it.message)
+                    Log.e(TAG, message)
+                    uiHelper.makeToast(message)
+                }
+                
+                newFile.write(newNote.content).onFailure {
+                    val message = uiHelper.getString(R.string.error_write_file, it.message)
+                    Log.e(TAG, message)
+                    uiHelper.makeToast(message)
+                }
+            }
+            success(Unit)
+        }
+    }
+
     suspend fun createNoteFolder(noteFolder: NoteFolder): Result<Unit> = locker.withLock {
         Log.d(TAG, "createNoteFolder: $noteFolder")
 

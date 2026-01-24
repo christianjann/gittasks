@@ -111,6 +111,11 @@
     <string name="success_note_create">Заметка успешно создана</string>
     <string name="error_delete_folder">Не удалось удалить папку: %1$s</string>
 
+    <plurals name="move_selected_notes">
+        <item quantity="one">Переместить выбранную заметку</item>
+        <item quantity="other">Переместить выбранные заметки</item>
+    </plurals>
+
     <plurals name="delete_selected_notes">
         <item quantity="one">Удалить выбранную заметку</item>
         <item quantity="other">Удалить выбранные заметки</item>
