@@ -54,6 +54,28 @@ sort-supported-extension:
 
 rust-build:
     #!/usr/bin/env bash
+    # Check if we're on Windows (uses prebuilt OpenSSL by default)
+    if [[ "$OS" == "Windows_NT" ]] && [[ "${OPENSSL_NO_VENDOR_PRIV:-1}" == "1" ]]; then
+        echo ""
+        echo "╔════════════════════════════════════════════════════════════════════╗"
+        echo "║  ⚠️  WARNING: USING PREBUILT OPENSSL ⚠️                            ║"
+        echo "╠════════════════════════════════════════════════════════════════════╣"
+        echo "║  You are using PREBUILT OpenSSL binaries from openssl-prebuild/    ║"
+        echo "║                                                                    ║"
+        echo "║  These prebuilt binaries may be OUTDATED and contain               ║"
+        echo "║  SECURITY VULNERABILITIES!                                         ║"
+        echo "║                                                                    ║"
+        echo "║  To use vendored (fresh) OpenSSL instead:                          ║"
+        echo "║    - Build on Linux/macOS (recommended)                            ║"
+        echo "║    - Or set: export OPENSSL_NO_VENDOR_PRIV=0                       ║"
+        echo "╚════════════════════════════════════════════════════════════════════╝"
+        echo ""
+        read -p "Do you want to continue? (y/N) " answer
+        if [[ ! "$answer" =~ ^[Yy]$ ]]; then
+            echo "Aborted."
+            exit 1
+        fi
+    fi
     cd app/src/main/rust
     make DEBUG=0 build_install
 

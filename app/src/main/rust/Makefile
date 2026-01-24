@@ -41,9 +41,29 @@ ifeq ($(OPENSSL_NO_VENDOR_PRIV),1)
 endif
 
 
-build_install: build cp_to_jni
+build_install: warn_prebuild build cp_to_jni
 
-build_zip: build zip_openssl_build_all
+build_zip: warn_prebuild build zip_openssl_build_all
+
+warn_prebuild:
+ifeq ($(OPENSSL_NO_VENDOR_PRIV),1)
+	@echo ""
+	@echo "╔════════════════════════════════════════════════════════════════════╗"
+	@echo "║  ⚠️  WARNING: USING PREBUILT OPENSSL ⚠️                            ║"
+	@echo "╠════════════════════════════════════════════════════════════════════╣"
+	@echo "║  You are using PREBUILT OpenSSL binaries from openssl-prebuild/    ║"
+	@echo "║                                                                    ║"
+	@echo "║  These prebuilt binaries may be OUTDATED and contain               ║"
+	@echo "║  SECURITY VULNERABILITIES!                                         ║"
+	@echo "║                                                                    ║"
+	@echo "║  To use vendored (fresh) OpenSSL instead:                          ║"
+	@echo "║    - Build on Linux/macOS (recommended)                            ║"
+	@echo "║    - Or set: OPENSSL_NO_VENDOR_PRIV=0                              ║"
+	@echo "╚════════════════════════════════════════════════════════════════════╝"
+	@echo ""
+	@echo "Press Enter to continue or Ctrl+C to abort..."
+	@read dummy
+endif
 
 unzip_openssl_prebuild:
 	unzip openssl-prebuild/x86_64/install.zip
