@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
@@ -80,14 +81,17 @@ fun MarkdownWithClickableCheckboxes(
                 
                 Row(
                     verticalAlignment = Alignment.Top,
-                    modifier = Modifier.padding(start = (indent.length * 8).dp)
+                    modifier = Modifier.padding(start = (indent.length * 8).dp, top = 4.dp, bottom = 4.dp)
                 ) {
                     Checkbox(
                         checked = checkboxState,
                         onCheckedChange = { isChecked ->
                             onCheckboxClick(line, isChecked)
                         },
-                        enabled = true
+                        enabled = true,
+                        modifier = Modifier
+                            .size(20.dp)
+                            .padding(top = 10.dp)
                     )
                     Text(
                         text = text,
