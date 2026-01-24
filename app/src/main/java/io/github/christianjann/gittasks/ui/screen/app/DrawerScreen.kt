@@ -22,6 +22,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardReturn
+import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.CreateNewFolder
@@ -278,18 +279,38 @@ fun DrawerScreen(
             // bug: https://issuetracker.google.com/issues/224005027
             //AnimatedVisibility(visible = currentNoteFolderRelativePath.isNotEmpty()) {
             if (currentNoteFolderRelativePath.isNotEmpty()) {
-                FloatingActionButton(
-                    modifier = Modifier,
-                    containerColor = MaterialTheme.colorScheme.secondary,
-                    shape = RoundedCornerShape(20.dp),
-                    onClick = {
-                        openFolder(getParentPath(currentNoteFolderRelativePath))
-                    }
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    SimpleIcon(
-                        imageVector = Icons.AutoMirrored.Filled.KeyboardReturn,
-                        tint = MaterialTheme.colorScheme.onSecondary
-                    )
+                    // Up button - navigate to parent folder
+                    FloatingActionButton(
+                        modifier = Modifier,
+                        containerColor = MaterialTheme.colorScheme.secondary,
+                        shape = RoundedCornerShape(20.dp),
+                        onClick = {
+                            openFolder(getParentPath(currentNoteFolderRelativePath))
+                        }
+                    ) {
+                        SimpleIcon(
+                            imageVector = Icons.Filled.ArrowUpward,
+                            tint = MaterialTheme.colorScheme.onSecondary
+                        )
+                    }
+                    // Enter/Accept button - select current folder and close drawer
+                    FloatingActionButton(
+                        modifier = Modifier,
+                        containerColor = MaterialTheme.colorScheme.secondary,
+                        shape = RoundedCornerShape(20.dp),
+                        onClick = {
+                            openFolder(currentNoteFolderRelativePath)
+                            scope.launch { drawerState.close() }
+                        }
+                    ) {
+                        SimpleIcon(
+                            imageVector = Icons.AutoMirrored.Filled.KeyboardReturn,
+                            tint = MaterialTheme.colorScheme.onSecondary
+                        )
+                    }
                 }
             }
         }
@@ -301,7 +322,9 @@ fun DrawerScreen(
         LazyColumn(
             modifier = Modifier
                 .padding(paddingValues = paddingValues),
-            state = listState
+            state = listState,
+            // Add bottom padding to prevent items from being hidden by FAB buttons
+            contentPadding = androidx.compose.foundation.layout.PaddingValues(bottom = 140.dp)
         ) {
 
             if (showTags.value) {

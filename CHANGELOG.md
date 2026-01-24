@@ -18,6 +18,10 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
   - Full filenames now displayed instead of truncated text
   - Added scrollbar for easier navigation when many assets are present
   - Added image preview thumbnails for image files (PNG, JPG, GIF, WebP, BMP, SVG)
+- Navigation Drawer: Improved folder navigation buttons
+  - Added separate "up" button (arrow icon) to navigate to parent folder
+  - "Enter" button (return icon) now selects current folder and closes drawer
+  - Added bottom padding to prevent folder items from being hidden by buttons
 
 ## [26.01.15]
 
