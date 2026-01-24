@@ -52,6 +52,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import io.github.christianjann.gittasks.MyApp
@@ -377,6 +378,11 @@ fun GenericTextField(
                 interactionSource = interactionSource,
                 indication = null
             ) {
+                // Move cursor to end of text when tapping below the content
+                val newValue = textContent.copy(
+                    selection = TextRange(textContent.text.length)
+                )
+                vm.onValueChange(newValue)
                 textFocusRequester.requestFocus()
             }
     ) {

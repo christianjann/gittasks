@@ -8,6 +8,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### Fixed
 
 - Fixed two times 150 in NoteMinWidth menu
+- Cursor Position When Tapping Below Text: Tapping below the last line in the text editor now moves the cursor to the end of the text instead of the beginning
 
 ## [26.01.15]
 
