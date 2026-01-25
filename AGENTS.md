@@ -1,106 +1,79 @@
-# GitTasks Build Instructions
+# GitTasks Agent Instructions
 
-This file documents the build commands for the GitTasks Android app, which uses Kotlin, Rust (via JNI), and Gradle.
+GitTasks is a Git-based note-taking and task management Android app. Notes are stored as Markdown files with YAML frontmatter, synced via Git repositories.
 
-## Prerequisites
+**Tech Stack**: Kotlin, Jetpack Compose, Room database, Rust (JNI for Git operations), Gradle
 
-- Android SDK and NDK installed
-- Java JDK (configured in `.gradle/config.properties`)
-- Rust toolchain with Android targets
-- `just` command runner installed
+## Quick Reference
 
-**Important**: The `just` commands automatically set `JAVA_HOME` from `.gradle/config.properties`. When running `./gradlew` directly in terminal, you must manually set `JAVA_HOME` first:
+| Command              | Purpose                                   |
+| -------------------- | ----------------------------------------- |
+| `just build`         | Build debug APK                           |
+| `just install`       | Build and install to device               |
+| `just rust-build`    | Compile Rust library (after Rust changes) |
+| `just release-build` | Build release APK                         |
+| `just fmt`           | Ensure all files are formatted properly   |
+
+## Code Structure
+
+```
+app/src/main/java/io/github/christianjann/gittasks/
+├── ui/
+│   ├── screen/        # Composable screens (Grid, Editor, Settings)
+│   ├── viewmodel/     # ViewModels (GridViewModel, TextVM, etc.)
+│   ├── component/     # Reusable UI components
+│   └── model/         # UI state models (GridNote, SortOrder, etc.)
+├── data/
+│   ├── room/          # Room database (Note, NoteFolder, Dao)
+│   └── AppPreferences # DataStore preferences
+├── helper/            # Utilities (FrontmatterParser, etc.)
+└── manager/           # Business logic (StorageManager, GitManager)
+
+app/src/main/rust/src/ # Rust/JNI code for Git operations
+doc/                   # Design docs and feature documentation
+```
+
+## When Making Changes
+
+**Always**:
+
+1. Follow the [app architecture](doc/design/app_architecture.md)
+2. Update `CHANGELOG.md` under `[Unreleased]` section
+3. Update `doc/features.md` if adding user-facing features
+4. Run `just build` to verify compilation
+
+**Frontmatter format** (see [doc/design/markdown_header.md](doc/design/markdown_header.md)):
+
+```yaml
+---
+title: Note Title
+completed?: yes|no
+due: 2026-01-25T14:00:00
+tags:
+  - tag1
+---
+```
+
+## Architecture Patterns
+
+- **MVVM**: Screens observe ViewModels via `StateFlow`/`collectAsState()`
+- **Repository pattern**: `NoteRepository` abstracts Room database access
+- **Managers**: `StorageManager` handles file I/O + Git commits, `GitManager` for Git operations
+- **Parsing**: `FrontmatterParser` for all YAML frontmatter operations
+
+## Build Prerequisites
+
+- Android SDK/NDK, Java JDK, Rust toolchain with Android targets, `just` command runner
+- JAVA_HOME configured in `.gradle/config.properties`
+
+**Manual Gradle** (if not using `just`):
 
 ```bash
 JAVA_HOME=$(grep '^java.home=' .gradle/config.properties | cut -d'=' -f2) ./gradlew <command>
 ```
 
-## Build Commands
-
-All commands are run using the `just` command runner. The justfile contains the following targets:
-
-### Rust Library Build
-
-```bash
-just rust-build
-```
-
-- Builds the Rust native library for Android (x86_64 and aarch64 targets)
-- Copies shared libraries to `app/src/main/jniLibs/`
-- Uses the Makefile in `app/src/main/rust/`
-
-### Debug Build
-
-```bash
-just build
-```
-
-- Assembles the debug APK
-- Sets JAVA_HOME from `.gradle/config.properties`
-- Output: `app/build/outputs/apk/debug/app-debug.apk`
-
-### Debug Install
-
-```bash
-just install
-```
-
-- Builds and installs the debug APK to connected device/emulator
-- Requires device to be connected via ADB
-
-### Release Build
-
-```bash
-just release-build
-```
-
-- Sets up release environment (signing keys, etc.)
-- Assembles the release APK
-- Output: `app/build/outputs/apk/release/app-release.apk`
-
-### Release Install
-
-```bash
-just release-install
-```
-
-- Builds and installs the release APK to connected device
-- Checks for connected device before installing
-- Provides manual install instructions if no device found
-
-## Additional Utility Commands
-
-```bash
-just fix          # Run lint fixes
-just fmt-just     # Format the justfile
-just prettier     # Format code with Prettier
-just prettier     # Format all files
-just get-wrapper  # Get Gradle wrapper
-```
-
-## Key Files
-
-- `justfile`: Contains all build recipes
-- `app/src/main/rust/`: Rust native code
-- `app/src/main/rust/Makefile`: Rust build configuration
-- `.gradle/config.properties`: Java home configuration
-- `setup-release-env.sh`: Release environment setup
-- `generate-release-keys.sh`: Generate signing keys
-
-## Development Workflow
-
-1. Make changes to Kotlin code in `app/src/main/java/`
-2. Make changes to Rust code in `app/src/main/rust/src/`
-3. Run `just rust-build` to compile Rust changes
-4. Run `just build` or `just install` to test
-5. For release: `just release-build` or `just release-install`
-6. **When adding features**:
-   - Update `CHANGELOG.md` and `doc/features.md` to document the new functionality
-   - Check [app architecture](doc/design/app_architecture.md) fo follow the popper design when changing the app
-
 ## Troubleshooting
 
-- Ensure Android SDK/NDK are properly configured
-- Check that Rust targets are installed: `rustup target add aarch64-linux-android x86_64-linux-android`
-- Verify JAVA_HOME in `.gradle/config.properties` points to correct JDK
-- For device issues, ensure ADB is working and device is authorized
+- Rust targets: `rustup target add aarch64-linux-android x86_64-linux-android`
+- Verify JAVA_HOME in `.gradle/config.properties`
+- For device issues: check ADB connection and authorization
