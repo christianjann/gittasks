@@ -223,13 +223,6 @@ fun DrawerScreen(
 
     val isMovingNotes = noteBeingMoved != null || notesBeingMovedCount > 0
 
-    // Load favorites when drawer mode is Favorites (including on initial composition)
-    LaunchedEffect(drawerMode) {
-        if (drawerMode == DrawerMode.Favorites) {
-            onLoadFavorites()
-        }
-    }
-
     // Switch to folder mode when starting to move a note
     LaunchedEffect(noteBeingMoved, notesBeingMovedCount) {
         if (isMovingNotes && drawerMode != DrawerMode.Folders) {
