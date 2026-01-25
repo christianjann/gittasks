@@ -23,6 +23,10 @@
     <string name="language_ukrainian">Українська</string>
     <string name="language_german">Deutsch</string>
     <string name="search_in_notes">Пошук у нотатках</string>
+    <string name="search_in_note">Пошук у нотатці</string>
+    <string name="previous_match">Попередній збіг</string>
+    <string name="next_match">Наступний збіг</string>
+    <string name="close_search">Закрити пошук</string>
     <string name="user_interface">Інтерфейс</string>
     <string name="dynamic_colors">Динамічні кольори</string>
     <string name="show_scrollbars">Показувати смуги прокрутки</string>

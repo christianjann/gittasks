@@ -23,6 +23,10 @@
     <string name="language_ukrainian">Українська</string>
     <string name="language_german">Deutsch</string>
     <string name="search_in_notes">Hledat v poznámkách</string>
+    <string name="search_in_note">Hledat v poznámce</string>
+    <string name="previous_match">Předchozí shoda</string>
+    <string name="next_match">Další shoda</string>
+    <string name="close_search">Zavřít hledání</string>
     <string name="user_interface">Uživatelské rozhraní</string>
     <string name="dynamic_colors">Dynamické barvy</string>
     <string name="show_scrollbars">Zobrazit posuvníky</string>

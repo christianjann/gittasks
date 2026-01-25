@@ -24,6 +24,7 @@ import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.LockOpen
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Tag
 import androidx.compose.material.icons.filled.TextFormat
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -52,6 +53,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
@@ -131,6 +133,48 @@ fun EditScreen(
 
     var menuExpanded by remember { mutableStateOf(false) }
 
+    // Search in note state
+    var isSearchVisible by rememberSaveable { mutableStateOf(false) }
+    var searchQuery by rememberSaveable { mutableStateOf("") }
+    var currentMatchIndex by rememberSaveable { mutableStateOf(0) }
+    
+    // Calculate matches based on search query and content
+    // In read-only mode, only search in body (visible content), not frontmatter
+    val searchText = if (isReadOnlyModeActive) {
+        FrontmatterParser.extractBody(vm.content.value.text)
+    } else {
+        vm.content.value.text
+    }
+    
+    val searchMatches by remember(searchQuery, searchText) {
+        derivedStateOf {
+            findMatchPositions(searchText, searchQuery)
+        }
+    }
+    
+    // Reset match index to 0 when search query changes, and jump to first match
+    LaunchedEffect(searchQuery) {
+        currentMatchIndex = 0
+    }
+    
+    // Ensure currentMatchIndex is valid when matches change
+    LaunchedEffect(searchMatches) {
+        if (searchMatches.isNotEmpty() && currentMatchIndex >= searchMatches.size) {
+            currentMatchIndex = searchMatches.size - 1
+        }
+    }
+    
+    // Jump to match when searchMatches, currentMatchIndex, or searchQuery changes
+    LaunchedEffect(searchMatches, currentMatchIndex, searchQuery) {
+        if (searchMatches.isNotEmpty() && searchQuery.isNotEmpty()) {
+            val matchPos = searchMatches[currentMatchIndex]
+            val newValue = vm.content.value.copy(
+                selection = TextRange(matchPos, matchPos + searchQuery.length)
+            )
+            vm.onValueChange(newValue)
+        }
+    }
+
     Scaffold(
         contentWindowInsets = WindowInsets.safeDrawing,
         topBar = {
@@ -184,6 +228,7 @@ fun EditScreen(
                     )
                 },
                 actions = {
+                    // Read-only mode toggle
                     IconButton(
                         colors = IconButtonDefaults.iconButtonColors(
                             containerColor = MaterialTheme.colorScheme.primary,
@@ -205,12 +250,23 @@ fun EditScreen(
             )
         },
         floatingActionButton = {
-            // Tags, Due Date, and Save buttons stacked vertically
+            // Search, Tags, Due Date, and Save buttons stacked vertically
             Column(
                 modifier = Modifier.padding(bottom = bottomBarHeight),
                 verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(8.dp),
                 horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally
             ) {
+                // Search button
+                FloatingActionButton(
+                    containerColor = MaterialTheme.colorScheme.secondary,
+                    shape = RoundedCornerShape(20.dp),
+                    onClick = { isSearchVisible = !isSearchVisible }
+                ) {
+                    SimpleIcon(
+                        imageVector = Icons.Default.Search,
+                        tint = MaterialTheme.colorScheme.onSecondary
+                    )
+                }
                 // Tags button
                 FloatingActionButton(
                     containerColor = MaterialTheme.colorScheme.secondary,
@@ -264,6 +320,29 @@ fun EditScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
+            // Search bar
+            NoteSearchBar(
+                isVisible = isSearchVisible,
+                searchQuery = searchQuery,
+                onSearchQueryChange = { searchQuery = it },
+                currentMatchIndex = currentMatchIndex,
+                totalMatches = searchMatches.size,
+                onNextMatch = {
+                    if (searchMatches.isNotEmpty()) {
+                        currentMatchIndex = (currentMatchIndex + 1) % searchMatches.size
+                    }
+                },
+                onPreviousMatch = {
+                    if (searchMatches.isNotEmpty()) {
+                        currentMatchIndex = if (currentMatchIndex > 0) currentMatchIndex - 1 else searchMatches.size - 1
+                    }
+                },
+                onClose = {
+                    isSearchVisible = false
+                    searchQuery = ""
+                    currentMatchIndex = 0
+                }
+            )
 
             Box(
                 modifier = Modifier.weight(1f)
@@ -282,7 +361,10 @@ fun EditScreen(
                             onCheckboxChangesPending = { hasChanges, modifiedText ->
                                 hasPendingCheckboxChanges = hasChanges
                                 pendingCheckboxText = modifiedText
-                            }
+                            },
+                            searchQuery = searchQuery,
+                            currentMatchIndex = currentMatchIndex,
+                            searchMatches = searchMatches
                         )
                     }
 
@@ -292,7 +374,10 @@ fun EditScreen(
                             textFocusRequester = textFocusRequester,
                             onFinished = onFinished,
                             isReadOnlyModeActive = isReadOnlyModeActive,
-                            textContent = textContent
+                            textContent = textContent,
+                            searchQuery = searchQuery,
+                            currentMatchIndex = currentMatchIndex,
+                            searchMatches = searchMatches
                         )
                     }
                 }
@@ -403,6 +488,9 @@ fun GenericTextField(
     onFinished: () -> Unit,
     isReadOnlyModeActive: Boolean = false,
     textContent: TextFieldValue,
+    searchQuery: String = "",
+    currentMatchIndex: Int = 0,
+    searchMatches: List<Int> = emptyList(),
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     

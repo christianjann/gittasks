@@ -34,6 +34,10 @@
     <string name="commit">Übernehmen</string>
     <string name="close">Schließen</string>
     <string name="search_in_notes">In Notizen suchen</string>
+    <string name="search_in_note">In Notiz suchen</string>
+    <string name="previous_match">Vorheriger Treffer</string>
+    <string name="next_match">Nächster Treffer</string>
+    <string name="close_search">Suche schließen</string>
     <string name="user_interface">Benutzeroberfläche</string>
     <string name="dynamic_colors">Dynamische Farben</string>
     <string name="show_scrollbars">Scrollleisten anzeigen</string>

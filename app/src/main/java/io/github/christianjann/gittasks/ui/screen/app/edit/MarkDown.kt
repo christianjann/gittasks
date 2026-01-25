@@ -37,8 +37,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.focus.FocusRequester
 import coil.ImageLoader
@@ -54,7 +59,9 @@ fun MarkdownWithClickableCheckboxes(
     markdown: String,
     modifier: Modifier = Modifier,
     imageLoader: ImageLoader? = null,
-    onCheckboxClick: (originalLine: String, isChecked: Boolean) -> Unit
+    onCheckboxClick: (originalLine: String, isChecked: Boolean) -> Unit,
+    searchQuery: String = "",
+    currentMatchIndex: Int = 0
 ) {
     val lines = markdown.lines()
     
@@ -143,6 +150,104 @@ private fun RenderMarkdownBlock(
     )
 }
 
+/**
+ * Composable that shows the current search match with context and highlighting.
+ */
+@Composable
+fun SearchMatchContext(
+    text: String,
+    searchQuery: String,
+    currentMatchIndex: Int,
+    modifier: Modifier = Modifier
+) {
+    // Find matches in the body text
+    val bodyMatches = findMatchPositionsInText(text, searchQuery)
+    if (bodyMatches.isEmpty() || currentMatchIndex >= bodyMatches.size) return
+    
+    val matchPosition = bodyMatches[currentMatchIndex]
+    
+    // Extract context around the match (up to 40 chars before and after)
+    val contextStart = maxOf(0, matchPosition - 40)
+    val contextEnd = minOf(text.length, matchPosition + searchQuery.length + 40)
+    
+    // Find line breaks to avoid showing partial lines
+    val lineStart = text.lastIndexOf('\n', matchPosition).let { if (it < contextStart) contextStart else it + 1 }
+    val lineEnd = text.indexOf('\n', matchPosition + searchQuery.length).let { if (it < 0 || it > contextEnd) contextEnd else it }
+    
+    val contextText = text.substring(lineStart, lineEnd)
+    val matchStartInContext = matchPosition - lineStart
+    val matchEndInContext = matchStartInContext + searchQuery.length
+    
+    val annotatedString = buildAnnotatedString {
+        // Add prefix ellipsis if needed
+        if (lineStart > 0) {
+            withStyle(SpanStyle(color = Color.Gray)) {
+                append("...")
+            }
+        }
+        
+        // Text before match
+        if (matchStartInContext > 0) {
+            append(contextText.substring(0, matchStartInContext))
+        }
+        
+        // Highlighted match
+        withStyle(SpanStyle(
+            background = Color(0xFFFFAA00),
+            color = Color.Black,
+            fontWeight = FontWeight.Bold
+        )) {
+            append(contextText.substring(matchStartInContext, minOf(matchEndInContext, contextText.length)))
+        }
+        
+        // Text after match
+        if (matchEndInContext < contextText.length) {
+            append(contextText.substring(matchEndInContext))
+        }
+        
+        // Add suffix ellipsis if needed
+        if (lineEnd < text.length) {
+            withStyle(SpanStyle(color = Color.Gray)) {
+                append("...")
+            }
+        }
+    }
+    
+    androidx.compose.material3.Card(
+        modifier = modifier.fillMaxWidth(),
+        colors = androidx.compose.material3.CardDefaults.cardColors(
+            containerColor = androidx.compose.material3.MaterialTheme.colorScheme.surfaceVariant
+        )
+    ) {
+        Text(
+            text = annotatedString,
+            modifier = Modifier.padding(12.dp),
+            style = androidx.compose.material3.MaterialTheme.typography.bodyMedium
+        )
+    }
+}
+
+/**
+ * Find all match positions of a search query in text (case-insensitive).
+ */
+fun findMatchPositionsInText(text: String, query: String): List<Int> {
+    if (query.isEmpty()) return emptyList()
+    
+    val positions = mutableListOf<Int>()
+    val lowerText = text.lowercase()
+    val lowerQuery = query.lowercase()
+    
+    var startIndex = 0
+    while (true) {
+        val index = lowerText.indexOf(lowerQuery, startIndex)
+        if (index < 0) break
+        positions.add(index)
+        startIndex = index + 1
+    }
+    
+    return positions
+}
+
 @Composable
 fun MarkDownContent(
     vm: MarkDownVM,
@@ -151,6 +256,9 @@ fun MarkDownContent(
     isReadOnlyModeActive: Boolean,
     textContent: TextFieldValue,
     onCheckboxChangesPending: (hasChanges: Boolean, modifiedText: String?) -> Unit = { _, _ -> },
+    searchQuery: String = "",
+    currentMatchIndex: Int = 0,
+    searchMatches: List<Int> = emptyList(),
 ) {
     if (isReadOnlyModeActive) {
         var modifiedText by remember { mutableStateOf(textContent.text) }
@@ -218,11 +326,21 @@ fun MarkDownContent(
         }
         
         SelectionContainer {
-            Box(
+            Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
             ) {
+                // Show search context when searching
+                if (searchQuery.isNotEmpty() && searchMatches.isNotEmpty()) {
+                    SearchMatchContext(
+                        text = processedBodyText,
+                        searchQuery = searchQuery,
+                        currentMatchIndex = currentMatchIndex,
+                        modifier = Modifier.padding(horizontal = 15.dp, vertical = 8.dp)
+                    )
+                }
+                
                 MarkdownWithClickableCheckboxes(
                     markdown = processedBodyText,
                     modifier = Modifier.padding(15.dp),
@@ -266,7 +384,10 @@ fun MarkDownContent(
             vm = vm,
             textFocusRequester = textFocusRequester,
             onFinished = onFinished,
-            textContent = textContent
+            textContent = textContent,
+            searchQuery = searchQuery,
+            currentMatchIndex = currentMatchIndex,
+            searchMatches = searchMatches
         )
     }
 }

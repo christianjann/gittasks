@@ -21,6 +21,10 @@
     <string name="language_ukrainian">Українська</string>
     <string name="language_german">Deutsch</string>
     <string name="search_in_notes">Pesquisar anotações</string>
+    <string name="search_in_note">Pesquisar na anotação</string>
+    <string name="previous_match">Correspondência anterior</string>
+    <string name="next_match">Próxima correspondência</string>
+    <string name="close_search">Fechar pesquisa</string>
     <string name="user_interface">Interface de usuário</string>
     <string name="dynamic_colors">Cores dinâmicas</string>
     <string name="show_scrollbars">Mostrar barras de rolagem</string>

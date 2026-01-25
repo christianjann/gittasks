@@ -531,6 +531,31 @@ GitTasks features a read-only mode that transforms the note editing experience i
 - **Accidental Edit Prevention**: Perfect for reviewing notes you don't want to modify.
 - **Presentation Mode**: Clean, formatted display for sharing or presenting notes.
 
+### Search in Note
+
+GitTasks includes an in-note search feature similar to Ctrl+F in desktop applications, allowing you to quickly find and navigate to text within long notes.
+
+#### How It Works
+
+- **Search Icon**: Tap the search icon (magnifying glass) in the note editor's top bar to open the search bar.
+- **Match Counter**: Shows the current match index and total count (e.g., "3/15").
+- **Navigation**: Use the up/down arrow buttons to jump between matches.
+- **Keyboard Search**: Press Enter/Search on the keyboard to jump to the next match.
+- **Case Insensitive**: Search is case-insensitive for easier matching.
+
+#### Edit Mode Integration
+
+- **Cursor Positioning**: When navigating matches in edit mode, the cursor moves to and selects the matched text.
+- **Auto-Focus**: The text field automatically receives focus after navigating to a match.
+- **Selection Highlight**: The matched text is highlighted with the cursor selection.
+
+#### Usage Tips
+
+- Use search to quickly find specific sections in long notes.
+- Navigate through all occurrences of a word or phrase.
+- In edit mode, use search to jump to text you want to modify.
+- Close search with the X button to return to normal editing.
+
 ### Asset Management
 
 GitTasks includes an initial asset management system that allows you to import, organize, and insert images and files into your notes with seamless Git integration.

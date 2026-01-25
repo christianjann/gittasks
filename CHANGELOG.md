@@ -9,6 +9,10 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ### Added
 
+- Search in Note: Press the search icon in the editor to search within the current note
+  - Shows match count and current position (e.g., "3/15")
+  - Navigate between matches with up/down arrows
+  - In edit mode, selecting a match highlights and positions cursor at the match
 - Favorites Feature:
   - New "Favorites" mode in navigation drawer (cycle: Folders → Tags → Favorites)
   - Long-press on a folder or tag to add/remove from favorites

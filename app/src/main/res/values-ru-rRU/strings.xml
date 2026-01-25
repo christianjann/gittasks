@@ -23,6 +23,10 @@
     <string name="language_ukrainian">Українська</string>
     <string name="language_german">Deutsch</string>
     <string name="search_in_notes">Поиск в заметках</string>
+    <string name="search_in_note">Поиск в заметке</string>
+    <string name="previous_match">Предыдущее совпадение</string>
+    <string name="next_match">Следующее совпадение</string>
+    <string name="close_search">Закрыть поиск</string>
     <string name="user_interface">Интерфейс</string>
     <string name="dynamic_colors">Динамические цвета</string>
     <string name="show_scrollbars">Показывать полосы прокрутки</string>
