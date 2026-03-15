@@ -5,6 +5,10 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+### Changed
+
+- Editor FABs (search, tags, due date) now collapse into a single plus button to avoid hiding text; tap plus to expand, X to collapse
+
 ## [26.01.17]
 
 ### Added

@@ -1,6 +1,13 @@
 package io.github.christianjann.gittasks.ui.screen.app.edit
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.Column
@@ -18,7 +25,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.CalendarMonth
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.Lock
@@ -46,7 +55,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
@@ -132,6 +143,9 @@ fun EditScreen(
     var pendingCheckboxText by remember { mutableStateOf<String?>(null) }
 
     var menuExpanded by remember { mutableStateOf(false) }
+
+    // FAB expand/collapse state
+    var fabExpanded by rememberSaveable { mutableStateOf(false) }
 
     // Search in note state
     var isSearchVisible by rememberSaveable { mutableStateOf(false) }
@@ -250,46 +264,81 @@ fun EditScreen(
             )
         },
         floatingActionButton = {
-            // Search, Tags, Due Date, and Save buttons stacked vertically
+            val fabRotation by animateFloatAsState(
+                targetValue = if (fabExpanded) 45f else 0f,
+                label = "FabRotate"
+            )
+
             Column(
                 modifier = Modifier.padding(bottom = bottomBarHeight),
-                verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(8.dp),
-                horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // Search button
+                // Expandable secondary buttons (Search, Tags, Due Date)
+                AnimatedVisibility(
+                    visible = fabExpanded,
+                    enter = fadeIn() + expandVertically(),
+                    exit = fadeOut() + shrinkVertically(),
+                ) {
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        // Search button
+                        FloatingActionButton(
+                            containerColor = MaterialTheme.colorScheme.secondary,
+                            shape = RoundedCornerShape(20.dp),
+                            onClick = {
+                                isSearchVisible = !isSearchVisible
+                                fabExpanded = false
+                            }
+                        ) {
+                            SimpleIcon(
+                                imageVector = Icons.Default.Search,
+                                tint = MaterialTheme.colorScheme.onSecondary
+                            )
+                        }
+                        // Tags button
+                        FloatingActionButton(
+                            containerColor = MaterialTheme.colorScheme.secondary,
+                            shape = RoundedCornerShape(20.dp),
+                            onClick = {
+                                vm.startEditTags()
+                                fabExpanded = false
+                            }
+                        ) {
+                            SimpleIcon(
+                                imageVector = Icons.Default.Tag,
+                                tint = MaterialTheme.colorScheme.onSecondary
+                            )
+                        }
+                        // Due Date button
+                        FloatingActionButton(
+                            containerColor = MaterialTheme.colorScheme.secondary,
+                            shape = RoundedCornerShape(20.dp),
+                            onClick = {
+                                vm.startEditDueDate()
+                                fabExpanded = false
+                            }
+                        ) {
+                            SimpleIcon(
+                                imageVector = Icons.Default.CalendarMonth,
+                                tint = MaterialTheme.colorScheme.onSecondary
+                            )
+                        }
+                    }
+                }
+                // Plus/Close toggle button
                 FloatingActionButton(
-                    containerColor = MaterialTheme.colorScheme.secondary,
                     shape = RoundedCornerShape(20.dp),
-                    onClick = { isSearchVisible = !isSearchVisible }
+                    onClick = { fabExpanded = !fabExpanded }
                 ) {
                     SimpleIcon(
-                        imageVector = Icons.Default.Search,
-                        tint = MaterialTheme.colorScheme.onSecondary
+                        imageVector = Icons.Default.Add,
+                        modifier = Modifier.rotate(fabRotation)
                     )
                 }
-                // Tags button
-                FloatingActionButton(
-                    containerColor = MaterialTheme.colorScheme.secondary,
-                    shape = RoundedCornerShape(20.dp),
-                    onClick = { vm.startEditTags() }
-                ) {
-                    SimpleIcon(
-                        imageVector = Icons.Default.Tag,
-                        tint = MaterialTheme.colorScheme.onSecondary
-                    )
-                }
-                // Due Date button
-                FloatingActionButton(
-                    containerColor = MaterialTheme.colorScheme.secondary,
-                    shape = RoundedCornerShape(20.dp),
-                    onClick = { vm.startEditDueDate() }
-                ) {
-                    SimpleIcon(
-                        imageVector = Icons.Default.CalendarMonth,
-                        tint = MaterialTheme.colorScheme.onSecondary
-                    )
-                }
-                // Save button - only show when there are changes to save
+                // Save button - only show when there are changes to save (edit mode)
                 if ((!isReadOnlyModeActive || hasPendingCheckboxChanges || hasUnsavedChanges) && vm.name.value.text.isNotEmpty()) {
                     FloatingActionButton(
                         containerColor = MaterialTheme.colorScheme.primary,
