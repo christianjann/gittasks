@@ -9,6 +9,10 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 - Editor FABs (search, tags, due date) now collapse into a single plus button to avoid hiding text; tap plus to expand, X to collapse
 
+### Fixed
+
+- Fix some moved notes not appearing immediately in destination view when moving multiple notes at once
+
 ## [26.01.17]
 
 ### Added
