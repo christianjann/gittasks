@@ -16,6 +16,40 @@
 
 GitTasks is an Android note-taking and task management app with Git integration optimized for efficient markdown-based note management with advanced features like tag filtering, Git log viewing, and seamless synchronization.
 
+## Download
+
+[<img height="80" src="https://media.githubusercontent.com/media/christianjann/gittasks/refs/heads/master/doc/badges/badge_github.png"/>](https://github.com/christianjann/gittasks/releases/latest)
+[<img height="80" src="https://media.githubusercontent.com/media/christianjann/gittasks/refs/heads/master/doc/badges/obtainium.png"/>](https://apps.obtainium.imranr.dev/redirect?r=obtainium://app/%7B%22id%22%3A%22io.github.christianjann.gittasks%22%2C%22url%22%3A%22https%3A%2F%2Fgithub.com%2Fchristianjann%2Fgittasks%22%2C%22author%22%3A%22christianjann%22%2C%22name%22%3A%22GitTasks%22%2C%22preferredApkIndex%22%3A0%2C%22additionalSettings%22%3A%22%7B%5C%22includePrereleases%5C%22%3Afalse%2C%5C%22fallbackToOlderReleases%5C%22%3Atrue%2C%5C%22filterReleaseTitlesByRegEx%5C%22%3A%5C%22%5C%22%2C%5C%22filterReleaseNotesByRegEx%5C%22%3A%5C%22%5C%22%2C%5C%22verifyLatestTag%5C%22%3Afalse%2C%5C%22sortMethodChoice%5C%22%3A%5C%22date%5C%22%2C%5C%22useLatestAssetDateAsReleaseDate%5C%22%3Afalse%2C%5C%22releaseTitleAsVersion%5C%22%3Afalse%2C%5C%22trackOnly%5C%22%3Afalse%2C%5C%22versionExtractionRegEx%5C%22%3A%5C%22%5C%22%2C%5C%22matchGroupToUse%5C%22%3A%5C%22%5C%22%2C%5C%22versionDetection%5C%22%3Atrue%2C%5C%22releaseDateAsVersion%5C%22%3Afalse%2C%5C%22useVersionCodeAsOSVersion%5C%22%3Afalse%2C%5C%22apkFilterRegEx%5C%22%3A%5C%22%5C%22%2C%5C%22invertAPKFilter%5C%22%3Afalse%2C%5C%22autoApkFilterByArch%5C%22%3Atrue%2C%5C%22appName%5C%22%3A%5C%22GitTasks%5C%22%2C%5C%22appAuthor%5C%22%3A%5C%22Christian%20Jann%5C%22%2C%5C%22shizukuPretendToBeGooglePlay%5C%22%3Afalse%2C%5C%22allowInsecure%5C%22%3Afalse%2C%5C%22exemptFromBackgroundUpdates%5C%22%3Afalse%2C%5C%22skipUpdateNotifications%5C%22%3Afalse%2C%5C%22about%5C%22%3A%5C%22Android%20note-taking%20and%20task%20management%20app%20with%20Git%20integration.%5C%22%2C%5C%22refreshBeforeDownload%5C%22%3Afalse%2C%5C%22includeZips%5C%22%3Afalse%2C%5C%22zippedApkFilterRegEx%5C%22%3A%5C%22%5C%22%2C%5C%22github-creds%5C%22%3A%5C%22%5C%22%2C%5C%22GHReqPrefix%5C%22%3A%5C%22%5C%22%7D%22%2C%22overrideSource%22%3A%22GitHub%22%7D)
+
+### Verification
+
+The APK files can be verified using [apksigner](https://developer.android.com/tools/apksigner#options-verify).
+
+```
+apksigner verify --print-certs -v gittasks-release-<VERSION>.apk 
+```
+
+The output should look like this:
+
+```
+Verifies
+Verified using v1 scheme (JAR signing): false
+Verified using v2 scheme (APK Signature Scheme v2): true
+Verified using v3 scheme (APK Signature Scheme v3): false
+Verified using v3.1 scheme (APK Signature Scheme v3.1): false
+Verified using v4 scheme (APK Signature Scheme v4): false
+Verified for SourceStamp: false
+```
+
+The certificate content and digests should look like this:
+
+```
+Signer #1 certificate DN: CN=GitNote, OU=Development, O=GitNote, L=Unknown, ST=Unknown, C=US
+Signer #1 certificate SHA-256 digest: f0374ed8e7494da4a3ab7b726cc38cddc151dd28186accb17052096b0c9c69c3
+Signer #1 certificate SHA-1 digest: 69130faa0af21cbd8c97f9953d3fbf24a781bd23
+Signer #1 certificate MD5 digest: da57a50a1e6413077b0e6874d77b33da
+```
+
 ## User Quick Start
 
 1. **Set up a Git repository**: Create a private Git repository on GitHub, GitLab, or your own server to store your notes
