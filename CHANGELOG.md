@@ -5,6 +5,12 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [26.04]
+
+### Fixed
+
+- Fixed top app bar overlapping first note on devices with larger screen insets (e.g., newer phones with edge-to-edge displays or different aspect ratios) by using dynamic inset-aware spacing instead of hardcoded values
+
 ## [26.03]
 
 ### Changed

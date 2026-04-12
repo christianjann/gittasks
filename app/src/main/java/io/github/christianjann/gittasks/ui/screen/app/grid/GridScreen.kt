@@ -127,7 +127,8 @@ private const val TAG = "GridScreen"
 private const val maxOffset = -500f
 internal val topBarHeight = 80.dp
 
-internal val topSpacerHeight = topBarHeight + 40.dp + 15.dp
+// Extra gap between the top bar and the first note item
+internal val topBarGap = 30.dp
 
 // Custom scrollbar implementation since VerticalScrollbar is not available in current Compose version
 @Composable
@@ -510,6 +511,7 @@ private fun GridView(
                     onEditClick = onEditClick,
                     vm = vm,
                     showScrollbars = showScrollbars.value,
+                    topInsetPadding = padding.calculateTopPadding(),
                 )
             }
 
@@ -533,6 +535,7 @@ private fun GridView(
                     onEditClick = onEditClick,
                     vm = vm,
                     showScrollbars = showScrollbars.value,
+                    topInsetPadding = padding.calculateTopPadding(),
                 )
             }
 
@@ -557,6 +560,7 @@ private fun GridView(
                     onEditClick = onEditClick,
                     vm = vm,
                     showScrollbars = showScrollbars.value,
+                    topInsetPadding = padding.calculateTopPadding(),
                 )
             }
         }
@@ -590,6 +594,7 @@ private fun GridNotesView(
     onEditClick: (Note, EditType) -> Unit,
     vm: GridViewModel,
     showScrollbars: Boolean,
+    topInsetPadding: Dp = 0.dp,
 ) {
 
 
@@ -626,7 +631,7 @@ private fun GridNotesView(
                 state = gridState
             ) {
                 item(span = StaggeredGridItemSpan.FullLine) {
-                    Spacer(modifier = Modifier.height(topSpacerHeight))
+                    Spacer(modifier = Modifier.height(topBarHeight + topInsetPadding + topBarGap))
                 }
 
                 items(

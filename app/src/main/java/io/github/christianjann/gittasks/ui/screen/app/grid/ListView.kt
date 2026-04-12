@@ -44,6 +44,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.paging.compose.LazyPagingItems
@@ -116,6 +117,7 @@ internal fun NoteListView(
     onEditClick: (Note, EditType) -> Unit,
     vm: GridViewModel,
     showScrollbars: Boolean,
+    topInsetPadding: Dp = 0.dp,
 ) {
 
     Box(modifier = modifier) {
@@ -146,7 +148,7 @@ internal fun NoteListView(
                 state = listState
             ) {
                 item {
-                    Spacer(modifier = Modifier.height(topSpacerHeight))
+                    Spacer(modifier = Modifier.height(topBarHeight + topInsetPadding + topBarGap))
                 }
 
                 items(

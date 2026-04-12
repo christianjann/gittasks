@@ -50,8 +50,8 @@ android {
         applicationId = "io.github.christianjann.gittasks"
         minSdk = 30
         targetSdk = 36
-        versionCode = 33
-        versionName = "26.03"
+        versionCode = 34
+        versionName = "26.04"
 
         buildConfigField(
             "String",
